@@ -10,10 +10,29 @@ commands:
     description: Teleport back to your last saved or death location.
     usage: /back
     permission: foxcore.back
+  anvil:
+    description: Open a virtual anvil.
+    usage: /anvil
+    permission: foxcore.anvil
+  cartographytable:
+    aliases: [cartography]
+    description: Open a virtual cartography table.
+    usage: /cartographytable
+    permission: foxcore.cartographytable
+  craft:
+    aliases: [wb, workbench]
+    description: Open a virtual crafting table.
+    usage: /craft
+    permission: foxcore.craft
   delhome:
     description: Delete one of your homes or another player's home.
     usage: /delhome <home> | /delhome <player> <home>
     permission: foxcore.delhome
+  enderchest:
+    aliases: [ec]
+    description: Open your ender chest.
+    usage: /enderchest
+    permission: foxcore.enderchest
   fly:
     description: Toggle flight for yourself or another player.
     usage: /fly [player]
@@ -34,6 +53,19 @@ commands:
     description: Set your own or another player's gamemode to spectator.
     usage: /gmsp [player]
     permission: foxcore.gmsp
+  grindstone:
+    description: Open a virtual grindstone.
+    usage: /grindstone
+    permission: foxcore.grindstone
+  hat:
+    description: Put the item in your hand on your head.
+    usage: /hat
+    permission: foxcore.hat
+  head:
+    aliases: [skull]
+    description: Give yourself a player head by name.
+    usage: /head [player] [amount]
+    permission: foxcore.head
   home:
     description: Teleport to one of your homes.
     usage: /home [name]
@@ -42,6 +74,10 @@ commands:
     description: List your homes or another player's homes.
     usage: /homes [player]
     permission: foxcore.homes
+  loom:
+    description: Open a virtual loom.
+    usage: /loom
+    permission: foxcore.loom
   renamehome:
     description: Rename one of your homes.
     usage: /renamehome <old> <new>
@@ -58,10 +94,19 @@ commands:
     description: Set the server spawn.
     usage: /setspawn
     permission: foxcore.setspawn
+  smithingtable:
+    aliases: [smithing]
+    description: Open a virtual smithing table.
+    usage: /smithingtable
+    permission: foxcore.smithingtable
   spawn:
     description: Teleport to the server spawn.
     usage: /spawn [player]
     permission: foxcore.spawn
+  stonecutter:
+    description: Open a virtual stonecutter.
+    usage: /stonecutter
+    permission: foxcore.stonecutter
   tp:
     description: Teleport yourself to another online player.
     usage: /tp <player>
@@ -95,11 +140,23 @@ permissions:
   foxcore.back:
     description: Allows teleporting back to your last saved or death location.
     default: op
+  foxcore.anvil:
+    description: Allows opening a virtual anvil.
+    default: op
+  foxcore.cartographytable:
+    description: Allows opening a virtual cartography table.
+    default: op
+  foxcore.craft:
+    description: Allows opening a virtual crafting table.
+    default: op
   foxcore.delhome:
     description: Allows deleting your own homes.
     default: true
   foxcore.delhome.others:
     description: Allows deleting another player's homes.
+    default: op
+  foxcore.enderchest:
+    description: Allows opening your ender chest.
     default: op
   foxcore.fly:
     description: Allows toggling your own flight.
@@ -131,6 +188,15 @@ permissions:
   foxcore.gmsp.others:
     description: Allows setting another player's gamemode to spectator.
     default: op
+  foxcore.grindstone:
+    description: Allows opening a virtual grindstone.
+    default: op
+  foxcore.hat:
+    description: Allows placing the item in your hand on your head slot.
+    default: op
+  foxcore.head:
+    description: Allows giving yourself player heads by name.
+    default: op
   foxcore.home:
     description: Allows teleporting to your own homes.
     default: true
@@ -139,6 +205,9 @@ permissions:
     default: true
   foxcore.homes.others:
     description: Allows listing another player's homes.
+    default: op
+  foxcore.loom:
+    description: Allows opening a virtual loom.
     default: op
   foxcore.renamehome:
     description: Allows renaming homes.
@@ -155,11 +224,17 @@ permissions:
   foxcore.setspawn:
     description: Allows setting the server spawn.
     default: op
+  foxcore.smithingtable:
+    description: Allows opening a virtual smithing table.
+    default: op
   foxcore.spawn:
     description: Allows teleporting to the server spawn.
     default: true
   foxcore.spawn.others:
     description: Allows teleporting another player to the server spawn.
+    default: op
+  foxcore.stonecutter:
+    description: Allows opening a virtual stonecutter.
     default: op
   foxcore.tp:
     description: Allows teleporting to another player.

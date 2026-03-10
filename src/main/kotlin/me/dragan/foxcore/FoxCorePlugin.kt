@@ -7,8 +7,11 @@ import me.dragan.foxcore.command.FoxCoreCommand
 import me.dragan.foxcore.command.FlyCommand
 import me.dragan.foxcore.command.DeleteHomeCommand
 import me.dragan.foxcore.command.GamemodeShortcutCommand
+import me.dragan.foxcore.command.HeadCommand
+import me.dragan.foxcore.command.HatCommand
 import me.dragan.foxcore.command.HomeCommand
 import me.dragan.foxcore.command.HomesCommand
+import me.dragan.foxcore.command.InventoryOpenerCommand
 import me.dragan.foxcore.command.RenameHomeCommand
 import me.dragan.foxcore.command.SetSpawnCommand
 import me.dragan.foxcore.command.SetHomeIconCommand
@@ -68,19 +71,69 @@ class FoxCorePlugin : JavaPlugin() {
         messages = MessageService(this).also { it.reload() }
 
         registerCommand("back", BackCommand(this))
+        registerCommand(
+            "anvil",
+            InventoryOpenerCommand(this, "foxcore.anvil", "command.anvil") { player ->
+                player.openAnvil(null, true)
+            },
+        )
+        registerCommand(
+            "cartographytable",
+            InventoryOpenerCommand(this, "foxcore.cartographytable", "command.cartographytable") { player ->
+                player.openCartographyTable(null, true)
+            },
+        )
+        registerCommand(
+            "craft",
+            InventoryOpenerCommand(this, "foxcore.craft", "command.craft") { player ->
+                player.openWorkbench(null, true)
+            },
+        )
         registerCommand("delhome", DeleteHomeCommand(this))
+        registerCommand(
+            "enderchest",
+            InventoryOpenerCommand(this, "foxcore.enderchest", "command.enderchest") { player ->
+                player.openInventory(player.enderChest)
+            },
+        )
         registerCommand("fly", FlyCommand(this))
         registerCommand("gma", GamemodeShortcutCommand(this, GameMode.ADVENTURE, "gma", "foxcore.gma", "foxcore.gma.others"))
         registerCommand("gmc", GamemodeShortcutCommand(this, GameMode.CREATIVE, "gmc", "foxcore.gmc", "foxcore.gmc.others"))
         registerCommand("gms", GamemodeShortcutCommand(this, GameMode.SURVIVAL, "gms", "foxcore.gms", "foxcore.gms.others"))
         registerCommand("gmsp", GamemodeShortcutCommand(this, GameMode.SPECTATOR, "gmsp", "foxcore.gmsp", "foxcore.gmsp.others"))
+        registerCommand(
+            "grindstone",
+            InventoryOpenerCommand(this, "foxcore.grindstone", "command.grindstone") { player ->
+                player.openGrindstone(null, true)
+            },
+        )
+        registerCommand("hat", HatCommand(this))
+        registerCommand("head", HeadCommand(this))
         registerCommand("home", HomeCommand(this))
         registerCommand("homes", HomesCommand(this))
+        registerCommand(
+            "loom",
+            InventoryOpenerCommand(this, "foxcore.loom", "command.loom") { player ->
+                player.openLoom(null, true)
+            },
+        )
         registerCommand("renamehome", RenameHomeCommand(this))
         registerCommand("sethome", SetHomeCommand(this))
         registerCommand("sethomeicon", SetHomeIconCommand(this))
         registerCommand("setspawn", SetSpawnCommand(this))
+        registerCommand(
+            "smithingtable",
+            InventoryOpenerCommand(this, "foxcore.smithingtable", "command.smithingtable") { player ->
+                player.openSmithingTable(null, true)
+            },
+        )
         registerCommand("spawn", SpawnCommand(this))
+        registerCommand(
+            "stonecutter",
+            InventoryOpenerCommand(this, "foxcore.stonecutter", "command.stonecutter") { player ->
+                player.openStonecutter(null, true)
+            },
+        )
         registerCommand("tp", TeleportCommand(this))
         registerCommand("tphere", TeleportHereCommand(this))
         registerCommand("tpa", TpaCommand(this))

@@ -17,14 +17,28 @@ Built jar output:
 ## Current functionality
 - `/back`
   Teleports you back to your last saved location or death location.
+- `/anvil`
+  Opens a virtual anvil.
+- `/cartographytable` or `/cartography`
+  Opens a virtual cartography table.
+- `/craft`, `/wb` or `/workbench`
+  Opens a virtual crafting table.
 - `/delhome <home>`
   Deletes one of your saved homes.
 - `/delhome <player> <home>`
   Admin form for deleting another player's home.
+- `/enderchest` or `/ec`
+  Opens your ender chest.
 - `/fly [player]`
   Toggles flight for yourself, or for another player if you have admin permission.
 - `/gms [player]`, `/gmc [player]`, `/gma [player]`, `/gmsp [player]`
   Gamemode shortcuts for yourself or another player.
+- `/grindstone`
+  Opens a virtual grindstone.
+- `/hat`
+  Puts the item in your hand on your head slot.
+- `/head [player] [amount]` or `/skull [player] [amount]`
+  Gives you a player head by name.
 - `/sethome [name]`
   Saves your current location as a named home.
 - `/renamehome <old> <new>`
@@ -35,10 +49,16 @@ Built jar output:
   Opens your homes menu, or teleports to a specific saved home.
 - `/homes [player]`
   Lists your homes, or another player's homes with admin permission.
+- `/loom`
+  Opens a virtual loom.
 - `/setspawn`
   Sets the server spawn to your current location.
+- `/smithingtable` or `/smithing`
+  Opens a virtual smithing table.
 - `/spawn [player]`
   Teleports you, or another player, to the configured server spawn.
+- `/stonecutter`
+  Opens a virtual stonecutter.
 - `/tp <player>`
   Teleports you to an online player.
 - `/tphere <player>`
@@ -55,6 +75,21 @@ Built jar output:
   Reloads config and translations.
 
 ## Commands
+### `/anvil`
+- Description: Opens a virtual anvil.
+- Player only: yes
+- Permission: `foxcore.anvil`
+
+### `/cartographytable` or `/cartography`
+- Description: Opens a virtual cartography table.
+- Player only: yes
+- Permission: `foxcore.cartographytable`
+
+### `/craft`, `/wb` or `/workbench`
+- Description: Opens a virtual crafting table.
+- Player only: yes
+- Permission: `foxcore.craft`
+
 ### `/back`
 - Description: Teleports you back to your most recent saved back location.
 - Player only: yes
@@ -74,6 +109,35 @@ Built jar output:
 - `/delhome <home>` deletes one of your own homes.
 - `/delhome <player> <home>` deletes another player's home and requires `foxcore.delhome.others`.
 - Admin deletion works from stored database data, so it can target offline players too.
+
+### `/enderchest` or `/ec`
+- Description: Opens your own ender chest.
+- Player only: yes
+- Permission: `foxcore.enderchest`
+- Notes:
+- `/ec` is an alias of `/enderchest`.
+
+### `/grindstone`
+- Description: Opens a virtual grindstone.
+- Player only: yes
+- Permission: `foxcore.grindstone`
+
+### `/hat`
+- Description: Puts the item in your main hand on your head slot.
+- Player only: yes
+- Permission: `foxcore.hat`
+- Notes:
+- Swaps your current helmet back into your hand.
+- Rejects empty hands.
+
+### `/head [player] [amount]` or `/skull [player] [amount]`
+- Description: Gives you a player head item by player name.
+- Player only: yes
+- Permission: `foxcore.head`
+- Notes:
+- With no arguments, gives your own head.
+- If the first argument is a number, it is treated as the amount for your own head.
+- Amount defaults to `1` and is clamped to a maximum of `64`.
 
 ### `/fly [player]`
 - Description: Toggles flight for yourself or another online player.
@@ -147,12 +211,22 @@ Built jar output:
 - Clicking a home teleports you to it.
 - Admin lookup works from stored database data, so it can inspect offline players too.
 
+### `/loom`
+- Description: Opens a virtual loom.
+- Player only: yes
+- Permission: `foxcore.loom`
+
 ### `/setspawn`
 - Description: Sets the server spawn to your current location.
 - Player only: yes
 - Permission: `foxcore.setspawn`
 - Notes:
 - Updates the spawn location stored in `config.yml`.
+
+### `/smithingtable` or `/smithing`
+- Description: Opens a virtual smithing table.
+- Player only: yes
+- Permission: `foxcore.smithingtable`
 
 ### `/spawn [player]`
 - Description: Teleports to the configured server spawn.
@@ -163,6 +237,11 @@ Built jar output:
 - `/spawn <player>` teleports another online player to spawn and requires `foxcore.spawn.others`.
 - If spawn is disabled or unset, the command fails cleanly.
 - Uses the same safe teleport rules as other FoxCore teleports.
+
+### `/stonecutter`
+- Description: Opens a virtual stonecutter.
+- Player only: yes
+- Permission: `foxcore.stonecutter`
 
 ### `/tp <player>`
 - Description: Teleport yourself to another online player.
@@ -237,6 +316,18 @@ Built jar output:
 - Reload also synchronizes bundled YAML files.
 
 ## Permissions
+### `foxcore.anvil`
+- Default: `op`
+- Allows opening a virtual anvil.
+
+### `foxcore.cartographytable`
+- Default: `op`
+- Allows opening a virtual cartography table.
+
+### `foxcore.craft`
+- Default: `op`
+- Allows opening a virtual crafting table.
+
 ### `foxcore.back`
 - Default: `op`
 - Allows teleporting back to your last saved or death location.
@@ -248,6 +339,22 @@ Built jar output:
 ### `foxcore.delhome.others`
 - Default: `op`
 - Allows deleting another player's homes.
+
+### `foxcore.enderchest`
+- Default: `op`
+- Allows opening your ender chest.
+
+### `foxcore.grindstone`
+- Default: `op`
+- Allows opening a virtual grindstone.
+
+### `foxcore.hat`
+- Default: `op`
+- Allows placing the item in your hand on your head slot.
+
+### `foxcore.head`
+- Default: `op`
+- Allows giving yourself player heads by name.
 
 ### `foxcore.fly`
 - Default: `op`
@@ -276,6 +383,10 @@ Built jar output:
 ### `foxcore.homes.others`
 - Default: `op`
 - Allows listing another player's homes.
+
+### `foxcore.loom`
+- Default: `op`
+- Allows opening a virtual loom.
 
 ### `foxcore.renamehome`
 - Default: `true`
@@ -308,6 +419,10 @@ Built jar output:
 - Default: `op`
 - Allows setting the server spawn.
 
+### `foxcore.smithingtable`
+- Default: `op`
+- Allows opening a virtual smithing table.
+
 ### `foxcore.spawn`
 - Default: `true`
 - Allows teleporting yourself to the server spawn.
@@ -315,6 +430,10 @@ Built jar output:
 ### `foxcore.spawn.others`
 - Default: `op`
 - Allows teleporting another player to the server spawn.
+
+### `foxcore.stonecutter`
+- Default: `op`
+- Allows opening a virtual stonecutter.
 
 ### `foxcore.tp`
 - Default: `op`

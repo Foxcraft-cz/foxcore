@@ -22,12 +22,21 @@ error:
   teleport-failed-other: "<gray>[<gold>FoxCore</gold>]</gray> <red>The teleport for <white>%player%</white> could not be completed.</red>"
 
 command:
+  anvil:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/anvil</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual anvil.</green>"
   back:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/back</white>"
     loading: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Your back data is still loading. Try again in a moment.</yellow>"
     none: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have a saved back location.</red>"
     missing-world: "<gray>[<gold>FoxCore</gold>]</gray> <red>The saved world <white>%world%</white> is not available.</red>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleported you back.</green>"
+  cartographytable:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/cartographytable</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual cartography table.</green>"
+  craft:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/craft</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual crafting table.</green>"
   delhome:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/delhome &lt;home&gt;</white> <gray>or</gray> <white>/delhome &lt;player&gt; &lt;home&gt;</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>That is not a valid home name.</red>"
@@ -37,6 +46,9 @@ command:
     not-found-other: "<gray>[<gold>FoxCore</gold>]</gray> <red><white>%player%</white> does not have a home named <white>%home%</white>.</red>"
     success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Deleted home <white>%home%</white>.</green>"
     success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Deleted home <white>%home%</white> from <white>%player%</white>.</green>"
+  enderchest:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/enderchest</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened your ender chest.</green>"
   fly:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/fly [player]</white>"
     not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
@@ -71,6 +83,17 @@ command:
       success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Gamemode set to spectator.</green>"
       success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set <white>%player%</white> to spectator mode.</green>"
       success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> set your gamemode to spectator.</green>"
+  grindstone:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/grindstone</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual grindstone.</green>"
+  hat:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/hat</white>"
+    invalid-item: "<gray>[<gold>FoxCore</gold>]</gray> <red>You must hold a valid item to use as a hat.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Placed the item in your hand on your head.</green>"
+  head:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/head [player] [amount]</white>"
+    invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>That is not a valid player name for a head.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Gave you <white>%amount%</white>x head of <white>%player%</white>.</green>"
   sethome:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/sethome [name]</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Home names must use only letters, numbers, underscores, or dashes and be at most 32 characters long.</red>"
@@ -100,6 +123,9 @@ command:
     success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Your homes (<white>%count%</white>): <white>%homes%</white></green>"
     success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Homes for <white>%player%</white> (<white>%count%</white>): <white>%homes%</white></green>"
     teleport-other-success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleported to <white>%player%</white>'s home <white>%home%</white>.</green>"
+  loom:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/loom</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual loom.</green>"
   renamehome:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/renamehome &lt;old&gt; &lt;new&gt;</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Both home names must be valid names.</red>"
@@ -111,12 +137,18 @@ command:
   setspawn:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/setspawn</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Server spawn updated.</green>"
+  smithingtable:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/smithingtable</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual smithing table.</green>"
   spawn:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/spawn [player]</white>"
     not-set: "<gray>[<gold>FoxCore</gold>]</gray> <red>Server spawn is not set or is disabled.</red>"
     not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleported to spawn.</green>"
     success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> teleported you to spawn.</green>"
+  stonecutter:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/stonecutter</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual stonecutter.</green>"
   foxcore:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/foxcore reload</white>"
     reload-success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Configuration and translations reloaded.</green>"
