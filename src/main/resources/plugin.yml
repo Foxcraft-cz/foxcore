@@ -1,0 +1,93 @@
+name: foxcraft
+version: ${version}
+main: me.dragan.foxcore.FoxCraftPlugin
+api-version: "1.21"
+authors: [Dragan]
+description: Lightweight Paper essentials-style utilities.
+
+commands:
+  back:
+    description: Teleport back to your last saved or death location.
+    usage: /back
+    permission: foxcore.back
+  fly:
+    description: Toggle flight for yourself or another player.
+    usage: /fly [player]
+    permission: foxcore.fly
+  setspawn:
+    description: Set the server spawn.
+    usage: /setspawn
+    permission: foxcore.setspawn
+  spawn:
+    description: Teleport to the server spawn.
+    usage: /spawn [player]
+    permission: foxcore.spawn
+  tp:
+    description: Teleport yourself to another online player.
+    usage: /tp <player>
+    permission: foxcore.tp
+  tphere:
+    description: Teleport another online player to you.
+    usage: /tphere <player>
+    permission: foxcore.tphere
+  tpa:
+    description: Send a teleport request to another player.
+    usage: /tpa <player>
+    permission: foxcore.tpa
+  tpahere:
+    description: Send a teleport-here request to another player.
+    usage: /tpahere <player>
+    permission: foxcore.tpahere
+  tpaccept:
+    description: Accept a pending teleport request.
+    usage: /tpaccept [player]
+    permission: foxcore.tpaccept
+  tpadeny:
+    description: Deny a pending teleport request.
+    usage: /tpadeny [player]
+    permission: foxcore.tpadeny
+  foxcore:
+    description: Main FoxCore administration command.
+    usage: /foxcore reload
+    permission: foxcore.reload
+
+permissions:
+  foxcore.back:
+    description: Allows teleporting back to your last saved or death location.
+    default: op
+  foxcore.fly:
+    description: Allows toggling your own flight.
+    default: op
+  foxcore.fly.others:
+    description: Allows toggling another player's flight.
+    default: op
+  foxcore.setspawn:
+    description: Allows setting the server spawn.
+    default: op
+  foxcore.spawn:
+    description: Allows teleporting to the server spawn.
+    default: true
+  foxcore.spawn.others:
+    description: Allows teleporting another player to the server spawn.
+    default: op
+  foxcore.tp:
+    description: Allows teleporting to another player.
+    default: op
+  foxcore.tphere:
+    description: Allows teleporting another player to yourself.
+    default: op
+  foxcore.tpa:
+    description: Allows sending teleport requests.
+    default: op
+  foxcore.tpahere:
+    description: Allows sending teleport-here requests.
+    default: op
+  foxcore.tpaccept:
+    description: Allows accepting teleport requests.
+    default: op
+  foxcore.tpadeny:
+    description: Allows denying teleport requests.
+    default: op
+  foxcore.reload:
+    description: Allows reloading FoxCore configuration and translations.
+    default: op

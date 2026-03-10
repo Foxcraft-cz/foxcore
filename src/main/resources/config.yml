@@ -1,0 +1,37 @@
+storage:
+  type: sqlite
+  sqlite:
+    file: storage/foxcraft.db
+  mysql:
+    host: 127.0.0.1
+    port: 3306
+    database: foxcraft
+    username: root
+    password: ""
+    pool-size: 5
+    table-prefix: foxcraft_
+
+back:
+  prioritize-death: true
+
+spawn:
+  enabled: true
+  on-respawn: false
+  on-join: false
+  on-first-join: false
+  location:
+    world: null
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    yaw: 0.0
+    pitch: 0.0
+
+translations:
+  locale: en
+
+teleport:
+  notify-target: true
+
+tpa:
+  request-expiration-seconds: 60
