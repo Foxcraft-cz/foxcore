@@ -15,6 +15,7 @@ class SqliteBackStorage(
 ) : JdbcBackStorage(
     dataSource = createDataSource(plugin, config),
     tableName = "player_back",
+    homeTableName = "player_home",
 ) {
     override fun createTableSql(): String =
         """
@@ -63,11 +64,30 @@ class SqliteBackStorage(
             death_location_at = excluded.death_location_at
         """.trimIndent()
 
+    override fun createHomeTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $homeTableName (
+            player_uuid TEXT NOT NULL,
+            home_name TEXT NOT NULL,
+            world_name TEXT NOT NULL,
+            x REAL NOT NULL,
+            y REAL NOT NULL,
+            z REAL NOT NULL,
+            yaw REAL NOT NULL,
+            pitch REAL NOT NULL,
+            icon_material TEXT NULL,
+            PRIMARY KEY (player_uuid, home_name)
+        )
+        """.trimIndent()
+
     override fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData) = Unit
 
     override fun migrateSchema(statement: java.sql.Statement) {
         statement.runCatching {
             executeUpdate("ALTER TABLE $tableName ADD COLUMN player_name TEXT NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $homeTableName ADD COLUMN icon_material TEXT NULL")
         }
     }
 

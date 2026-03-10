@@ -19,6 +19,16 @@ Built jar output:
   Teleports you back to your last saved location or death location.
 - `/fly [player]`
   Toggles flight for yourself, or for another player if you have admin permission.
+- `/sethome [name]`
+  Saves your current location as a named home.
+- `/renamehome <old> <new>`
+  Renames one of your saved homes.
+- `/sethomeicon <name> [material]`
+  Changes the icon used for a home in the homes GUI.
+- `/home [name]`
+  Opens your homes menu, or teleports to a specific saved home.
+- `/homes [player]`
+  Lists your homes, or another player's homes with admin permission.
 - `/setspawn`
   Sets the server spawn to your current location.
 - `/spawn [player]`
@@ -60,6 +70,54 @@ Built jar output:
 - World access is controlled by `foxcore.fly.world.<worldname>`.
 - If a player enters a world without that permission, FoxCore disables their flight automatically.
 - Supports tab completion for online players when using the admin form.
+
+### `/sethome [name]`
+- Description: Saves your current location as a home.
+- Player only: yes
+- Permission: `foxcore.sethome`
+- Notes:
+- Without an argument, sets the default home named `home`.
+- Home names are normalized to lowercase.
+- New homes are limited by `homes.default-max-count` unless a higher `foxcore.sethome.limit.<number>` permission is present.
+- Homes are stored in the configured database and survive restarts and reloads.
+
+### `/renamehome <old> <new>`
+- Description: Renames one of your homes.
+- Player only: yes
+- Permission: `foxcore.renamehome`
+- Notes:
+- Preserves the home location and any custom home icon.
+- Rejects renaming if the old home does not exist.
+- Rejects renaming if the target home name already exists.
+
+### `/sethomeicon <name> [material]`
+- Description: Changes the icon shown for a home in the homes GUI.
+- Player only: yes
+- Permission: `foxcore.sethomeicon`
+- Notes:
+- With a material argument, uses that item material as the icon.
+- Without a material argument, uses the item currently held in your main hand.
+- The icon is stored in the database with the home and shown in `/home` and `/homes`.
+
+### `/home [name]`
+- Description: Opens your homes menu or teleports to a specific home.
+- Player only: yes
+- Permission: `foxcore.home`
+- Notes:
+- Without an argument, opens the same paginated homes GUI as `/homes`.
+- With a name, targets one of your named homes directly.
+- Uses the same safe teleport rules as other FoxCore teleports.
+- Supports tab completion from your loaded home list.
+
+### `/homes [player]`
+- Description: Lists saved homes.
+- Player only: self use yes, console only for admin lookup
+- Permission: `foxcore.homes`
+- Notes:
+- `/homes` opens a paginated GUI for your homes.
+- `/homes <player>` opens a paginated admin GUI for another player's homes and requires `foxcore.homes.others`.
+- Clicking a home teleports you to it.
+- Admin lookup works from stored database data, so it can inspect offline players too.
 
 ### `/setspawn`
 - Description: Sets the server spawn to your current location.
@@ -163,6 +221,40 @@ Built jar output:
 - Default: `op`
 - Allows toggling another player's flight.
 
+### `foxcore.home`
+- Default: `true`
+- Allows teleporting to your own homes.
+
+### `foxcore.homes`
+- Default: `true`
+- Allows listing your own homes.
+
+### `foxcore.homes.others`
+- Default: `op`
+- Allows listing another player's homes.
+
+### `foxcore.renamehome`
+- Default: `true`
+- Allows renaming homes.
+
+### `foxcore.sethome`
+- Default: `true`
+- Allows setting homes.
+
+### `foxcore.sethomeicon`
+- Default: `true`
+- Allows changing the icon used for homes.
+
+### `foxcore.sethome.limit.<number>`
+- Default: none
+- Sets the maximum number of homes a player may have.
+- Highest granted numeric limit wins.
+- Example: `foxcore.sethome.limit.5`
+
+### `foxcore.sethome.limit.unlimited`
+- Default: `op`
+- Allows setting unlimited homes.
+
 ### `foxcore.fly.world.<worldname>`
 - Default: none
 - Allows flight in a specific world.
@@ -234,6 +326,9 @@ storage:
 back:
   prioritize-death: true
 
+homes:
+  default-max-count: 1
+
 spawn:
   enabled: true
   on-respawn: false
@@ -277,6 +372,10 @@ tpa:
 ### `back.prioritize-death`
 - If `true`, `/back` prefers the death location when it is as recent or newer than the regular saved location.
 
+### `homes.default-max-count`
+- Default maximum number of homes for players without a `foxcore.sethome.limit.<number>` permission.
+- Replacing an existing home with the same name is always allowed.
+
 ### `spawn.enabled`
 - Enables or disables the server spawn system entirely.
 
@@ -316,3 +415,4 @@ tpa:
 - Only `/tp` supports offline target lookup. Other teleport commands require online players.
 - Teleport requests are stored in memory only and do not survive a restart or reload.
 - Player back-state persistence supports SQLite and MySQL only.
+- Homes are persisted in the same SQLite/MySQL storage backend as back-location data.

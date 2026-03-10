@@ -14,6 +14,26 @@ commands:
     description: Toggle flight for yourself or another player.
     usage: /fly [player]
     permission: foxcore.fly
+  home:
+    description: Teleport to one of your homes.
+    usage: /home [name]
+    permission: foxcore.home
+  homes:
+    description: List your homes or another player's homes.
+    usage: /homes [player]
+    permission: foxcore.homes
+  renamehome:
+    description: Rename one of your homes.
+    usage: /renamehome <old> <new>
+    permission: foxcore.renamehome
+  sethome:
+    description: Set a home at your current location.
+    usage: /sethome [name]
+    permission: foxcore.sethome
+  sethomeicon:
+    description: Change the icon used for a home in the homes GUI.
+    usage: /sethomeicon <name> [material]
+    permission: foxcore.sethomeicon
   setspawn:
     description: Set the server spawn.
     usage: /setspawn
@@ -60,6 +80,27 @@ permissions:
     default: op
   foxcore.fly.others:
     description: Allows toggling another player's flight.
+    default: op
+  foxcore.home:
+    description: Allows teleporting to your own homes.
+    default: true
+  foxcore.homes:
+    description: Allows listing your own homes.
+    default: true
+  foxcore.homes.others:
+    description: Allows listing another player's homes.
+    default: op
+  foxcore.renamehome:
+    description: Allows renaming homes.
+    default: true
+  foxcore.sethome:
+    description: Allows setting homes.
+    default: true
+  foxcore.sethomeicon:
+    description: Allows changing the icon used for homes.
+    default: true
+  foxcore.sethome.limit.unlimited:
+    description: Allows setting unlimited homes.
     default: op
   foxcore.setspawn:
     description: Allows setting the server spawn.

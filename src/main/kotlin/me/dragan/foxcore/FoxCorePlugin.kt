@@ -5,7 +5,12 @@ import me.dragan.foxcore.back.BackService
 import me.dragan.foxcore.back.storage.StorageFactory
 import me.dragan.foxcore.command.FoxCoreCommand
 import me.dragan.foxcore.command.FlyCommand
+import me.dragan.foxcore.command.HomeCommand
+import me.dragan.foxcore.command.HomesCommand
+import me.dragan.foxcore.command.RenameHomeCommand
 import me.dragan.foxcore.command.SetSpawnCommand
+import me.dragan.foxcore.command.SetHomeIconCommand
+import me.dragan.foxcore.command.SetHomeCommand
 import me.dragan.foxcore.command.SpawnCommand
 import me.dragan.foxcore.command.TpAcceptCommand
 import me.dragan.foxcore.command.TpaCommand
@@ -15,8 +20,10 @@ import me.dragan.foxcore.command.TeleportCommand
 import me.dragan.foxcore.command.TeleportHereCommand
 import me.dragan.foxcore.config.MessageService
 import me.dragan.foxcore.config.YamlResourceSynchronizer
+import me.dragan.foxcore.gui.GuiManager
 import me.dragan.foxcore.listener.BackTrackingListener
 import me.dragan.foxcore.listener.FlyPermissionListener
+import me.dragan.foxcore.listener.GuiListener
 import me.dragan.foxcore.listener.SpawnJoinListener
 import me.dragan.foxcore.listener.SpawnRespawnListener
 import me.dragan.foxcore.listener.TpaRequestCleanupListener
@@ -30,6 +37,8 @@ class FoxCorePlugin : JavaPlugin() {
     lateinit var backService: BackService
         private set
     lateinit var messages: MessageService
+        private set
+    lateinit var guiManager: GuiManager
         private set
     lateinit var safeTeleports: SafeTeleportService
         private set
@@ -48,6 +57,7 @@ class FoxCorePlugin : JavaPlugin() {
         val storage = StorageFactory.create(this, config)
         storage.initialize()
         backService = BackService(this, storage)
+        guiManager = GuiManager()
         tpaRequests = TpaRequestService()
         safeTeleports = SafeTeleportService(this)
         spawnService = SpawnService(this)
@@ -55,6 +65,11 @@ class FoxCorePlugin : JavaPlugin() {
 
         registerCommand("back", BackCommand(this))
         registerCommand("fly", FlyCommand(this))
+        registerCommand("home", HomeCommand(this))
+        registerCommand("homes", HomesCommand(this))
+        registerCommand("renamehome", RenameHomeCommand(this))
+        registerCommand("sethome", SetHomeCommand(this))
+        registerCommand("sethomeicon", SetHomeIconCommand(this))
         registerCommand("setspawn", SetSpawnCommand(this))
         registerCommand("spawn", SpawnCommand(this))
         registerCommand("tp", TeleportCommand(this))
@@ -67,6 +82,7 @@ class FoxCorePlugin : JavaPlugin() {
         server.onlinePlayers.forEach { backService.loadPlayer(it.uniqueId) }
         server.pluginManager.registerEvents(BackTrackingListener(this), this)
         server.pluginManager.registerEvents(FlyPermissionListener(this), this)
+        server.pluginManager.registerEvents(GuiListener(this), this)
         server.pluginManager.registerEvents(SpawnJoinListener(this), this)
         server.pluginManager.registerEvents(SpawnRespawnListener(this), this)
         server.pluginManager.registerEvents(TpaRequestCleanupListener(this), this)

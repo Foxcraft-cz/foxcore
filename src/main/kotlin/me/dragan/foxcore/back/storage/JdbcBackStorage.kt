@@ -3,6 +3,7 @@ package me.dragan.foxcore.back.storage
 import com.zaxxer.hikari.HikariDataSource
 import me.dragan.foxcore.back.BackData
 import me.dragan.foxcore.back.StoredLocation
+import me.dragan.foxcore.home.HomeData
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
@@ -11,12 +12,14 @@ import java.util.UUID
 abstract class JdbcBackStorage(
     private val dataSource: HikariDataSource,
     protected val tableName: String,
+    protected val homeTableName: String,
 ) : BackStorage {
 
     override fun initialize() {
         dataSource.connection.use { connection ->
             connection.createStatement().use { statement ->
                 statement.executeUpdate(createTableSql())
+                statement.executeUpdate(createHomeTableSql())
                 migrateSchema(statement)
             }
         }
@@ -31,8 +34,9 @@ abstract class JdbcBackStorage(
                         return null
                     }
 
+                    val playerUuid = result.getString("player_uuid")
                     return BackData(
-                        playerId = result.getString("player_uuid"),
+                        playerId = playerUuid,
                         playerName = result.getString("player_name"),
                         lastLocation = readLocation(
                             world = result.getString("last_world"),
@@ -52,6 +56,7 @@ abstract class JdbcBackStorage(
                             pitch = result.getFloat("death_pitch"),
                         ),
                         lastDeathAtMillis = result.getLongOrNull("death_location_at"),
+                        homes = loadHomes(connection, playerUuid),
                     )
                 }
             }
@@ -67,8 +72,9 @@ abstract class JdbcBackStorage(
                         return null
                     }
 
+                    val playerUuid = result.getString("player_uuid")
                     return BackData(
-                        playerId = result.getString("player_uuid"),
+                        playerId = playerUuid,
                         playerName = result.getString("player_name"),
                         lastLocation = readLocation(
                             world = result.getString("last_world"),
@@ -88,6 +94,7 @@ abstract class JdbcBackStorage(
                             pitch = result.getFloat("death_pitch"),
                         ),
                         lastDeathAtMillis = result.getLongOrNull("death_location_at"),
+                        homes = loadHomes(connection, playerUuid),
                     )
                 }
             }
@@ -96,10 +103,36 @@ abstract class JdbcBackStorage(
 
     override fun save(playerId: UUID, data: BackData) {
         dataSource.connection.use { connection ->
-            connection.prepareStatement(upsertSql()).use { statement ->
-                fillBaseColumns(statement, playerId, data)
-                bindUpsertTail(statement, playerId, data)
-                statement.executeUpdate()
+            val previousAutoCommit = connection.autoCommit
+            connection.autoCommit = false
+            try {
+                connection.prepareStatement(upsertSql()).use { statement ->
+                    fillBaseColumns(statement, playerId, data)
+                    bindUpsertTail(statement, playerId, data)
+                    statement.executeUpdate()
+                }
+                connection.prepareStatement(deleteHomesSql()).use { statement ->
+                    statement.setString(1, playerId.toString())
+                    statement.executeUpdate()
+                }
+                connection.prepareStatement(insertHomeSql()).use { statement ->
+                    data.homes.entries
+                        .sortedBy { it.key }
+                        .forEach { (homeName, homeData) ->
+                            statement.setString(1, playerId.toString())
+                            statement.setString(2, homeName)
+                            bindLocation(statement, 3, homeData.location)
+                            statement.setString(9, homeData.iconMaterialKey)
+                            statement.addBatch()
+                        }
+                    statement.executeBatch()
+                }
+                connection.commit()
+            } catch (exception: Exception) {
+                connection.rollback()
+                throw exception
+            } finally {
+                connection.autoCommit = previousAutoCommit
             }
         }
     }
@@ -109,6 +142,8 @@ abstract class JdbcBackStorage(
     }
 
     protected abstract fun createTableSql(): String
+
+    protected abstract fun createHomeTableSql(): String
 
     protected abstract fun upsertSql(): String
 
@@ -134,6 +169,20 @@ abstract class JdbcBackStorage(
         WHERE LOWER(player_name) = ?
         ORDER BY COALESCE(last_location_at, 0) DESC
         LIMIT 1
+        """.trimIndent()
+
+    protected open fun deleteHomesSql(): String =
+        """
+        DELETE FROM $homeTableName
+        WHERE player_uuid = ?
+        """.trimIndent()
+
+    protected open fun insertHomeSql(): String =
+        """
+        INSERT INTO $homeTableName (
+            player_uuid, home_name,
+            world_name, x, y, z, yaw, pitch, icon_material
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
     protected fun fillBaseColumns(statement: PreparedStatement, playerId: UUID, data: BackData) {
@@ -186,4 +235,36 @@ abstract class JdbcBackStorage(
         val value = getLong(column)
         return if (wasNull()) null else value
     }
+
+    private fun loadHomes(connection: java.sql.Connection, playerId: String): Map<String, HomeData> {
+        connection.prepareStatement(selectHomesSql()).use { statement ->
+            statement.setString(1, playerId)
+            statement.executeQuery().use { result ->
+                val homes = linkedMapOf<String, HomeData>()
+                while (result.next()) {
+                    val location = readLocation(
+                        world = result.getString("world_name"),
+                        x = result.getDouble("x"),
+                        y = result.getDouble("y"),
+                        z = result.getDouble("z"),
+                        yaw = result.getFloat("yaw"),
+                        pitch = result.getFloat("pitch"),
+                    ) ?: continue
+                    homes[result.getString("home_name")] = HomeData(
+                        location = location,
+                        iconMaterialKey = result.getString("icon_material"),
+                    )
+                }
+                return homes.toSortedMap()
+            }
+        }
+    }
+
+    private fun selectHomesSql(): String =
+        """
+        SELECT home_name, world_name, x, y, z, yaw, pitch, icon_material
+        FROM $homeTableName
+        WHERE player_uuid = ?
+        ORDER BY home_name ASC
+        """.trimIndent()
 }
