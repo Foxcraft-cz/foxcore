@@ -5,6 +5,8 @@ import me.dragan.foxcore.back.BackService
 import me.dragan.foxcore.back.storage.StorageFactory
 import me.dragan.foxcore.command.FoxCoreCommand
 import me.dragan.foxcore.command.FlyCommand
+import me.dragan.foxcore.command.DeleteHomeCommand
+import me.dragan.foxcore.command.GamemodeShortcutCommand
 import me.dragan.foxcore.command.HomeCommand
 import me.dragan.foxcore.command.HomesCommand
 import me.dragan.foxcore.command.RenameHomeCommand
@@ -24,12 +26,14 @@ import me.dragan.foxcore.gui.GuiManager
 import me.dragan.foxcore.listener.BackTrackingListener
 import me.dragan.foxcore.listener.FlyPermissionListener
 import me.dragan.foxcore.listener.GuiListener
+import me.dragan.foxcore.listener.JoinMessageListener
 import me.dragan.foxcore.listener.SpawnJoinListener
 import me.dragan.foxcore.listener.SpawnRespawnListener
 import me.dragan.foxcore.listener.TpaRequestCleanupListener
 import me.dragan.foxcore.spawn.SpawnService
 import me.dragan.foxcore.teleport.SafeTeleportService
 import me.dragan.foxcore.tpa.TpaRequestService
+import org.bukkit.GameMode
 import org.bukkit.command.PluginCommand
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -64,7 +68,12 @@ class FoxCorePlugin : JavaPlugin() {
         messages = MessageService(this).also { it.reload() }
 
         registerCommand("back", BackCommand(this))
+        registerCommand("delhome", DeleteHomeCommand(this))
         registerCommand("fly", FlyCommand(this))
+        registerCommand("gma", GamemodeShortcutCommand(this, GameMode.ADVENTURE, "gma", "foxcore.gma", "foxcore.gma.others"))
+        registerCommand("gmc", GamemodeShortcutCommand(this, GameMode.CREATIVE, "gmc", "foxcore.gmc", "foxcore.gmc.others"))
+        registerCommand("gms", GamemodeShortcutCommand(this, GameMode.SURVIVAL, "gms", "foxcore.gms", "foxcore.gms.others"))
+        registerCommand("gmsp", GamemodeShortcutCommand(this, GameMode.SPECTATOR, "gmsp", "foxcore.gmsp", "foxcore.gmsp.others"))
         registerCommand("home", HomeCommand(this))
         registerCommand("homes", HomesCommand(this))
         registerCommand("renamehome", RenameHomeCommand(this))
@@ -83,6 +92,7 @@ class FoxCorePlugin : JavaPlugin() {
         server.pluginManager.registerEvents(BackTrackingListener(this), this)
         server.pluginManager.registerEvents(FlyPermissionListener(this), this)
         server.pluginManager.registerEvents(GuiListener(this), this)
+        server.pluginManager.registerEvents(JoinMessageListener(this), this)
         server.pluginManager.registerEvents(SpawnJoinListener(this), this)
         server.pluginManager.registerEvents(SpawnRespawnListener(this), this)
         server.pluginManager.registerEvents(TpaRequestCleanupListener(this), this)
@@ -92,6 +102,7 @@ class FoxCorePlugin : JavaPlugin() {
     fun reloadPlugin() {
         syncBundledFiles()
         reloadConfig()
+        spawnService.reload()
         messages.reload()
     }
 

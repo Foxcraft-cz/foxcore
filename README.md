@@ -17,8 +17,14 @@ Built jar output:
 ## Current functionality
 - `/back`
   Teleports you back to your last saved location or death location.
+- `/delhome <home>`
+  Deletes one of your saved homes.
+- `/delhome <player> <home>`
+  Admin form for deleting another player's home.
 - `/fly [player]`
   Toggles flight for yourself, or for another player if you have admin permission.
+- `/gms [player]`, `/gmc [player]`, `/gma [player]`, `/gmsp [player]`
+  Gamemode shortcuts for yourself or another player.
 - `/sethome [name]`
   Saves your current location as a named home.
 - `/renamehome <old> <new>`
@@ -60,6 +66,15 @@ Built jar output:
 - If you are flying, you are kept in the air.
 - If you are not flying, FoxCore tries to place you on safe ground and cancels the teleport if none is found.
 
+### `/delhome <home>` and `/delhome <player> <home>`
+- Description: Deletes saved homes.
+- Player only: self use yes, console only for admin delete
+- Permission: `foxcore.delhome`
+- Notes:
+- `/delhome <home>` deletes one of your own homes.
+- `/delhome <player> <home>` deletes another player's home and requires `foxcore.delhome.others`.
+- Admin deletion works from stored database data, so it can target offline players too.
+
 ### `/fly [player]`
 - Description: Toggles flight for yourself or another online player.
 - Player only: self use yes, console no
@@ -70,6 +85,19 @@ Built jar output:
 - World access is controlled by `foxcore.fly.world.<worldname>`.
 - If a player enters a world without that permission, FoxCore disables their flight automatically.
 - Supports tab completion for online players when using the admin form.
+
+### `/gms [player]`, `/gmc [player]`, `/gma [player]`, `/gmsp [player]`
+- Description: Sets a gamemode using shortcut commands.
+- Player only: self use yes, console only for targeting others
+- Permissions:
+- `foxcore.gms`, `foxcore.gms.others`
+- `foxcore.gmc`, `foxcore.gmc.others`
+- `foxcore.gma`, `foxcore.gma.others`
+- `foxcore.gmsp`, `foxcore.gmsp.others`
+- Notes:
+- Without an argument, changes your own gamemode.
+- With a player argument, changes another online player's gamemode.
+- Uses one generic shortcut executor internally so future shortcuts can reuse the same target and permission handling.
 
 ### `/sethome [name]`
 - Description: Saves your current location as a home.
@@ -213,6 +241,14 @@ Built jar output:
 - Default: `op`
 - Allows teleporting back to your last saved or death location.
 
+### `foxcore.delhome`
+- Default: `true`
+- Allows deleting your own homes.
+
+### `foxcore.delhome.others`
+- Default: `op`
+- Allows deleting another player's homes.
+
 ### `foxcore.fly`
 - Default: `op`
 - Allows toggling your own flight.
@@ -220,6 +256,14 @@ Built jar output:
 ### `foxcore.fly.others`
 - Default: `op`
 - Allows toggling another player's flight.
+
+### `foxcore.gms`, `foxcore.gmc`, `foxcore.gma`, `foxcore.gmsp`
+- Default: `op`
+- Allow setting your own gamemode with the corresponding shortcut command.
+
+### `foxcore.gms.others`, `foxcore.gmc.others`, `foxcore.gma.others`, `foxcore.gmsp.others`
+- Default: `op`
+- Allow setting another player's gamemode with the corresponding shortcut command.
 
 ### `foxcore.home`
 - Default: `true`
@@ -329,6 +373,12 @@ back:
 homes:
   default-max-count: 1
 
+join-messages:
+  join-broadcast-enabled: true
+  first-join-broadcast-enabled: true
+  quit-broadcast-enabled: true
+  personal-enabled: true
+
 spawn:
   enabled: true
   on-respawn: false
@@ -376,6 +426,19 @@ tpa:
 - Default maximum number of homes for players without a `foxcore.sethome.limit.<number>` permission.
 - Replacing an existing home with the same name is always allowed.
 
+### `join-messages.join-broadcast-enabled`
+- Enables or disables the broadcast join message shown to other players.
+
+### `join-messages.first-join-broadcast-enabled`
+- Enables or disables the special first-join broadcast shown to other players.
+
+### `join-messages.quit-broadcast-enabled`
+- Enables or disables the logout broadcast shown to other players.
+
+### `join-messages.personal-enabled`
+- Enables or disables the personal multi-line welcome shown to the joining player.
+- The default translation includes server info and command hints.
+
 ### `spawn.enabled`
 - Enables or disables the server spawn system entirely.
 
@@ -404,6 +467,7 @@ tpa:
 - Runtime translations are stored in `plugins/foxcore/translations/`.
 - Current bundled file:
 - `messages_en.yml`
+- Join/quit broadcasts and the personal welcome lines are editable in `event.join.*` and `event.quit.*`.
 
 ## Config synchronization
 - Bundled YAML files are synchronized on startup and `/foxcore reload`.

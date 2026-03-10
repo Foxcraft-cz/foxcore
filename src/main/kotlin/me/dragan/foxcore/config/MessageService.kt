@@ -37,6 +37,26 @@ class MessageService(
         return miniMessage.deserialize(message)
     }
 
+    fun lines(path: String, vararg placeholders: Pair<String, String>): List<Component> {
+        val rawLines = when {
+            messages.isList(path) -> messages.getStringList(path)
+            fallbackMessages.isList(path) -> fallbackMessages.getStringList(path)
+            else -> listOf(
+                messages.getString(path)
+                    ?: fallbackMessages.getString(path)
+                    ?: "<red>Missing translation: $path</red>",
+            )
+        }
+
+        return rawLines.map { rawLine ->
+            var message = rawLine
+            for ((key, value) in placeholders) {
+                message = message.replace("%$key%", value)
+            }
+            miniMessage.deserialize(message)
+        }
+    }
+
     private fun ensureTranslationExists(locale: String): String {
         val fileName = "messages_${locale.lowercase()}.yml"
         val resourcePath = "$translationsFolder/$fileName"

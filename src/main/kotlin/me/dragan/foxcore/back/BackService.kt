@@ -3,6 +3,7 @@ package me.dragan.foxcore.back
 import me.dragan.foxcore.back.storage.BackStorage
 import me.dragan.foxcore.home.HomeBrowseResult
 import me.dragan.foxcore.home.HomeData
+import me.dragan.foxcore.home.HomeDeleteResult
 import me.dragan.foxcore.home.HomeIconChangeResult
 import me.dragan.foxcore.home.HomeListResult
 import me.dragan.foxcore.home.HomeLookupResult
@@ -217,6 +218,54 @@ class BackService(
         )
         persist(playerId, updated)
         return HomeIconChangeResult.Success(normalizedName, material.key.toString())
+    }
+
+    fun deleteHome(player: Player, homeName: String): HomeDeleteResult {
+        val playerId = player.uniqueId
+        if (!loaded.contains(playerId)) {
+            return HomeDeleteResult.Loading
+        }
+
+        val normalizedName = HomeNames.normalize(homeName)
+        val current = current(playerId)
+        if (!current.homes.containsKey(normalizedName)) {
+            return HomeDeleteResult.HomeNotFound(player.name, normalizedName)
+        }
+
+        val updated = current.copy(
+            playerName = player.name,
+            homes = current.homes
+                .toMutableMap()
+                .apply { remove(normalizedName) }
+                .toSortedMap(),
+        )
+        persist(playerId, updated)
+        return HomeDeleteResult.Success(player.name, normalizedName)
+    }
+
+    fun deleteHomeByLastKnownName(playerName: String, homeName: String, callback: (HomeDeleteResult) -> Unit) {
+        executor.execute {
+            val data = storage.findByLastKnownName(playerName)
+            val result = when {
+                data == null -> HomeDeleteResult.PlayerNotFound(playerName)
+                !data.homes.containsKey(homeName) -> HomeDeleteResult.HomeNotFound(data.playerName ?: playerName, homeName)
+                else -> {
+                    val playerId = UUID.fromString(data.playerId)
+                    val updated = data.copy(
+                        homes = data.homes
+                            .toMutableMap()
+                            .apply { remove(homeName) }
+                            .toSortedMap(),
+                    )
+                    cache[playerId] = updated
+                    loaded.add(playerId)
+                    storage.save(playerId, updated)
+                    HomeDeleteResult.Success(data.playerName ?: playerName, homeName)
+                }
+            }
+
+            plugin.server.scheduler.runTask(plugin, Runnable { callback(result) })
+        }
     }
 
     fun renameHome(player: Player, oldHomeName: String, newHomeName: String): HomeRenameResult {

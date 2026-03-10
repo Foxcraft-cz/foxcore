@@ -1,5 +1,18 @@
 prefix: "<gray>[<gold>FoxCore</gold>]</gray> "
 
+event:
+  join:
+    broadcast: "<gray>[<gold>+</gold>]</gray> <green><white>%player%</white> joined the server.</green>"
+    first-broadcast: "<gray>[<gold>★</gold>]</gray> <gold><white>%player%</white> joined the server for the first time.</gold>"
+    personal-lines:
+      - "<dark_gray>--------------------------------------------------</dark_gray>"
+      - "<gold>Welcome, <white>%player%</white>!</gold> <gray>You are now on <white>%server%</white>.</gray>"
+      - "<gray>Online players:</gray> <white>%online%</white><gray>/</gray><white>%max%</white>"
+      - "<gray>Useful commands:</gray> <white>/spawn</white><gray>,</gray> <white>/home</white><gray>,</gray> <white>/homes</white>"
+      - "<dark_gray>--------------------------------------------------</dark_gray>"
+  quit:
+    broadcast: "<gray>[<gold>-</gold>]</gray> <red><white>%player%</white> left the server.</red>"
+
 error:
   no-permission: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have permission to do that.</red>"
   player-only: "<gray>[<gold>FoxCore</gold>]</gray> <red>Only players can use this command.</red>"
@@ -15,6 +28,15 @@ command:
     none: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have a saved back location.</red>"
     missing-world: "<gray>[<gold>FoxCore</gold>]</gray> <red>The saved world <white>%world%</white> is not available.</red>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleported you back.</green>"
+  delhome:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/delhome &lt;home&gt;</white> <gray>or</gray> <white>/delhome &lt;player&gt; &lt;home&gt;</white>"
+    invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>That is not a valid home name.</red>"
+    loading: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Home data is still loading. Try again in a moment.</yellow>"
+    player-not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>No stored home data was found for <white>%player%</white>.</red>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have a home named <white>%home%</white>.</red>"
+    not-found-other: "<gray>[<gold>FoxCore</gold>]</gray> <red><white>%player%</white> does not have a home named <white>%home%</white>.</red>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Deleted home <white>%home%</white>.</green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Deleted home <white>%home%</white> from <white>%player%</white>.</green>"
   fly:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/fly [player]</white>"
     not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
@@ -27,6 +49,28 @@ command:
     enabled-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> enabled your flight.</green>"
     disabled-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <yellow><white>%player%</white> disabled your flight.</yellow>"
     disabled-world: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Flight was disabled because world <white>%world%</white> does not allow it for you.</yellow>"
+  gamemode:
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
+    gma:
+      usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/gma [player]</white>"
+      success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Gamemode set to adventure.</green>"
+      success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set <white>%player%</white> to adventure mode.</green>"
+      success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> set your gamemode to adventure.</green>"
+    gmc:
+      usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/gmc [player]</white>"
+      success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Gamemode set to creative.</green>"
+      success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set <white>%player%</white> to creative mode.</green>"
+      success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> set your gamemode to creative.</green>"
+    gms:
+      usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/gms [player]</white>"
+      success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Gamemode set to survival.</green>"
+      success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set <white>%player%</white> to survival mode.</green>"
+      success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> set your gamemode to survival.</green>"
+    gmsp:
+      usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/gmsp [player]</white>"
+      success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Gamemode set to spectator.</green>"
+      success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set <white>%player%</white> to spectator mode.</green>"
+      success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> set your gamemode to spectator.</green>"
   sethome:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/sethome [name]</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Home names must use only letters, numbers, underscores, or dashes and be at most 32 characters long.</red>"

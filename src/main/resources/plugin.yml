@@ -10,10 +10,30 @@ commands:
     description: Teleport back to your last saved or death location.
     usage: /back
     permission: foxcore.back
+  delhome:
+    description: Delete one of your homes or another player's home.
+    usage: /delhome <home> | /delhome <player> <home>
+    permission: foxcore.delhome
   fly:
     description: Toggle flight for yourself or another player.
     usage: /fly [player]
     permission: foxcore.fly
+  gma:
+    description: Set your own or another player's gamemode to adventure.
+    usage: /gma [player]
+    permission: foxcore.gma
+  gmc:
+    description: Set your own or another player's gamemode to creative.
+    usage: /gmc [player]
+    permission: foxcore.gmc
+  gms:
+    description: Set your own or another player's gamemode to survival.
+    usage: /gms [player]
+    permission: foxcore.gms
+  gmsp:
+    description: Set your own or another player's gamemode to spectator.
+    usage: /gmsp [player]
+    permission: foxcore.gmsp
   home:
     description: Teleport to one of your homes.
     usage: /home [name]
@@ -75,11 +95,41 @@ permissions:
   foxcore.back:
     description: Allows teleporting back to your last saved or death location.
     default: op
+  foxcore.delhome:
+    description: Allows deleting your own homes.
+    default: true
+  foxcore.delhome.others:
+    description: Allows deleting another player's homes.
+    default: op
   foxcore.fly:
     description: Allows toggling your own flight.
     default: op
   foxcore.fly.others:
     description: Allows toggling another player's flight.
+    default: op
+  foxcore.gma:
+    description: Allows setting your own gamemode to adventure.
+    default: op
+  foxcore.gma.others:
+    description: Allows setting another player's gamemode to adventure.
+    default: op
+  foxcore.gmc:
+    description: Allows setting your own gamemode to creative.
+    default: op
+  foxcore.gmc.others:
+    description: Allows setting another player's gamemode to creative.
+    default: op
+  foxcore.gms:
+    description: Allows setting your own gamemode to survival.
+    default: op
+  foxcore.gms.others:
+    description: Allows setting another player's gamemode to survival.
+    default: op
+  foxcore.gmsp:
+    description: Allows setting your own gamemode to spectator.
+    default: op
+  foxcore.gmsp.others:
+    description: Allows setting another player's gamemode to spectator.
     default: op
   foxcore.home:
     description: Allows teleporting to your own homes.

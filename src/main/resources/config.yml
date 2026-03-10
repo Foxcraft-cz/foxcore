@@ -17,13 +17,19 @@ back:
 homes:
   default-max-count: 1
 
+join-messages:
+  join-broadcast-enabled: true
+  first-join-broadcast-enabled: true
+  quit-broadcast-enabled: true
+  personal-enabled: true
+
 spawn:
   enabled: true
   on-respawn: false
   on-join: false
   on-first-join: false
   location:
-    world: null
+    world: ""
     x: 0.0
     y: 0.0
     z: 0.0
