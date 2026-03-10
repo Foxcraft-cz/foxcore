@@ -17,6 +17,7 @@ abstract class JdbcBackStorage(
         dataSource.connection.use { connection ->
             connection.createStatement().use { statement ->
                 statement.executeUpdate(createTableSql())
+                migrateSchema(statement)
             }
         }
     }
@@ -32,6 +33,43 @@ abstract class JdbcBackStorage(
 
                     return BackData(
                         playerId = result.getString("player_uuid"),
+                        playerName = result.getString("player_name"),
+                        lastLocation = readLocation(
+                            world = result.getString("last_world"),
+                            x = result.getDouble("last_x"),
+                            y = result.getDouble("last_y"),
+                            z = result.getDouble("last_z"),
+                            yaw = result.getFloat("last_yaw"),
+                            pitch = result.getFloat("last_pitch"),
+                        ),
+                        lastLocationAtMillis = result.getLongOrNull("last_location_at"),
+                        lastDeathLocation = readLocation(
+                            world = result.getString("death_world"),
+                            x = result.getDouble("death_x"),
+                            y = result.getDouble("death_y"),
+                            z = result.getDouble("death_z"),
+                            yaw = result.getFloat("death_yaw"),
+                            pitch = result.getFloat("death_pitch"),
+                        ),
+                        lastDeathAtMillis = result.getLongOrNull("death_location_at"),
+                    )
+                }
+            }
+        }
+    }
+
+    override fun findByLastKnownName(name: String): BackData? {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(findByNameSql()).use { statement ->
+                statement.setString(1, name.lowercase())
+                statement.executeQuery().use { result ->
+                    if (!result.next()) {
+                        return null
+                    }
+
+                    return BackData(
+                        playerId = result.getString("player_uuid"),
+                        playerName = result.getString("player_name"),
                         lastLocation = readLocation(
                             world = result.getString("last_world"),
                             x = result.getDouble("last_x"),
@@ -76,21 +114,35 @@ abstract class JdbcBackStorage(
 
     protected abstract fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData)
 
+    protected abstract fun migrateSchema(statement: java.sql.Statement)
+
     protected open fun selectSql(): String =
         """
-        SELECT player_uuid,
+        SELECT player_uuid, player_name,
                last_world, last_x, last_y, last_z, last_yaw, last_pitch, last_location_at,
                death_world, death_x, death_y, death_z, death_yaw, death_pitch, death_location_at
         FROM $tableName
         WHERE player_uuid = ?
         """.trimIndent()
 
+    protected open fun findByNameSql(): String =
+        """
+        SELECT player_uuid, player_name,
+               last_world, last_x, last_y, last_z, last_yaw, last_pitch, last_location_at,
+               death_world, death_x, death_y, death_z, death_yaw, death_pitch, death_location_at
+        FROM $tableName
+        WHERE LOWER(player_name) = ?
+        ORDER BY COALESCE(last_location_at, 0) DESC
+        LIMIT 1
+        """.trimIndent()
+
     protected fun fillBaseColumns(statement: PreparedStatement, playerId: UUID, data: BackData) {
         statement.setString(1, playerId.toString())
-        bindLocation(statement, 2, data.lastLocation)
-        bindLong(statement, 8, data.lastLocationAtMillis)
-        bindLocation(statement, 9, data.lastDeathLocation)
-        bindLong(statement, 15, data.lastDeathAtMillis)
+        statement.setString(2, data.playerName)
+        bindLocation(statement, 3, data.lastLocation)
+        bindLong(statement, 9, data.lastLocationAtMillis)
+        bindLocation(statement, 10, data.lastDeathLocation)
+        bindLong(statement, 16, data.lastDeathAtMillis)
     }
 
     protected fun bindLocation(statement: PreparedStatement, startIndex: Int, location: StoredLocation?) {
@@ -135,4 +187,3 @@ abstract class JdbcBackStorage(
         return if (wasNull()) null else value
     }
 }
-

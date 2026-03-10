@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Project identity
-- Project name: `foxcraft`
+- Project name: `foxcore`
 - Package/group: `me.dragan.foxcore`
 - Platform: Paper `1.21.11`
 - Language/build: Kotlin with Gradle

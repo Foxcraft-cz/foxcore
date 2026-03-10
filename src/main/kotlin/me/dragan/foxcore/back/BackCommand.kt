@@ -1,6 +1,6 @@
 package me.dragan.foxcore.back
 
-import me.dragan.foxcore.FoxCraftPlugin
+import me.dragan.foxcore.FoxCorePlugin
 import me.dragan.foxcore.teleport.SafeTeleportResult
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -8,7 +8,7 @@ import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
 class BackCommand(
-    private val plugin: FoxCraftPlugin,
+    private val plugin: FoxCorePlugin,
 ) : TabExecutor {
     override fun onCommand(
         sender: CommandSender,

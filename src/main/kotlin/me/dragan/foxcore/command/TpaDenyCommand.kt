@@ -1,6 +1,6 @@
 package me.dragan.foxcore.command
 
-import me.dragan.foxcore.FoxCraftPlugin
+import me.dragan.foxcore.FoxCorePlugin
 import me.dragan.foxcore.tpa.TpaResolveStatus
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -8,7 +8,7 @@ import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
 class TpaDenyCommand(
-    private val plugin: FoxCraftPlugin,
+    private val plugin: FoxCorePlugin,
 ) : TabExecutor {
 
     override fun onCommand(
@@ -79,4 +79,3 @@ class TpaDenyCommand(
             .sorted()
     }
 }
-

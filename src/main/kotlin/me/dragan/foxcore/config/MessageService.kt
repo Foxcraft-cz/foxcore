@@ -1,13 +1,13 @@
 package me.dragan.foxcore.config
 
-import me.dragan.foxcore.FoxCraftPlugin
+import me.dragan.foxcore.FoxCorePlugin
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 class MessageService(
-    private val plugin: FoxCraftPlugin,
+    private val plugin: FoxCorePlugin,
 ) {
     private val translationsFolder = "translations"
     private val miniMessage = MiniMessage.miniMessage()

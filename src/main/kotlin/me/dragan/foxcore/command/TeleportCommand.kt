@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
-import me.dragan.foxcore.FoxCraftPlugin
+import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.back.OfflineLocationLookup
 import me.dragan.foxcore.teleport.SafeTeleportResult
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -9,7 +10,7 @@ import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
 class TeleportCommand(
-    private val plugin: FoxCraftPlugin,
+    private val plugin: FoxCorePlugin,
 ) : TabExecutor {
 
     override fun onCommand(
@@ -33,17 +34,68 @@ class TeleportCommand(
             return true
         }
 
-        val target = findOnlinePlayer(args[0])
-        if (target == null) {
-            player.sendMessage(plugin.messages.text("command.tp.not-found", "player" to args[0]))
-            return true
-        }
-
-        if (target.uniqueId == player.uniqueId) {
+        if (args[0].equals(player.name, ignoreCase = true)) {
             player.sendMessage(plugin.messages.text("command.tp.self"))
             return true
         }
 
+        val target = findOnlinePlayer(args[0])
+        if (target != null) {
+            return teleportToOnlineTarget(player, target)
+        }
+
+        if (!player.hasPermission("foxcore.tp.offline")) {
+            player.sendMessage(plugin.messages.text("command.tp.not-found", "player" to args[0]))
+            return true
+        }
+
+        player.sendMessage(plugin.messages.text("command.tp.offline-searching", "player" to args[0]))
+        plugin.backService.findOfflineLastLocationByName(args[0]) { result ->
+            if (!player.isOnline) {
+                return@findOfflineLastLocationByName
+            }
+
+            when (result) {
+                is OfflineLocationLookup.NotFound -> {
+                    player.sendMessage(plugin.messages.text("command.tp.not-found", "player" to args[0]))
+                }
+
+                is OfflineLocationLookup.NoStoredLocation -> {
+                    player.sendMessage(plugin.messages.text("command.tp.offline-no-location", "player" to result.playerName))
+                }
+
+                is OfflineLocationLookup.MissingWorld -> {
+                    player.sendMessage(
+                        plugin.messages.text(
+                            "command.tp.offline-missing-world",
+                            "player" to result.playerName,
+                            "world" to result.worldName,
+                        ),
+                    )
+                }
+
+                is OfflineLocationLookup.Success -> {
+                    when (plugin.safeTeleports.teleport(player, result.location)) {
+                        SafeTeleportResult.SUCCESS -> {
+                            player.sendMessage(plugin.messages.text("command.tp.offline-success", "player" to result.playerName))
+                        }
+
+                        SafeTeleportResult.NO_SAFE_GROUND -> {
+                            player.sendMessage(plugin.messages.text("error.no-safe-ground"))
+                        }
+
+                        SafeTeleportResult.FAILED -> {
+                            player.sendMessage(plugin.messages.text("error.teleport-failed"))
+                        }
+                    }
+                }
+            }
+        }
+
+        return true
+    }
+
+    private fun teleportToOnlineTarget(player: Player, target: Player): Boolean {
         when (plugin.safeTeleports.teleport(player, target.location)) {
             SafeTeleportResult.SUCCESS -> Unit
             SafeTeleportResult.NO_SAFE_GROUND -> {
@@ -58,10 +110,10 @@ class TeleportCommand(
         }
 
         player.sendMessage(plugin.messages.text("command.tp.success", "player" to target.name))
-
         if (plugin.config.getBoolean("teleport.notify-target", true)) {
             target.sendMessage(plugin.messages.text("command.tp.notify-target", "player" to player.name))
         }
+
         return true
     }
 

@@ -17,6 +17,7 @@ class MysqlBackStorage(
         """
         CREATE TABLE IF NOT EXISTS $tableName (
             player_uuid VARCHAR(36) NOT NULL PRIMARY KEY,
+            player_name VARCHAR(16) NULL,
             last_world VARCHAR(255) NULL,
             last_x DOUBLE NULL,
             last_y DOUBLE NULL,
@@ -37,11 +38,12 @@ class MysqlBackStorage(
     override fun upsertSql(): String =
         """
         INSERT INTO $tableName (
-            player_uuid,
+            player_uuid, player_name,
             last_world, last_x, last_y, last_z, last_yaw, last_pitch, last_location_at,
             death_world, death_x, death_y, death_z, death_yaw, death_pitch, death_location_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
+            player_name = ?,
             last_world = ?,
             last_x = ?,
             last_y = ?,
@@ -59,10 +61,17 @@ class MysqlBackStorage(
         """.trimIndent()
 
     override fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData) {
-        bindLocation(statement, 16, data.lastLocation)
-        bindLong(statement, 22, data.lastLocationAtMillis)
-        bindLocation(statement, 23, data.lastDeathLocation)
-        bindLong(statement, 29, data.lastDeathAtMillis)
+        statement.setString(17, data.playerName)
+        bindLocation(statement, 18, data.lastLocation)
+        bindLong(statement, 24, data.lastLocationAtMillis)
+        bindLocation(statement, 25, data.lastDeathLocation)
+        bindLong(statement, 31, data.lastDeathAtMillis)
+    }
+
+    override fun migrateSchema(statement: java.sql.Statement) {
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $tableName ADD COLUMN player_name VARCHAR(16) NULL")
+        }
     }
 
     companion object {
@@ -72,21 +81,20 @@ class MysqlBackStorage(
             }
 
             val hikari = HikariConfig().apply {
-                jdbcUrl = "jdbc:mysql://${section.getString("host", "127.0.0.1")}:${section.getInt("port", 3306)}/${section.getString("database", "foxcraft")}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+                jdbcUrl = "jdbc:mysql://${section.getString("host", "127.0.0.1")}:${section.getInt("port", 3306)}/${section.getString("database", "foxcore")}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
                 username = section.getString("username", "root")
                 password = section.getString("password", "")
                 maximumPoolSize = section.getInt("pool-size", 5).coerceAtLeast(1)
                 driverClassName = "com.mysql.cj.jdbc.Driver"
-                poolName = "FoxCraft-MySQL"
+                poolName = "FoxCore-MySQL"
             }
 
             return HikariDataSource(hikari)
         }
 
         private fun buildTableName(config: FileConfiguration): String {
-            val prefix = config.getString("storage.mysql.table-prefix", "foxcraft_").orEmpty()
+            val prefix = config.getString("storage.mysql.table-prefix", "foxcore_").orEmpty()
             return "${prefix}player_back"
         }
     }
 }
-

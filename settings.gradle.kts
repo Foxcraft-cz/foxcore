@@ -1,2 +1,1 @@
-rootProject.name = "foxcraft"
-
+rootProject.name = "foxcore"

@@ -1,6 +1,6 @@
-name: foxcraft
+name: foxcore
 version: ${version}
-main: me.dragan.foxcore.FoxCraftPlugin
+main: me.dragan.foxcore.FoxCorePlugin
 api-version: "1.21"
 authors: [Dragan]
 description: Lightweight Paper essentials-style utilities.
@@ -72,6 +72,9 @@ permissions:
     default: op
   foxcore.tp:
     description: Allows teleporting to another player.
+    default: op
+  foxcore.tp.offline:
+    description: Allows teleporting to an offline player's stored last location.
     default: op
   foxcore.tphere:
     description: Allows teleporting another player to yourself.

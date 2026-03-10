@@ -1,6 +1,6 @@
 package me.dragan.foxcore.command
 
-import me.dragan.foxcore.FoxCraftPlugin
+import me.dragan.foxcore.FoxCorePlugin
 import me.dragan.foxcore.teleport.SafeTeleportResult
 import me.dragan.foxcore.tpa.TpaResolveStatus
 import me.dragan.foxcore.tpa.TpaRequestType
@@ -10,7 +10,7 @@ import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
 class TpAcceptCommand(
-    private val plugin: FoxCraftPlugin,
+    private val plugin: FoxCorePlugin,
 ) : TabExecutor {
 
     override fun onCommand(

@@ -20,6 +20,7 @@ class SqliteBackStorage(
         """
         CREATE TABLE IF NOT EXISTS $tableName (
             player_uuid TEXT NOT NULL PRIMARY KEY,
+            player_name TEXT NULL,
             last_world TEXT NULL,
             last_x REAL NULL,
             last_y REAL NULL,
@@ -40,11 +41,12 @@ class SqliteBackStorage(
     override fun upsertSql(): String =
         """
         INSERT INTO $tableName (
-            player_uuid,
+            player_uuid, player_name,
             last_world, last_x, last_y, last_z, last_yaw, last_pitch, last_location_at,
             death_world, death_x, death_y, death_z, death_yaw, death_pitch, death_location_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(player_uuid) DO UPDATE SET
+            player_name = excluded.player_name,
             last_world = excluded.last_world,
             last_x = excluded.last_x,
             last_y = excluded.last_y,
@@ -63,10 +65,16 @@ class SqliteBackStorage(
 
     override fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData) = Unit
 
+    override fun migrateSchema(statement: java.sql.Statement) {
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $tableName ADD COLUMN player_name TEXT NULL")
+        }
+    }
+
     companion object {
         private fun createDataSource(plugin: JavaPlugin, config: FileConfiguration): HikariDataSource {
-            val fileName = config.getString("storage.sqlite.file", "storage/foxcraft.db").orEmpty().ifBlank {
-                "storage/foxcraft.db"
+            val fileName = config.getString("storage.sqlite.file", "storage/foxcore.db").orEmpty().ifBlank {
+                "storage/foxcore.db"
             }
             val file = File(plugin.dataFolder, fileName)
             file.parentFile?.mkdirs()
@@ -75,11 +83,10 @@ class SqliteBackStorage(
                 jdbcUrl = "jdbc:sqlite:${file.absolutePath}"
                 driverClassName = "org.sqlite.JDBC"
                 maximumPoolSize = 1
-                poolName = "FoxCraft-SQLite"
+                poolName = "FoxCore-SQLite"
             }
 
             return HikariDataSource(hikari)
         }
     }
 }
-

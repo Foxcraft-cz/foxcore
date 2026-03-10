@@ -1,6 +1,6 @@
 package me.dragan.foxcore.listener
 
-import me.dragan.foxcore.FoxCraftPlugin
+import me.dragan.foxcore.FoxCorePlugin
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
 class FlyPermissionListener(
-    private val plugin: FoxCraftPlugin,
+    private val plugin: FoxCorePlugin,
 ) : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
@@ -51,4 +51,3 @@ class FlyPermissionListener(
     private fun worldPermission(player: Player): String =
         "foxcore.fly.world.${player.world.name.lowercase()}"
 }
-

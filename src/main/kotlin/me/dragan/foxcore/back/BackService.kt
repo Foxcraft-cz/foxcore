@@ -15,7 +15,7 @@ class BackService(
     private val storage: BackStorage,
 ) {
     private val executor: ExecutorService = Executors.newSingleThreadExecutor { runnable ->
-        Thread(runnable, "FoxCraft-BackStorage").apply { isDaemon = true }
+        Thread(runnable, "FoxCore-BackStorage").apply { isDaemon = true }
     }
     private val cache = ConcurrentHashMap<UUID, BackData>()
     private val loaded = ConcurrentHashMap.newKeySet<UUID>()
@@ -28,9 +28,33 @@ class BackService(
         }
     }
 
+    fun findOfflineLastLocationByName(name: String, callback: (OfflineLocationLookup) -> Unit) {
+        executor.execute {
+            val data = storage.findByLastKnownName(name)
+            val result = when {
+                data == null -> OfflineLocationLookup.NotFound
+                data.lastLocation == null -> OfflineLocationLookup.NoStoredLocation(data.playerName ?: name)
+                else -> {
+                    val world = plugin.server.getWorld(data.lastLocation.worldName)
+                    if (world == null) {
+                        OfflineLocationLookup.MissingWorld(data.playerName ?: name, data.lastLocation.worldName)
+                    } else {
+                        OfflineLocationLookup.Success(
+                            playerName = data.playerName ?: name,
+                            location = data.lastLocation.toBukkitLocation(world),
+                        )
+                    }
+                }
+            }
+
+            plugin.server.scheduler.runTask(plugin, Runnable { callback(result) })
+        }
+    }
+
     fun recordTeleportOrigin(player: Player, from: Location) {
         val playerId = player.uniqueId
         val updated = current(playerId).copy(
+            playerName = player.name,
             lastLocation = StoredLocation.from(from),
             lastLocationAtMillis = System.currentTimeMillis(),
         )
@@ -40,6 +64,7 @@ class BackService(
     fun recordDeath(player: Player, location: Location) {
         val playerId = player.uniqueId
         val updated = current(playerId).copy(
+            playerName = player.name,
             lastDeathLocation = StoredLocation.from(location),
             lastDeathAtMillis = System.currentTimeMillis(),
         )
@@ -49,6 +74,7 @@ class BackService(
     fun recordDisconnectLocation(player: Player) {
         val playerId = player.uniqueId
         val updated = current(playerId).copy(
+            playerName = player.name,
             lastLocation = StoredLocation.from(player.location),
             lastLocationAtMillis = System.currentTimeMillis(),
         )
@@ -106,4 +132,11 @@ class BackService(
             data.lastLocation ?: data.lastDeathLocation
         }
     }
+}
+
+sealed interface OfflineLocationLookup {
+    data object NotFound : OfflineLocationLookup
+    data class NoStoredLocation(val playerName: String) : OfflineLocationLookup
+    data class MissingWorld(val playerName: String, val worldName: String) : OfflineLocationLookup
+    data class Success(val playerName: String, val location: Location) : OfflineLocationLookup
 }

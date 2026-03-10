@@ -26,7 +26,7 @@ import me.dragan.foxcore.tpa.TpaRequestService
 import org.bukkit.command.PluginCommand
 import org.bukkit.plugin.java.JavaPlugin
 
-class FoxCraftPlugin : JavaPlugin() {
+class FoxCorePlugin : JavaPlugin() {
     lateinit var backService: BackService
         private set
     lateinit var messages: MessageService
@@ -70,7 +70,7 @@ class FoxCraftPlugin : JavaPlugin() {
         server.pluginManager.registerEvents(SpawnJoinListener(this), this)
         server.pluginManager.registerEvents(SpawnRespawnListener(this), this)
         server.pluginManager.registerEvents(TpaRequestCleanupListener(this), this)
-        logger.info("FoxCraft enabled.")
+        logger.info("FoxCore enabled.")
     }
 
     fun reloadPlugin() {

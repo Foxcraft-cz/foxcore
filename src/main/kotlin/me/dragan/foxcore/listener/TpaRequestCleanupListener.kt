@@ -1,13 +1,13 @@
 package me.dragan.foxcore.listener
 
-import me.dragan.foxcore.FoxCraftPlugin
+import me.dragan.foxcore.FoxCorePlugin
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerKickEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
 class TpaRequestCleanupListener(
-    private val plugin: FoxCraftPlugin,
+    private val plugin: FoxCorePlugin,
 ) : Listener {
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
@@ -19,4 +19,3 @@ class TpaRequestCleanupListener(
         plugin.tpaRequests.removeAllFor(event.player.uniqueId)
     }
 }
-

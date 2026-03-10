@@ -1,15 +1,15 @@
 storage:
   type: sqlite
   sqlite:
-    file: storage/foxcraft.db
+    file: storage/foxcore.db
   mysql:
     host: 127.0.0.1
     port: 3306
-    database: foxcraft
+    database: foxcore
     username: root
     password: ""
     pool-size: 5
-    table-prefix: foxcraft_
+    table-prefix: foxcore_
 
 back:
   prioritize-death: true
