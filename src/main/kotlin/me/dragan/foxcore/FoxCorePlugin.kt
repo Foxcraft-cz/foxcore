@@ -5,7 +5,9 @@ import me.dragan.foxcore.back.BackService
 import me.dragan.foxcore.back.storage.StorageFactory
 import me.dragan.foxcore.command.FoxCoreCommand
 import me.dragan.foxcore.command.FlyCommand
+import me.dragan.foxcore.command.AdminWarpCommand
 import me.dragan.foxcore.command.DeleteHomeCommand
+import me.dragan.foxcore.command.DeleteWarpCommand
 import me.dragan.foxcore.command.GamemodeShortcutCommand
 import me.dragan.foxcore.command.HeadCommand
 import me.dragan.foxcore.command.HatCommand
@@ -17,6 +19,7 @@ import me.dragan.foxcore.command.RtpCommand
 import me.dragan.foxcore.command.SetSpawnCommand
 import me.dragan.foxcore.command.SetHomeIconCommand
 import me.dragan.foxcore.command.SetHomeCommand
+import me.dragan.foxcore.command.SetWarpCommand
 import me.dragan.foxcore.command.SpawnCommand
 import me.dragan.foxcore.command.SpeedCommand
 import me.dragan.foxcore.command.TpAcceptCommand
@@ -25,6 +28,7 @@ import me.dragan.foxcore.command.TpaHereCommand
 import me.dragan.foxcore.command.TpaDenyCommand
 import me.dragan.foxcore.command.TeleportCommand
 import me.dragan.foxcore.command.TeleportHereCommand
+import me.dragan.foxcore.command.WarpCommand
 import me.dragan.foxcore.config.MessageService
 import me.dragan.foxcore.config.YamlResourceSynchronizer
 import me.dragan.foxcore.gui.GuiManager
@@ -39,6 +43,7 @@ import me.dragan.foxcore.rtp.RtpService
 import me.dragan.foxcore.spawn.SpawnService
 import me.dragan.foxcore.teleport.SafeTeleportService
 import me.dragan.foxcore.tpa.TpaRequestService
+import me.dragan.foxcore.warp.WarpService
 import org.bukkit.GameMode
 import org.bukkit.command.PluginCommand
 import org.bukkit.plugin.java.JavaPlugin
@@ -58,6 +63,8 @@ class FoxCorePlugin : JavaPlugin() {
         private set
     lateinit var tpaRequests: TpaRequestService
         private set
+    lateinit var warps: WarpService
+        private set
     lateinit var yamlSynchronizer: YamlResourceSynchronizer
         private set
 
@@ -74,6 +81,7 @@ class FoxCorePlugin : JavaPlugin() {
         safeTeleports = SafeTeleportService(this)
         spawnService = SpawnService(this)
         rtpService = RtpService(this)
+        warps = WarpService(this, storage)
         messages = MessageService(this).also { it.reload() }
 
         registerCommand("back", BackCommand(this))
@@ -124,6 +132,10 @@ class FoxCorePlugin : JavaPlugin() {
             },
         )
         registerCommand("renamehome", RenameHomeCommand(this))
+        registerCommand("warp", WarpCommand(this))
+        registerCommand("setwarp", SetWarpCommand(this))
+        registerCommand("delwarp", DeleteWarpCommand(this))
+        registerCommand("adminwarp", AdminWarpCommand(this))
         registerCommand("rtp", RtpCommand(this))
         registerCommand("sethome", SetHomeCommand(this))
         registerCommand("sethomeicon", SetHomeIconCommand(this))
@@ -164,11 +176,15 @@ class FoxCorePlugin : JavaPlugin() {
         syncBundledFiles()
         reloadConfig()
         rtpService.reload()
+        warps.reload()
         spawnService.reload()
         messages.reload()
     }
 
     override fun onDisable() {
+        if (::warps.isInitialized) {
+            warps.shutdown()
+        }
         if (::backService.isInitialized) {
             backService.shutdownAndFlush(server.onlinePlayers.toList())
         }

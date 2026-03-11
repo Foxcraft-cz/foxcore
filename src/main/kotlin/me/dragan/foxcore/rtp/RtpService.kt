@@ -159,6 +159,14 @@ class RtpService(
             }
 
             if (location != null) {
+                if (!world.worldBorder.isInside(location)) {
+                    plugin.logger.warning(
+                        "Skipping RTP location outside the world border in '${world.name}' at " +
+                            "${location.blockX}, ${location.blockY}, ${location.blockZ}.",
+                    )
+                    return@repeat
+                }
+
                 return location.apply {
                     yaw = player.location.yaw
                     pitch = player.location.pitch

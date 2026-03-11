@@ -16,6 +16,7 @@ class SqliteBackStorage(
     dataSource = createDataSource(plugin, config),
     tableName = "player_back",
     homeTableName = "player_home",
+    warpTableName = "warp",
 ) {
     override fun createTableSql(): String =
         """
@@ -80,7 +81,57 @@ class SqliteBackStorage(
         )
         """.trimIndent()
 
+    override fun createWarpTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $warpTableName (
+            warp_name TEXT NOT NULL PRIMARY KEY,
+            scope TEXT NOT NULL,
+            owner_uuid TEXT NULL,
+            owner_name TEXT NULL,
+            world_name TEXT NOT NULL,
+            x REAL NOT NULL,
+            y REAL NOT NULL,
+            z REAL NOT NULL,
+            yaw REAL NOT NULL,
+            pitch REAL NOT NULL,
+            icon_material TEXT NULL,
+            title TEXT NULL,
+            description TEXT NULL
+        )
+        """.trimIndent()
+
     override fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData) = Unit
+
+    override fun upsertWarpSql(): String =
+        """
+        INSERT INTO $warpTableName (
+            warp_name, scope, owner_uuid, owner_name,
+            world_name, x, y, z, yaw, pitch,
+            icon_material, title, description
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(warp_name) DO UPDATE SET
+            scope = excluded.scope,
+            owner_uuid = excluded.owner_uuid,
+            owner_name = excluded.owner_name,
+            world_name = excluded.world_name,
+            x = excluded.x,
+            y = excluded.y,
+            z = excluded.z,
+            yaw = excluded.yaw,
+            pitch = excluded.pitch,
+            icon_material = excluded.icon_material,
+            title = excluded.title,
+            description = excluded.description
+        """.trimIndent()
+
+    override fun bindWarpUpsertTail(statement: PreparedStatement, name: String, data: me.dragan.foxcore.warp.WarpData) = Unit
+
+    override fun renameWarpSql(): String =
+        """
+        UPDATE $warpTableName
+        SET warp_name = ?
+        WHERE warp_name = ?
+        """.trimIndent()
 
     override fun migrateSchema(statement: java.sql.Statement) {
         statement.runCatching {
@@ -88,6 +139,15 @@ class SqliteBackStorage(
         }
         statement.runCatching {
             executeUpdate("ALTER TABLE $homeTableName ADD COLUMN icon_material TEXT NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $warpTableName ADD COLUMN icon_material TEXT NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $warpTableName ADD COLUMN title TEXT NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $warpTableName ADD COLUMN description TEXT NULL")
         }
     }
 

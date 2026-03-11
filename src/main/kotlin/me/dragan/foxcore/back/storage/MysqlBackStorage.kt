@@ -13,6 +13,7 @@ class MysqlBackStorage(
     dataSource = createDataSource(config),
     tableName = buildTableName(config),
     homeTableName = buildHomeTableName(config),
+    warpTableName = buildWarpTableName(config),
 ) {
     override fun createTableSql(): String =
         """
@@ -77,6 +78,26 @@ class MysqlBackStorage(
         )
         """.trimIndent()
 
+    override fun createWarpTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $warpTableName (
+            warp_name VARCHAR(32) NOT NULL PRIMARY KEY,
+            scope VARCHAR(16) NOT NULL,
+            owner_uuid VARCHAR(36) NULL,
+            owner_name VARCHAR(16) NULL,
+            world_name VARCHAR(255) NOT NULL,
+            x DOUBLE NOT NULL,
+            y DOUBLE NOT NULL,
+            z DOUBLE NOT NULL,
+            yaw FLOAT NOT NULL,
+            pitch FLOAT NOT NULL,
+            icon_material VARCHAR(255) NULL,
+            title VARCHAR(255) NULL,
+            description TEXT NULL,
+            INDEX idx_${warpTableName}_owner_uuid (owner_uuid)
+        )
+        """.trimIndent()
+
     override fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData) {
         statement.setString(17, data.playerName)
         bindLocation(statement, 18, data.lastLocation)
@@ -85,12 +106,60 @@ class MysqlBackStorage(
         bindLong(statement, 31, data.lastDeathAtMillis)
     }
 
+    override fun upsertWarpSql(): String =
+        """
+        INSERT INTO $warpTableName (
+            warp_name, scope, owner_uuid, owner_name,
+            world_name, x, y, z, yaw, pitch,
+            icon_material, title, description
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+            scope = ?,
+            owner_uuid = ?,
+            owner_name = ?,
+            world_name = ?,
+            x = ?,
+            y = ?,
+            z = ?,
+            yaw = ?,
+            pitch = ?,
+            icon_material = ?,
+            title = ?,
+            description = ?
+        """.trimIndent()
+
+    override fun bindWarpUpsertTail(statement: PreparedStatement, name: String, data: me.dragan.foxcore.warp.WarpData) {
+        statement.setString(14, data.scope.name)
+        statement.setString(15, data.ownerId?.toString())
+        statement.setString(16, data.ownerName)
+        bindLocation(statement, 17, data.location)
+        statement.setString(23, data.iconMaterialKey)
+        statement.setString(24, data.title)
+        statement.setString(25, data.description)
+    }
+
+    override fun renameWarpSql(): String =
+        """
+        UPDATE $warpTableName
+        SET warp_name = ?
+        WHERE warp_name = ?
+        """.trimIndent()
+
     override fun migrateSchema(statement: java.sql.Statement) {
         statement.runCatching {
             executeUpdate("ALTER TABLE $tableName ADD COLUMN player_name VARCHAR(16) NULL")
         }
         statement.runCatching {
             executeUpdate("ALTER TABLE $homeTableName ADD COLUMN icon_material VARCHAR(255) NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $warpTableName ADD COLUMN icon_material VARCHAR(255) NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $warpTableName ADD COLUMN title VARCHAR(255) NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $warpTableName ADD COLUMN description TEXT NULL")
         }
     }
 
@@ -120,6 +189,11 @@ class MysqlBackStorage(
         private fun buildHomeTableName(config: FileConfiguration): String {
             val prefix = config.getString("storage.mysql.table-prefix", "foxcore_").orEmpty()
             return "${prefix}player_home"
+        }
+
+        private fun buildWarpTableName(config: FileConfiguration): String {
+            val prefix = config.getString("storage.mysql.table-prefix", "foxcore_").orEmpty()
+            return "${prefix}warp"
         }
     }
 }

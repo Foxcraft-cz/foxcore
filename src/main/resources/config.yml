@@ -63,5 +63,8 @@ translations:
 teleport:
   notify-target: true
 
+warp:
+  teleport-cooldown-seconds: 0
+
 tpa:
   request-expiration-seconds: 60

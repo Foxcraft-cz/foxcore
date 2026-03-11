@@ -4,6 +4,8 @@ import com.zaxxer.hikari.HikariDataSource
 import me.dragan.foxcore.back.BackData
 import me.dragan.foxcore.back.StoredLocation
 import me.dragan.foxcore.home.HomeData
+import me.dragan.foxcore.warp.WarpData
+import me.dragan.foxcore.warp.WarpScope
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
@@ -13,6 +15,7 @@ abstract class JdbcBackStorage(
     private val dataSource: HikariDataSource,
     protected val tableName: String,
     protected val homeTableName: String,
+    protected val warpTableName: String,
 ) : BackStorage {
 
     override fun initialize() {
@@ -20,6 +23,7 @@ abstract class JdbcBackStorage(
             connection.createStatement().use { statement ->
                 statement.executeUpdate(createTableSql())
                 statement.executeUpdate(createHomeTableSql())
+                statement.executeUpdate(createWarpTableSql())
                 migrateSchema(statement)
             }
         }
@@ -137,6 +141,75 @@ abstract class JdbcBackStorage(
         }
     }
 
+    override fun loadAllWarps(): Map<String, WarpData> {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(selectWarpsSql()).use { statement ->
+                statement.executeQuery().use { result ->
+                    val warps = linkedMapOf<String, WarpData>()
+                    while (result.next()) {
+                        val location = readLocation(
+                            world = result.getString("world_name"),
+                            x = result.getDouble("x"),
+                            y = result.getDouble("y"),
+                            z = result.getDouble("z"),
+                            yaw = result.getFloat("yaw"),
+                            pitch = result.getFloat("pitch"),
+                        ) ?: continue
+
+                        val name = result.getString("warp_name")
+                        warps[name] = WarpData(
+                            name = name,
+                            scope = WarpScope.valueOf(result.getString("scope")),
+                            location = location,
+                            ownerId = result.getString("owner_uuid")?.let(UUID::fromString),
+                            ownerName = result.getString("owner_name"),
+                            iconMaterialKey = result.getString("icon_material"),
+                            title = result.getString("title"),
+                            description = result.getString("description"),
+                        )
+                    }
+                    return warps.toSortedMap()
+                }
+            }
+        }
+    }
+
+    override fun saveWarp(name: String, data: WarpData) {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(upsertWarpSql()).use { statement ->
+                statement.setString(1, name)
+                statement.setString(2, data.scope.name)
+                statement.setString(3, data.ownerId?.toString())
+                statement.setString(4, data.ownerName)
+                bindLocation(statement, 5, data.location)
+                statement.setString(11, data.iconMaterialKey)
+                statement.setString(12, data.title)
+                statement.setString(13, data.description)
+                bindWarpUpsertTail(statement, name, data)
+                statement.executeUpdate()
+            }
+        }
+    }
+
+    override fun deleteWarp(name: String) {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(deleteWarpSql()).use { statement ->
+                statement.setString(1, name)
+                statement.executeUpdate()
+            }
+        }
+    }
+
+    override fun renameWarp(oldName: String, newName: String) {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(renameWarpSql()).use { statement ->
+                statement.setString(1, newName)
+                statement.setString(2, oldName)
+                statement.executeUpdate()
+            }
+        }
+    }
+
     override fun close() {
         dataSource.close()
     }
@@ -145,7 +218,15 @@ abstract class JdbcBackStorage(
 
     protected abstract fun createHomeTableSql(): String
 
+    protected abstract fun createWarpTableSql(): String
+
     protected abstract fun upsertSql(): String
+
+    protected abstract fun upsertWarpSql(): String
+
+    protected abstract fun bindWarpUpsertTail(statement: PreparedStatement, name: String, data: WarpData)
+
+    protected abstract fun renameWarpSql(): String
 
     protected abstract fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData)
 
@@ -183,6 +264,21 @@ abstract class JdbcBackStorage(
             player_uuid, home_name,
             world_name, x, y, z, yaw, pitch, icon_material
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """.trimIndent()
+
+    protected open fun deleteWarpSql(): String =
+        """
+        DELETE FROM $warpTableName
+        WHERE warp_name = ?
+        """.trimIndent()
+
+    protected open fun selectWarpsSql(): String =
+        """
+        SELECT warp_name, scope, owner_uuid, owner_name,
+               world_name, x, y, z, yaw, pitch,
+               icon_material, title, description
+        FROM $warpTableName
+        ORDER BY CASE WHEN scope = 'SERVER' THEN 0 ELSE 1 END, warp_name ASC
         """.trimIndent()
 
     protected fun fillBaseColumns(statement: PreparedStatement, playerId: UUID, data: BackData) {

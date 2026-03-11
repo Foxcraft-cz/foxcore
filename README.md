@@ -51,6 +51,14 @@ Built jar output:
   Lists your homes, or another player's homes with admin permission.
 - `/loom`
   Opens a virtual loom.
+- `/warp`
+  Opens the public warp GUI, teleports to a named warp, or manages your own player-owned warps.
+- `/setwarp <name>`
+  Creates or updates a server-owned warp.
+- `/delwarp <name>`
+  Deletes a server-owned warp.
+- `/adminwarp ...`
+  Admin management commands for editing any warp.
 - `/rtp`
   Opens a world menu and teleports you to a random safe location in the selected world.
 - `/setspawn`
@@ -219,6 +227,49 @@ Built jar output:
 - Description: Opens a virtual loom.
 - Player only: yes
 - Permission: `foxcore.loom`
+
+### `/warp`
+- Description: Opens the public warp GUI, teleports to a named warp, or manages your own player-owned warps.
+- Player only: yes
+- Permission: `foxcore.warp`
+- Notes:
+- `/warp` opens a paginated GUI of all public warps.
+- `/warp <name>` teleports directly to a public warp.
+- Server warps are shown first in the GUI, then player-owned warps alphabetically.
+- `/warp create|delete|rename|movehere|icon|title|description ...` manage your own player-owned warps.
+- Warp names are globally unique across both server and player warps.
+- Warp titles and descriptions support formatting and are shown in the GUI.
+- Player-owned warp management commands:
+- `/warp create <name>`
+- `/warp delete <name>`
+- `/warp rename <old> <new>`
+- `/warp movehere <name>`
+- `/warp icon <name> [material]`
+- `/warp title <name> <title...>`
+- `/warp description <name> <description...>`
+
+### `/setwarp <name>`
+- Description: Creates or updates a server-owned warp at your current location.
+- Player only: yes
+- Permission: `foxcore.warp.server.manage`
+
+### `/delwarp <name>`
+- Description: Deletes a server-owned warp.
+- Player only: no
+- Permission: `foxcore.warp.server.manage`
+
+### `/adminwarp ...`
+- Description: Admin editing commands for any warp.
+- Player only: mostly yes for `/adminwarp movehere` or icon-from-hand usage, otherwise no
+- Permission: `foxcore.adminwarp`
+- Notes:
+- Supports `delete`, `rename`, `movehere`, `icon`, `title`, and `description`.
+- Intended for editing player-owned warps or non-standard admin maintenance.
+- Admin examples:
+- `/adminwarp rename shop spawnshop`
+- `/adminwarp movehere market`
+- `/adminwarp title market <gold><b>Market</b></gold>`
+- `/adminwarp description market <gray>Main server market with <gold>shops</gold>.</gray>`
 
 ### `/rtp`
 - Description: Opens a menu of configured worlds and teleports you to a random safe location in the one you select.
@@ -416,6 +467,40 @@ Built jar output:
 - Default: `op`
 - Allows opening a virtual loom.
 
+### `foxcore.warp`
+- Default: `true`
+- Allows browsing and using public warps.
+
+### `foxcore.warp.create`
+- Default: `op`
+- Allows creating your own public warps.
+
+### `foxcore.warp.edit`
+- Default: `op`
+- Allows editing your own public warps.
+
+### `foxcore.warp.limit.<number>`
+- Default: none
+- Sets the maximum number of player-owned warps a player may create.
+- Highest granted numeric limit wins.
+- Example: `foxcore.warp.limit.5`
+
+### `foxcore.warp.limit.unlimited`
+- Default: `op`
+- Allows creating unlimited player-owned warps.
+
+### `foxcore.warp.bypasscooldown`
+- Default: `op`
+- Allows teleporting to warps without waiting for the configured cooldown.
+
+### `foxcore.warp.server.manage`
+- Default: `op`
+- Allows creating and deleting server warps.
+
+### `foxcore.adminwarp`
+- Default: `op`
+- Allows editing any warp through admin commands.
+
 ### `foxcore.rtp`
 - Default: `op`
 - Allows teleporting to a random safe location.
@@ -561,6 +646,9 @@ translations:
 teleport:
   notify-target: true
 
+warp:
+  teleport-cooldown-seconds: 0
+
 tpa:
   request-expiration-seconds: 60
 ```
@@ -645,6 +733,10 @@ tpa:
 - Sets the material used for that world in the `/rtp` GUI.
 - Defaults are `GRASS_BLOCK` for `world` and `NETHERRACK` for `world_nether`.
 
+### `warp.teleport-cooldown-seconds`
+- Controls how long a player must wait after a successful warp teleport before using another warp.
+- Players with `foxcore.warp.bypasscooldown` ignore this cooldown.
+
 ### `teleport.notify-target`
 - If `true`, teleport targets receive a notification message.
 
@@ -659,6 +751,31 @@ tpa:
 - `messages_en.yml`
 - Join/quit broadcasts and the personal welcome lines are editable in `event.join.*` and `event.quit.*`.
 
+## Warp Formatting
+- Warp titles and descriptions use MiniMessage formatting.
+- Legacy `&` color codes such as `&6&lTitle` are not parsed for warps.
+- Use tags like `<gold>`, `<red>`, `<gray>`, `<b>`, `<italic>`, or `<color:#55cfff>`.
+- Example title:
+```text
+/adminwarp title truhly <gold><b>Truhly</b></gold>
+```
+- Example light blue title:
+```text
+/adminwarp title truhly <aqua><b>Truhly</b></aqua>
+```
+- Example custom hex color:
+```text
+/adminwarp title truhly <color:#55cfff><b>Truhly</b></color>
+```
+- Example description:
+```text
+/warp description market <gray>Main hub with <gold>shops</gold> and <aqua>portals</aqua>.</gray>
+```
+- Closing tags are recommended for nested formatting:
+```text
+<gold><b>Title</b></gold>
+```
+
 ## Config synchronization
 - Bundled YAML files are synchronized on startup and `/foxcore reload`.
 - New bundled keys are added automatically.
@@ -669,4 +786,4 @@ tpa:
 - Only `/tp` supports offline target lookup. Other teleport commands require online players.
 - Teleport requests are stored in memory only and do not survive a restart or reload.
 - Player back-state persistence supports SQLite and MySQL only.
-- Homes are persisted in the same SQLite/MySQL storage backend as back-location data.
+- Homes and warps are persisted in the same SQLite/MySQL storage backend as back-location data.

@@ -82,6 +82,22 @@ commands:
     description: Rename one of your homes.
     usage: /renamehome <old> <new>
     permission: foxcore.renamehome
+  warp:
+    description: Browse, use, and manage public warps.
+    usage: /warp [name|create|delete|rename|movehere|icon|title|description]
+    permission: foxcore.warp
+  setwarp:
+    description: Create or update a server warp.
+    usage: /setwarp <name>
+    permission: foxcore.warp.server.manage
+  delwarp:
+    description: Delete a server warp.
+    usage: /delwarp <name>
+    permission: foxcore.warp.server.manage
+  adminwarp:
+    description: Admin tools for editing any warp.
+    usage: /adminwarp <delete|rename|movehere|icon|title|description> ...
+    permission: foxcore.adminwarp
   rtp:
     description: Teleport to a random safe location in your current world.
     usage: /rtp
@@ -220,6 +236,27 @@ permissions:
   foxcore.renamehome:
     description: Allows renaming homes.
     default: true
+  foxcore.warp:
+    description: Allows browsing and using public warps.
+    default: true
+  foxcore.warp.create:
+    description: Allows creating your own public warps.
+    default: op
+  foxcore.warp.edit:
+    description: Allows editing your own public warps.
+    default: op
+  foxcore.warp.bypasscooldown:
+    description: Allows teleporting to warps without waiting for the cooldown.
+    default: op
+  foxcore.warp.limit.unlimited:
+    description: Allows creating unlimited public warps.
+    default: op
+  foxcore.warp.server.manage:
+    description: Allows creating and deleting server warps.
+    default: op
+  foxcore.adminwarp:
+    description: Allows editing any warp through admin commands.
+    default: op
   foxcore.rtp:
     description: Allows teleporting to a random location.
     default: op
