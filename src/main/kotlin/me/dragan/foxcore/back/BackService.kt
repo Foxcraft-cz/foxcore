@@ -63,6 +63,11 @@ class BackService(
 
     fun recordTeleportOrigin(player: Player, from: Location) {
         val playerId = player.uniqueId
+        if (!isLoaded(playerId)) {
+            skipUnloadedWrite("teleport origin", player)
+            return
+        }
+
         val updated = current(playerId).copy(
             playerName = player.name,
             lastLocation = StoredLocation.from(from),
@@ -73,6 +78,11 @@ class BackService(
 
     fun recordDeath(player: Player, location: Location) {
         val playerId = player.uniqueId
+        if (!isLoaded(playerId)) {
+            skipUnloadedWrite("death location", player)
+            return
+        }
+
         val updated = current(playerId).copy(
             playerName = player.name,
             lastDeathLocation = StoredLocation.from(location),
@@ -83,6 +93,11 @@ class BackService(
 
     fun recordDisconnectLocation(player: Player) {
         val playerId = player.uniqueId
+        if (!isLoaded(playerId)) {
+            skipUnloadedWrite("disconnect location", player)
+            return
+        }
+
         val updated = current(playerId).copy(
             playerName = player.name,
             lastLocation = StoredLocation.from(player.location),
@@ -317,6 +332,13 @@ class BackService(
     fun shutdownAndFlush(players: Collection<Player>) {
         players.forEach { player ->
             val playerId = player.uniqueId
+            if (!isLoaded(playerId)) {
+                plugin.logger.warning(
+                    "Skipping shutdown flush for player '${player.name}' (${playerId}) because their data was not loaded.",
+                )
+                return@forEach
+            }
+
             cache[playerId] = current(playerId).copy(
                 playerName = player.name,
                 lastLocation = StoredLocation.from(player.location),
@@ -336,8 +358,17 @@ class BackService(
         executor.execute { storage.save(playerId, data) }
     }
 
+    private fun isLoaded(playerId: UUID): Boolean =
+        loaded.contains(playerId) && cache.containsKey(playerId)
+
     private fun current(playerId: UUID): BackData =
         cache[playerId] ?: BackData(playerId.toString())
+
+    private fun skipUnloadedWrite(reason: String, player: Player) {
+        plugin.logger.warning(
+            "Skipping $reason update for player '${player.name}' (${player.uniqueId}) because their data is not loaded yet.",
+        )
+    }
 
     private fun chooseBackLocation(data: BackData): StoredLocation? {
         val prioritizeDeath = plugin.config.getBoolean("back.prioritize-death", true)

@@ -28,6 +28,10 @@ commands:
     description: Delete one of your homes or another player's home.
     usage: /delhome <home> | /delhome <player> <home>
     permission: foxcore.delhome
+  day:
+    description: Set your current world time to day.
+    usage: /day
+    permission: foxcore.day
   enderchest:
     aliases: [ec]
     description: Open your ender chest.
@@ -78,10 +82,18 @@ commands:
     description: Open a virtual loom.
     usage: /loom
     permission: foxcore.loom
+  night:
+    description: Set your current world time to night.
+    usage: /night
+    permission: foxcore.night
   renamehome:
     description: Rename one of your homes.
     usage: /renamehome <old> <new>
     permission: foxcore.renamehome
+  rain:
+    description: Start rain in your current world.
+    usage: /rain
+    permission: foxcore.rain
   warp:
     description: Browse, use, and manage public warps.
     usage: /warp [name|create|delete|rename|movehere|icon|title|description]
@@ -114,6 +126,10 @@ commands:
     description: Set the server spawn.
     usage: /setspawn
     permission: foxcore.setspawn
+  sun:
+    description: Clear weather in your current world.
+    usage: /sun
+    permission: foxcore.sun
   speed:
     description: Set flight speed for yourself or another player.
     usage: /speed <1-10> [player]
@@ -179,6 +195,9 @@ permissions:
   foxcore.delhome.others:
     description: Allows deleting another player's homes.
     default: op
+  foxcore.day:
+    description: Allows setting your current world time to day.
+    default: op
   foxcore.enderchest:
     description: Allows opening your ender chest.
     default: op
@@ -233,6 +252,12 @@ permissions:
   foxcore.loom:
     description: Allows opening a virtual loom.
     default: op
+  foxcore.night:
+    description: Allows setting your current world time to night.
+    default: op
+  foxcore.rain:
+    description: Allows starting rain in your current world.
+    default: op
   foxcore.renamehome:
     description: Allows renaming homes.
     default: true
@@ -274,6 +299,9 @@ permissions:
     default: op
   foxcore.setspawn:
     description: Allows setting the server spawn.
+    default: op
+  foxcore.sun:
+    description: Allows clearing weather in your current world.
     default: op
   foxcore.speed:
     description: Allows setting your own flight speed.

@@ -8,6 +8,8 @@ import me.dragan.foxcore.command.FlyCommand
 import me.dragan.foxcore.command.AdminWarpCommand
 import me.dragan.foxcore.command.DeleteHomeCommand
 import me.dragan.foxcore.command.DeleteWarpCommand
+import me.dragan.foxcore.command.WorldTimeShortcutCommand
+import me.dragan.foxcore.command.WorldWeatherShortcutCommand
 import me.dragan.foxcore.command.GamemodeShortcutCommand
 import me.dragan.foxcore.command.HeadCommand
 import me.dragan.foxcore.command.HatCommand
@@ -104,6 +106,8 @@ class FoxCorePlugin : JavaPlugin() {
             },
         )
         registerCommand("delhome", DeleteHomeCommand(this))
+        registerCommand("day", WorldTimeShortcutCommand(this, "foxcore.day", "day", 1000L))
+        registerCommand("night", WorldTimeShortcutCommand(this, "foxcore.night", "night", 13000L))
         registerCommand(
             "enderchest",
             InventoryOpenerCommand(this, "foxcore.enderchest", "command.enderchest") { player ->
@@ -132,6 +136,7 @@ class FoxCorePlugin : JavaPlugin() {
             },
         )
         registerCommand("renamehome", RenameHomeCommand(this))
+        registerCommand("rain", WorldWeatherShortcutCommand(this, "foxcore.rain", "rain", true))
         registerCommand("warp", WarpCommand(this))
         registerCommand("setwarp", SetWarpCommand(this))
         registerCommand("delwarp", DeleteWarpCommand(this))
@@ -140,6 +145,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("sethome", SetHomeCommand(this))
         registerCommand("sethomeicon", SetHomeIconCommand(this))
         registerCommand("setspawn", SetSpawnCommand(this))
+        registerCommand("sun", WorldWeatherShortcutCommand(this, "foxcore.sun", "sun", false))
         registerCommand("speed", SpeedCommand(this))
         registerCommand(
             "smithingtable",

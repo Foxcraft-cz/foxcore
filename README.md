@@ -27,6 +27,8 @@ Built jar output:
   Deletes one of your saved homes.
 - `/delhome <player> <home>`
   Admin form for deleting another player's home.
+- `/day`, `/night`, `/sun`, `/rain`
+  Set time or weather in your current world.
 - `/enderchest` or `/ec`
   Opens your ender chest.
 - `/fly [player]`
@@ -121,6 +123,21 @@ Built jar output:
 - `/delhome <home>` deletes one of your own homes.
 - `/delhome <player> <home>` deletes another player's home and requires `foxcore.delhome.others`.
 - Admin deletion works from stored database data, so it can target offline players too.
+
+### `/day`, `/night`, `/sun`, `/rain`
+- Description: Set time or weather in your current world.
+- Player only: yes
+- Permissions:
+- `foxcore.day`
+- `foxcore.night`
+- `foxcore.sun`
+- `foxcore.rain`
+- Notes:
+- These shortcuts only affect the world you are currently standing in.
+- `/day` sets time to day.
+- `/night` sets time to night.
+- `/sun` clears weather.
+- `/rain` starts rain without thunder.
 
 ### `/enderchest` or `/ec`
 - Description: Opens your own ender chest.
@@ -418,6 +435,10 @@ Built jar output:
 ### `foxcore.delhome.others`
 - Default: `op`
 - Allows deleting another player's homes.
+
+### `foxcore.day`, `foxcore.night`, `foxcore.sun`, `foxcore.rain`
+- Default: `op`
+- Allow changing time or weather in your current world with the corresponding shortcut command.
 
 ### `foxcore.enderchest`
 - Default: `op`
