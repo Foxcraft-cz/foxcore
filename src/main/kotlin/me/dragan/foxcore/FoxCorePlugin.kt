@@ -17,6 +17,7 @@ import me.dragan.foxcore.command.SetSpawnCommand
 import me.dragan.foxcore.command.SetHomeIconCommand
 import me.dragan.foxcore.command.SetHomeCommand
 import me.dragan.foxcore.command.SpawnCommand
+import me.dragan.foxcore.command.SpeedCommand
 import me.dragan.foxcore.command.TpAcceptCommand
 import me.dragan.foxcore.command.TpaCommand
 import me.dragan.foxcore.command.TpaHereCommand
@@ -121,6 +122,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("sethome", SetHomeCommand(this))
         registerCommand("sethomeicon", SetHomeIconCommand(this))
         registerCommand("setspawn", SetSpawnCommand(this))
+        registerCommand("speed", SpeedCommand(this))
         registerCommand(
             "smithingtable",
             InventoryOpenerCommand(this, "foxcore.smithingtable", "command.smithingtable") { player ->

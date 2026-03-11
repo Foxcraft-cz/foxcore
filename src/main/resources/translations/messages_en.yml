@@ -137,6 +137,13 @@ command:
   setspawn:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/setspawn</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Server spawn updated.</green>"
+  speed:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/speed &lt;1-10&gt; [player]</white>"
+    invalid-range: "<gray>[<gold>FoxCore</gold>]</gray> <red>Speed must be a whole number from <white>1</white> to <white>10</white>.</red>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Flight speed set to <white>%speed%</white>.</green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set <white>%player%</white>'s flight speed to <white>%speed%</white>.</green>"
+    success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> set your flight speed to <white>%speed%</white>.</green>"
   smithingtable:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/smithingtable</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual smithing table.</green>"

@@ -94,6 +94,10 @@ commands:
     description: Set the server spawn.
     usage: /setspawn
     permission: foxcore.setspawn
+  speed:
+    description: Set flight speed for yourself or another player.
+    usage: /speed <1-10> [player]
+    permission: foxcore.speed
   smithingtable:
     aliases: [smithing]
     description: Open a virtual smithing table.
@@ -223,6 +227,12 @@ permissions:
     default: op
   foxcore.setspawn:
     description: Allows setting the server spawn.
+    default: op
+  foxcore.speed:
+    description: Allows setting your own flight speed.
+    default: op
+  foxcore.speed.others:
+    description: Allows setting another player's flight speed.
     default: op
   foxcore.smithingtable:
     description: Allows opening a virtual smithing table.

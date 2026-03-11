@@ -53,6 +53,8 @@ Built jar output:
   Opens a virtual loom.
 - `/setspawn`
   Sets the server spawn to your current location.
+- `/speed <1-10> [player]`
+  Sets flight speed for yourself or another online player.
 - `/smithingtable` or `/smithing`
   Opens a virtual smithing table.
 - `/spawn [player]`
@@ -222,6 +224,17 @@ Built jar output:
 - Permission: `foxcore.setspawn`
 - Notes:
 - Updates the spawn location stored in `config.yml`.
+
+### `/speed <1-10> [player]`
+- Description: Sets flight speed for yourself or another online player.
+- Player only: self use yes, console only for targeting others
+- Permission: `foxcore.speed`
+- Notes:
+- Accepts whole numbers from `1` to `10`.
+- `/speed <1-10>` sets your own flight speed.
+- `/speed <1-10> <player>` sets another player's flight speed and requires `foxcore.speed.others`.
+- The command changes flight speed only, not walking speed.
+- Supports tab completion for speed values and online player names on the admin form.
 
 ### `/smithingtable` or `/smithing`
 - Description: Opens a virtual smithing table.
@@ -418,6 +431,14 @@ Built jar output:
 ### `foxcore.setspawn`
 - Default: `op`
 - Allows setting the server spawn.
+
+### `foxcore.speed`
+- Default: `op`
+- Allows setting your own flight speed.
+
+### `foxcore.speed.others`
+- Default: `op`
+- Allows setting another player's flight speed.
 
 ### `foxcore.smithingtable`
 - Default: `op`
