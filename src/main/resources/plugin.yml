@@ -82,6 +82,10 @@ commands:
     description: Rename one of your homes.
     usage: /renamehome <old> <new>
     permission: foxcore.renamehome
+  rtp:
+    description: Teleport to a random safe location in your current world.
+    usage: /rtp
+    permission: foxcore.rtp
   sethome:
     description: Set a home at your current location.
     usage: /sethome [name]
@@ -216,6 +220,12 @@ permissions:
   foxcore.renamehome:
     description: Allows renaming homes.
     default: true
+  foxcore.rtp:
+    description: Allows teleporting to a random location.
+    default: op
+  foxcore.rtp.bypasscooldown:
+    description: Allows using random teleport without waiting for the cooldown.
+    default: op
   foxcore.sethome:
     description: Allows setting homes.
     default: true

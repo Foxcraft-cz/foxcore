@@ -13,6 +13,7 @@ import me.dragan.foxcore.command.HomeCommand
 import me.dragan.foxcore.command.HomesCommand
 import me.dragan.foxcore.command.InventoryOpenerCommand
 import me.dragan.foxcore.command.RenameHomeCommand
+import me.dragan.foxcore.command.RtpCommand
 import me.dragan.foxcore.command.SetSpawnCommand
 import me.dragan.foxcore.command.SetHomeIconCommand
 import me.dragan.foxcore.command.SetHomeCommand
@@ -34,6 +35,7 @@ import me.dragan.foxcore.listener.JoinMessageListener
 import me.dragan.foxcore.listener.SpawnJoinListener
 import me.dragan.foxcore.listener.SpawnRespawnListener
 import me.dragan.foxcore.listener.TpaRequestCleanupListener
+import me.dragan.foxcore.rtp.RtpService
 import me.dragan.foxcore.spawn.SpawnService
 import me.dragan.foxcore.teleport.SafeTeleportService
 import me.dragan.foxcore.tpa.TpaRequestService
@@ -52,6 +54,8 @@ class FoxCorePlugin : JavaPlugin() {
         private set
     lateinit var spawnService: SpawnService
         private set
+    lateinit var rtpService: RtpService
+        private set
     lateinit var tpaRequests: TpaRequestService
         private set
     lateinit var yamlSynchronizer: YamlResourceSynchronizer
@@ -69,6 +73,7 @@ class FoxCorePlugin : JavaPlugin() {
         tpaRequests = TpaRequestService()
         safeTeleports = SafeTeleportService(this)
         spawnService = SpawnService(this)
+        rtpService = RtpService(this)
         messages = MessageService(this).also { it.reload() }
 
         registerCommand("back", BackCommand(this))
@@ -119,6 +124,7 @@ class FoxCorePlugin : JavaPlugin() {
             },
         )
         registerCommand("renamehome", RenameHomeCommand(this))
+        registerCommand("rtp", RtpCommand(this))
         registerCommand("sethome", SetHomeCommand(this))
         registerCommand("sethomeicon", SetHomeIconCommand(this))
         registerCommand("setspawn", SetSpawnCommand(this))
@@ -157,6 +163,7 @@ class FoxCorePlugin : JavaPlugin() {
     fun reloadPlugin() {
         syncBundledFiles()
         reloadConfig()
+        rtpService.reload()
         spawnService.reload()
         messages.reload()
     }

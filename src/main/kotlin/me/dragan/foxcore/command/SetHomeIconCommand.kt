@@ -91,7 +91,10 @@ class SetHomeIconCommand(
 
     private fun resolveMaterial(player: Player, materialInput: String?): Material? {
         if (materialInput != null) {
-            return Material.matchMaterial(materialInput, true)?.takeIf(Material::isItem)
+            return (
+                Material.matchMaterial(materialInput.uppercase())
+                    ?: Material.matchMaterial(materialInput, true)
+            )?.takeIf(Material::isItem)
         }
 
         val held = player.inventory.itemInMainHand.type

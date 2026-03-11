@@ -51,6 +51,8 @@ Built jar output:
   Lists your homes, or another player's homes with admin permission.
 - `/loom`
   Opens a virtual loom.
+- `/rtp`
+  Opens a world menu and teleports you to a random safe location in the selected world.
 - `/setspawn`
   Sets the server spawn to your current location.
 - `/speed <1-10> [player]`
@@ -217,6 +219,19 @@ Built jar output:
 - Description: Opens a virtual loom.
 - Player only: yes
 - Permission: `foxcore.loom`
+
+### `/rtp`
+- Description: Opens a menu of configured worlds and teleports you to a random safe location in the one you select.
+- Player only: yes
+- Permission: `foxcore.rtp`
+- Notes:
+- Opens a GUI menu with all enabled RTP worlds that are currently available on the server.
+- Each world can define its own menu icon in config.
+- Uses chunk-based random selection with a bounded number of chunk attempts and samples per chunk.
+- Respects the configured cooldown unless the player has `foxcore.rtp.bypasscooldown`.
+- Only works in worlds that are explicitly enabled under `rtp.worlds`.
+- Uses separate placement logic for Nether worlds so it does not place players above the bedrock roof.
+- Rejects dangerous spots such as lava, water, fire, cactus, campfires, powder snow, and leaves.
 
 ### `/setspawn`
 - Description: Sets the server spawn to your current location.
@@ -400,6 +415,14 @@ Built jar output:
 ### `foxcore.loom`
 - Default: `op`
 - Allows opening a virtual loom.
+
+### `foxcore.rtp`
+- Default: `op`
+- Allows teleporting to a random safe location.
+
+### `foxcore.rtp.bypasscooldown`
+- Default: `op`
+- Allows using `/rtp` without waiting for the configured cooldown.
 
 ### `foxcore.renamehome`
 - Default: `true`
@@ -594,6 +617,33 @@ tpa:
 ### `spawn.location.*`
 - Stores the configured server spawn position.
 - Usually managed through `/setspawn`.
+
+### `rtp.enabled`
+- Enables or disables random teleport globally.
+
+### `rtp.cooldown-seconds`
+- Controls how long a player must wait between successful `/rtp` uses.
+
+### `rtp.max-chunk-attempts`
+- Maximum number of random chunks FoxCore will try for one `/rtp` request.
+- Lower values reduce chunk loading work but increase the chance of failure.
+
+### `rtp.samples-per-chunk`
+- Number of random positions checked inside each loaded chunk.
+- Higher values improve success rate while reusing the same chunk load.
+
+### `rtp.worlds.<world>.enabled`
+- Enables or disables `/rtp` in a specific world.
+
+### `rtp.worlds.<world>.min-radius` and `rtp.worlds.<world>.max-radius`
+- Define the random teleport ring in blocks around the configured center point.
+
+### `rtp.worlds.<world>.center-x` and `rtp.worlds.<world>.center-z`
+- Set the center point used for random chunk selection in that world.
+
+### `rtp.worlds.<world>.icon`
+- Sets the material used for that world in the `/rtp` GUI.
+- Defaults are `GRASS_BLOCK` for `world` and `NETHERRACK` for `world_nether`.
 
 ### `teleport.notify-target`
 - If `true`, teleport targets receive a notification message.
