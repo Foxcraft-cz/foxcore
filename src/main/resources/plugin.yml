@@ -14,6 +14,10 @@ commands:
     description: Toggle flight for yourself or another player.
     usage: /fly [player]
     permission: foxcore.fly
+  onlinetime:
+    description: Show session and total playtime information.
+    usage: /onlinetime [player]
+    permission: foxcore.onlinetime
   setspawn:
     description: Set the server spawn.
     usage: /setspawn
@@ -60,6 +64,12 @@ permissions:
     default: op
   foxcore.fly.others:
     description: Allows toggling another player's flight.
+    default: op
+  foxcore.onlinetime:
+    description: Allows viewing your own session and total playtime.
+    default: true
+  foxcore.onlinetime.others:
+    description: Allows viewing another player's session and total playtime.
     default: op
   foxcore.setspawn:
     description: Allows setting the server spawn.

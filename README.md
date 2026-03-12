@@ -19,6 +19,8 @@ Built jar output:
   Teleports you back to your last saved location or death location.
 - `/fly [player]`
   Toggles flight for yourself, or for another player if you have admin permission.
+- `/onlinetime [player]`
+  Shows current session time, total playtime, and first join date.
 - `/setspawn`
   Sets the server spawn to your current location.
 - `/spawn [player]`
@@ -59,6 +61,17 @@ Built jar output:
 - `/fly <player>` toggles another player's flight and requires `foxcore.fly.others`.
 - World access is controlled by `foxcore.fly.world.<worldname>`.
 - If a player enters a world without that permission, FoxCore disables their flight automatically.
+- Supports tab completion for online players when using the admin form.
+
+### `/onlinetime [player]`
+- Description: Shows current session time, total playtime, and first join date.
+- Player only: self use yes, console target use yes
+- Permission: `foxcore.onlinetime`
+- Notes:
+- `/onlinetime` shows your own data.
+- `/onlinetime <player>` requires `foxcore.onlinetime.others`.
+- The target form supports online players and cached offline player profiles without doing a blocking lookup.
+- Session time is only available while the target is currently online.
 - Supports tab completion for online players when using the admin form.
 
 ### `/setspawn`
@@ -162,6 +175,14 @@ Built jar output:
 ### `foxcore.fly.others`
 - Default: `op`
 - Allows toggling another player's flight.
+
+### `foxcore.onlinetime`
+- Default: `true`
+- Allows viewing your own current session time, total playtime, and first join date.
+
+### `foxcore.onlinetime.others`
+- Default: `op`
+- Allows viewing another player's current session time, total playtime, and first join date.
 
 ### `foxcore.fly.world.<worldname>`
 - Default: none

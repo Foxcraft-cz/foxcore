@@ -27,6 +27,15 @@ command:
     enabled-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> enabled your flight.</green>"
     disabled-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <yellow><white>%player%</white> disabled your flight.</yellow>"
     disabled-world: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Flight was disabled because world <white>%world%</white> does not allow it for you.</yellow>"
+  onlinetime:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/onlinetime [player]</white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online and no cached profile was available.</red>"
+    player: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Player:</yellow> <white>%player%</white>"
+    session: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Session:</yellow> <white>%duration%</white>"
+    session-unavailable: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Session:</yellow> <gray>Unavailable while the player is offline.</gray>"
+    total: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Total playtime:</yellow> <white>%duration%</white>"
+    first-joined: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>First joined:</yellow> <white>%date%</white>"
+    first-joined-unknown: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>First joined:</yellow> <gray>Unknown</gray>"
   setspawn:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/setspawn</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Server spawn updated.</green>"

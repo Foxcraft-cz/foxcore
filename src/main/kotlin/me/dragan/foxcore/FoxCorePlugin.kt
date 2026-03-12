@@ -7,6 +7,7 @@ import me.dragan.foxcore.command.FoxCoreCommand
 import me.dragan.foxcore.command.FlyCommand
 import me.dragan.foxcore.command.SetSpawnCommand
 import me.dragan.foxcore.command.SpawnCommand
+import me.dragan.foxcore.command.OnlineTimeCommand
 import me.dragan.foxcore.command.TpAcceptCommand
 import me.dragan.foxcore.command.TpaCommand
 import me.dragan.foxcore.command.TpaHereCommand
@@ -55,6 +56,7 @@ class FoxCorePlugin : JavaPlugin() {
 
         registerCommand("back", BackCommand(this))
         registerCommand("fly", FlyCommand(this))
+        registerCommand("onlinetime", OnlineTimeCommand(this))
         registerCommand("setspawn", SetSpawnCommand(this))
         registerCommand("spawn", SpawnCommand(this))
         registerCommand("tp", TeleportCommand(this))
