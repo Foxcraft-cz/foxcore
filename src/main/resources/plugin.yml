@@ -78,6 +78,10 @@ commands:
     description: List your homes or another player's homes.
     usage: /homes [player]
     permission: foxcore.homes
+  onlinetime:
+    description: Show session and total playtime information.
+    usage: /onlinetime [player]
+    permission: foxcore.onlinetime
   loom:
     description: Open a virtual loom.
     usage: /loom
@@ -248,6 +252,12 @@ permissions:
     default: true
   foxcore.homes.others:
     description: Allows listing another player's homes.
+    default: op
+  foxcore.onlinetime:
+    description: Allows viewing your own session and total playtime.
+    default: true
+  foxcore.onlinetime.others:
+    description: Allows viewing another player's session and total playtime.
     default: op
   foxcore.loom:
     description: Allows opening a virtual loom.

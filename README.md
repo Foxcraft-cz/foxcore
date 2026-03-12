@@ -51,6 +51,8 @@ Built jar output:
   Opens your homes menu, or teleports to a specific saved home.
 - `/homes [player]`
   Lists your homes, or another player's homes with admin permission.
+- `/onlinetime [player]`
+  Shows current session time, total playtime, and first join date.
 - `/loom`
   Opens a virtual loom.
 - `/warp`
@@ -239,6 +241,17 @@ Built jar output:
 - `/homes <player>` opens a paginated admin GUI for another player's homes and requires `foxcore.homes.others`.
 - Clicking a home teleports you to it.
 - Admin lookup works from stored database data, so it can inspect offline players too.
+
+### `/onlinetime [player]`
+- Description: Shows current session time, total playtime, and first join date.
+- Player only: self use yes, console target use yes
+- Permission: `foxcore.onlinetime`
+- Notes:
+- `/onlinetime` shows your own data.
+- `/onlinetime <player>` requires `foxcore.onlinetime.others`.
+- The target form supports online players and cached offline player profiles without doing a blocking lookup.
+- Session time is only available while the target is currently online.
+- Supports tab completion for online players when using the admin form.
 
 ### `/loom`
 - Description: Opens a virtual loom.
@@ -483,6 +496,14 @@ Built jar output:
 ### `foxcore.homes.others`
 - Default: `op`
 - Allows listing another player's homes.
+
+### `foxcore.onlinetime`
+- Default: `true`
+- Allows viewing your own current session time, total playtime, and first join date.
+
+### `foxcore.onlinetime.others`
+- Default: `op`
+- Allows viewing another player's current session time, total playtime, and first join date.
 
 ### `foxcore.loom`
 - Default: `op`

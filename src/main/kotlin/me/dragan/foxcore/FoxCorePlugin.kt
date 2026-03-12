@@ -16,6 +16,7 @@ import me.dragan.foxcore.command.HatCommand
 import me.dragan.foxcore.command.HomeCommand
 import me.dragan.foxcore.command.HomesCommand
 import me.dragan.foxcore.command.InventoryOpenerCommand
+import me.dragan.foxcore.command.OnlineTimeCommand
 import me.dragan.foxcore.command.RenameHomeCommand
 import me.dragan.foxcore.command.RtpCommand
 import me.dragan.foxcore.command.SetSpawnCommand
@@ -129,6 +130,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("head", HeadCommand(this))
         registerCommand("home", HomeCommand(this))
         registerCommand("homes", HomesCommand(this))
+        registerCommand("onlinetime", OnlineTimeCommand(this))
         registerCommand(
             "loom",
             InventoryOpenerCommand(this, "foxcore.loom", "command.loom") { player ->

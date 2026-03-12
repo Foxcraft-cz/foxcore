@@ -1,7 +1,9 @@
 .gradle/
+.gradle-home/
 .kotlin/
 build/
 out/
+.DS_Store
 *.iml
 .idea/
 gradle-*-bin.zip
