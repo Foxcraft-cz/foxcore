@@ -10,6 +10,7 @@ import me.dragan.foxcore.command.DeleteHomeCommand
 import me.dragan.foxcore.command.DeleteWarpCommand
 import me.dragan.foxcore.command.WorldTimeShortcutCommand
 import me.dragan.foxcore.command.WorldWeatherShortcutCommand
+import me.dragan.foxcore.command.WhoisCommand
 import me.dragan.foxcore.command.GamemodeShortcutCommand
 import me.dragan.foxcore.command.HeadCommand
 import me.dragan.foxcore.command.HatCommand
@@ -19,6 +20,7 @@ import me.dragan.foxcore.command.InventoryOpenerCommand
 import me.dragan.foxcore.command.OnlineTimeCommand
 import me.dragan.foxcore.command.RenameHomeCommand
 import me.dragan.foxcore.command.RtpCommand
+import me.dragan.foxcore.command.SeenCommand
 import me.dragan.foxcore.command.SetSpawnCommand
 import me.dragan.foxcore.command.SetHomeIconCommand
 import me.dragan.foxcore.command.SetHomeCommand
@@ -144,6 +146,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("delwarp", DeleteWarpCommand(this))
         registerCommand("adminwarp", AdminWarpCommand(this))
         registerCommand("rtp", RtpCommand(this))
+        registerCommand("seen", SeenCommand(this))
         registerCommand("sethome", SetHomeCommand(this))
         registerCommand("sethomeicon", SetHomeIconCommand(this))
         registerCommand("setspawn", SetSpawnCommand(this))
@@ -163,6 +166,7 @@ class FoxCorePlugin : JavaPlugin() {
             },
         )
         registerCommand("tp", TeleportCommand(this))
+        registerCommand("whois", WhoisCommand(this))
         registerCommand("tphere", TeleportHereCommand(this))
         registerCommand("tpa", TpaCommand(this))
         registerCommand("tpahere", TpaHereCommand(this))

@@ -51,7 +51,7 @@ Built jar output:
   Opens your homes menu, or teleports to a specific saved home.
 - `/homes [player]`
   Lists your homes, or another player's homes with admin permission.
-- `/onlinetime [player]`
+- `/onlinetime [player]` or `/playtime [player]`
   Shows current session time, total playtime, and first join date.
 - `/loom`
   Opens a virtual loom.
@@ -65,6 +65,10 @@ Built jar output:
   Admin management commands for editing any warp.
 - `/rtp`
   Opens a world menu and teleports you to a random safe location in the selected world.
+- `/seen <playername>`
+  Shows when a player was last online and how many days ago that was.
+- `/whois <playername>`
+  Shows admin profile details for a player, including clickable copy and teleport actions.
 - `/setspawn`
   Sets the server spawn to your current location.
 - `/speed <1-10> [player]`
@@ -242,12 +246,13 @@ Built jar output:
 - Clicking a home teleports you to it.
 - Admin lookup works from stored database data, so it can inspect offline players too.
 
-### `/onlinetime [player]`
+### `/onlinetime [player]` or `/playtime [player]`
 - Description: Shows current session time, total playtime, and first join date.
 - Player only: self use yes, console target use yes
 - Permission: `foxcore.onlinetime`
 - Notes:
 - `/onlinetime` shows your own data.
+- `/playtime` is an alias of `/onlinetime`.
 - `/onlinetime <player>` requires `foxcore.onlinetime.others`.
 - The target form supports online players and cached offline player profiles without doing a blocking lookup.
 - Session time is only available while the target is currently online.
@@ -313,6 +318,27 @@ Built jar output:
 - Only works in worlds that are explicitly enabled under `rtp.worlds`.
 - Uses separate placement logic for Nether worlds so it does not place players above the bedrock roof.
 - Rejects dangerous spots such as lava, water, fire, cactus, campfires, powder snow, and leaves.
+
+### `/seen <playername>`
+- Description: Shows when a player was last online.
+- Player only: no
+- Permission: `foxcore.seen`
+- Notes:
+- Uses online players first, then cached offline player data without forcing a blocking lookup.
+- Reports the last seen timestamp and the whole number of days since that date.
+- If the target is currently online, the command reports that directly and shows `0` days ago.
+- Supports tab completion for currently online players.
+
+### `/whois <playername>`
+- Description: Shows detailed admin information about a player profile.
+- Player only: no
+- Permission: `foxcore.whois`
+- Notes:
+- Uses online players first, then cached offline player data without forcing a blocking lookup.
+- Shows player name, UUID, status, location when available, last seen time, first join, total playtime, and current session time when online.
+- Clicking the player name or UUID copies that value to the clipboard.
+- Clicking the location runs `/tp <player>` so admins can jump to the target's current or stored last location using the existing teleport rules.
+- Intended as an admin command and defaults to `op`.
 
 ### `/setspawn`
 - Description: Sets the server spawn to your current location.
@@ -550,6 +576,14 @@ Built jar output:
 ### `foxcore.rtp.bypasscooldown`
 - Default: `op`
 - Allows using `/rtp` without waiting for the configured cooldown.
+
+### `foxcore.seen`
+- Default: `true`
+- Allows viewing when a player was last online.
+
+### `foxcore.whois`
+- Default: `op`
+- Allows viewing detailed player profile information.
 
 ### `foxcore.renamehome`
 - Default: `true`

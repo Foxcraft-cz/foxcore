@@ -79,6 +79,7 @@ commands:
     usage: /homes [player]
     permission: foxcore.homes
   onlinetime:
+    aliases: [playtime]
     description: Show session and total playtime information.
     usage: /onlinetime [player]
     permission: foxcore.onlinetime
@@ -118,6 +119,14 @@ commands:
     description: Teleport to a random safe location in your current world.
     usage: /rtp
     permission: foxcore.rtp
+  seen:
+    description: Show when a player was last online.
+    usage: /seen <playername>
+    permission: foxcore.seen
+  whois:
+    description: Show admin details about a player profile.
+    usage: /whois <playername>
+    permission: foxcore.whois
   sethome:
     description: Set a home at your current location.
     usage: /sethome [name]
@@ -297,6 +306,12 @@ permissions:
     default: op
   foxcore.rtp.bypasscooldown:
     description: Allows using random teleport without waiting for the cooldown.
+    default: op
+  foxcore.seen:
+    description: Allows viewing when a player was last online.
+    default: true
+  foxcore.whois:
+    description: Allows viewing detailed player profile information.
     default: op
   foxcore.sethome:
     description: Allows setting homes.
