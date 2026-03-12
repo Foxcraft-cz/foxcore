@@ -4,8 +4,13 @@ main: me.dragan.foxcore.FoxCorePlugin
 api-version: "1.21"
 authors: [Dragan]
 description: Lightweight Paper essentials-style utilities.
+softdepend: [PlaceholderAPI]
 
 commands:
+  afk:
+    description: Toggle your AFK state manually.
+    usage: /afk
+    permission: foxcore.afk.command
   back:
     description: Teleport back to your last saved or death location.
     usage: /back
@@ -190,6 +195,9 @@ commands:
     permission: foxcore.reload
 
 permissions:
+  foxcore.afk.command:
+    description: Allows toggling your own AFK state manually.
+    default: true
   foxcore.back:
     description: Allows teleporting back to your last saved or death location.
     default: op
@@ -307,6 +315,9 @@ permissions:
   foxcore.rtp.bypasscooldown:
     description: Allows using random teleport without waiting for the cooldown.
     default: op
+  foxcore.afk.bypass:
+    description: Prevents the AFK system from kicking you while AFK.
+    default: false
   foxcore.seen:
     description: Allows viewing when a player was last online.
     default: true

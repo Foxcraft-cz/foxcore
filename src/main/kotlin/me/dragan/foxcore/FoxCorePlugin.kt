@@ -1,8 +1,10 @@
 package me.dragan.foxcore
 
+import me.dragan.foxcore.afk.AfkService
 import me.dragan.foxcore.back.BackCommand
 import me.dragan.foxcore.back.BackService
 import me.dragan.foxcore.back.storage.StorageFactory
+import me.dragan.foxcore.command.AfkCommand
 import me.dragan.foxcore.command.FoxCoreCommand
 import me.dragan.foxcore.command.FlyCommand
 import me.dragan.foxcore.command.AdminWarpCommand
@@ -38,6 +40,7 @@ import me.dragan.foxcore.config.MessageService
 import me.dragan.foxcore.config.YamlResourceSynchronizer
 import me.dragan.foxcore.gui.GuiManager
 import me.dragan.foxcore.listener.BackTrackingListener
+import me.dragan.foxcore.listener.AfkListener
 import me.dragan.foxcore.listener.FlyPermissionListener
 import me.dragan.foxcore.listener.GuiListener
 import me.dragan.foxcore.listener.JoinMessageListener
@@ -48,12 +51,16 @@ import me.dragan.foxcore.rtp.RtpService
 import me.dragan.foxcore.spawn.SpawnService
 import me.dragan.foxcore.teleport.SafeTeleportService
 import me.dragan.foxcore.tpa.TpaRequestService
+import me.dragan.foxcore.placeholder.FoxCorePlaceholderExpansion
 import me.dragan.foxcore.warp.WarpService
 import org.bukkit.GameMode
+import org.bukkit.entity.Player
 import org.bukkit.command.PluginCommand
 import org.bukkit.plugin.java.JavaPlugin
 
 class FoxCorePlugin : JavaPlugin() {
+    lateinit var afk: AfkService
+        private set
     lateinit var backService: BackService
         private set
     lateinit var messages: MessageService
@@ -83,6 +90,7 @@ class FoxCorePlugin : JavaPlugin() {
         backService = BackService(this, storage)
         guiManager = GuiManager()
         tpaRequests = TpaRequestService()
+        afk = AfkService(this)
         safeTeleports = SafeTeleportService(this)
         spawnService = SpawnService(this)
         rtpService = RtpService(this)
@@ -96,6 +104,7 @@ class FoxCorePlugin : JavaPlugin() {
                 player.openAnvil(null, true)
             },
         )
+        registerCommand("afk", AfkCommand(this))
         registerCommand(
             "cartographytable",
             InventoryOpenerCommand(this, "foxcore.cartographytable", "command.cartographytable") { player ->
@@ -174,6 +183,9 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("tpadeny", TpaDenyCommand(this))
         registerCommand("foxcore", FoxCoreCommand(this))
         server.onlinePlayers.forEach { backService.loadPlayer(it.uniqueId) }
+        afk.start()
+        maybeRegisterPlaceholderExpansion()
+        server.pluginManager.registerEvents(AfkListener(this), this)
         server.pluginManager.registerEvents(BackTrackingListener(this), this)
         server.pluginManager.registerEvents(FlyPermissionListener(this), this)
         server.pluginManager.registerEvents(GuiListener(this), this)
@@ -187,6 +199,7 @@ class FoxCorePlugin : JavaPlugin() {
     fun reloadPlugin() {
         syncBundledFiles()
         reloadConfig()
+        afk.start()
         rtpService.reload()
         warps.reload()
         spawnService.reload()
@@ -194,6 +207,9 @@ class FoxCorePlugin : JavaPlugin() {
     }
 
     override fun onDisable() {
+        if (::afk.isInitialized) {
+            afk.stop()
+        }
         if (::warps.isInitialized) {
             warps.shutdown()
         }
@@ -205,6 +221,25 @@ class FoxCorePlugin : JavaPlugin() {
     private fun syncBundledFiles() {
         yamlSynchronizer.sync("config.yml")
         yamlSynchronizer.sync("translations/messages_en.yml")
+    }
+
+    fun broadcastAfkState(player: Player, becameAfk: Boolean) {
+        if (!config.getBoolean("afk.broadcast-state-changes", true)) {
+            return
+        }
+
+        val messageKey = if (becameAfk) "afk.enter" else "afk.leave"
+        val message = messages.text(messageKey, "player" to player.name)
+        server.onlinePlayers.forEach { it.sendMessage(message) }
+        server.consoleSender.sendMessage(message)
+    }
+
+    private fun maybeRegisterPlaceholderExpansion() {
+        if (server.pluginManager.getPlugin("PlaceholderAPI") == null) {
+            return
+        }
+
+        FoxCorePlaceholderExpansion(this).register()
     }
 
     private fun registerCommand(name: String, executor: org.bukkit.command.TabExecutor) {

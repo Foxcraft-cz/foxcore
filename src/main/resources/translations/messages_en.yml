@@ -21,7 +21,16 @@ error:
   teleport-failed: "<gray>[<gold>FoxCore</gold>]</gray> <red>The teleport could not be completed.</red>"
   teleport-failed-other: "<gray>[<gold>FoxCore</gold>]</gray> <red>The teleport for <white>%player%</white> could not be completed.</red>"
 
+afk:
+  enter: "<gray>[<gold>☕</gold>]</gray> <yellow><white>%player%</white> is now AFK.</yellow>"
+  leave: "<gray>[<gold>☕</gold>]</gray> <green><white>%player%</white> is no longer AFK.</green>"
+  kick-reason: "<red>You were kicked for being AFK.</red>"
+
 command:
+  afk:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/afk</white>"
+    enabled: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>You are now marked as AFK.</yellow>"
+    disabled: "<gray>[<gold>FoxCore</gold>]</gray> <green>You are no longer marked as AFK.</green>"
   anvil:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/anvil</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual anvil.</green>"

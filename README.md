@@ -15,6 +15,8 @@ Built jar output:
 - `build/libs/foxcore-0.1.0-SNAPSHOT.jar`
 
 ## Current functionality
+- `/afk`
+  Toggles your AFK state manually.
 - `/back`
   Teleports you back to your last saved location or death location.
 - `/anvil`
@@ -23,6 +25,8 @@ Built jar output:
   Opens a virtual cartography table.
 - `/craft`, `/wb` or `/workbench`
   Opens a virtual crafting table.
+- automatic AFK tracking
+  Flags idle players as AFK, optionally kicks them after a longer idle period, and exposes AFK state to PlaceholderAPI when installed.
 - `/delhome <home>`
   Deletes one of your saved homes.
 - `/delhome <player> <home>`
@@ -95,6 +99,15 @@ Built jar output:
   Reloads config and translations.
 
 ## Commands
+### `/afk`
+- Description: Toggles your AFK state manually.
+- Player only: yes
+- Permission: `foxcore.afk.command`
+- Notes:
+- Marks you as AFK immediately without waiting for the idle timer.
+- Running `/afk` again clears the manual AFK state.
+- Real activity such as movement, chat, commands, interaction, or inventory use also clears manual AFK.
+
 ### `/anvil`
 - Description: Opens a virtual anvil.
 - Player only: yes
@@ -109,6 +122,18 @@ Built jar output:
 - Description: Opens a virtual crafting table.
 - Player only: yes
 - Permission: `foxcore.craft`
+
+### Automatic AFK
+- Description: Tracks idle players automatically without a command.
+- Player only: no
+- Permission: `foxcore.afk.bypass`
+- Notes:
+- One periodic check scans online players using configurable timings from `config.yml`.
+- Explicit actions such as chat, commands, inventory clicks, interactions, combat, teleports, and block changes reset activity.
+- Movement only resets activity after a real block-position change and ignores passive movement such as water drift, bubble columns, vehicles, gliding, and flight.
+- Players with `foxcore.afk.bypass` are excluded from AFK flagging and AFK kicks.
+- The bypass is explicit and negative-style: `op` alone does not bypass AFK.
+- If PlaceholderAPI is installed, FoxCore registers `%foxcore_afk%`, `%foxcore_afk_status%`, `%foxcore_afk_duration_seconds%`, and `%foxcore_afk_duration_human%`.
 
 ### `/back`
 - Description: Teleports you back to your most recent saved back location.
@@ -451,6 +476,10 @@ Built jar output:
 - Reload also synchronizes bundled YAML files.
 
 ## Permissions
+### `foxcore.afk.command`
+- Default: `true`
+- Allows toggling your own AFK state manually.
+
 ### `foxcore.anvil`
 - Default: `op`
 - Allows opening a virtual anvil.
@@ -462,6 +491,11 @@ Built jar output:
 ### `foxcore.craft`
 - Default: `op`
 - Allows opening a virtual crafting table.
+
+### `foxcore.afk.bypass`
+- Default: `false`
+- Excludes a player from automatic AFK flagging and AFK kicks.
+- This permission must be granted explicitly and is not implied by `op`.
 
 ### `foxcore.back`
 - Default: `op`
@@ -703,6 +737,15 @@ join-messages:
   quit-broadcast-enabled: true
   personal-enabled: true
 
+afk:
+  enabled: true
+  idle-seconds: 300
+  check-interval-seconds: 5
+  broadcast-state-changes: true
+  kick:
+    enabled: true
+    after-seconds: 1800
+
 spawn:
   enabled: true
   on-respawn: false
@@ -766,6 +809,26 @@ tpa:
 - Enables or disables the personal multi-line welcome shown to the joining player.
 - The default translation includes server info and command hints.
 
+### `afk.enabled`
+- Enables or disables the automatic AFK system entirely.
+
+### `afk.idle-seconds`
+- Controls how long a player must remain inactive before being marked AFK.
+
+### `afk.check-interval-seconds`
+- Controls how often FoxCore scans online players for AFK state changes.
+- Lower values make AFK state react faster, while higher values reduce work further.
+
+### `afk.broadcast-state-changes`
+- If `true`, FoxCore broadcasts AFK enter and leave messages to players and console.
+
+### `afk.kick.enabled`
+- Enables or disables AFK kicking.
+
+### `afk.kick.after-seconds`
+- Controls how long a player may remain AFK before being kicked.
+- Players with `foxcore.afk.bypass` are excluded from the AFK system entirely.
+
 ### `spawn.enabled`
 - Enables or disables the server spawn system entirely.
 
@@ -826,6 +889,16 @@ tpa:
 - Current bundled file:
 - `messages_en.yml`
 - Join/quit broadcasts and the personal welcome lines are editable in `event.join.*` and `event.quit.*`.
+- AFK messages are editable in `afk.*`.
+
+## PlaceholderAPI
+- FoxCore registers a PlaceholderAPI expansion automatically when PlaceholderAPI is installed.
+- Placeholder identifier: `foxcore`
+- Supported placeholders:
+- `%foxcore_afk%`
+- `%foxcore_afk_status%`
+- `%foxcore_afk_duration_seconds%`
+- `%foxcore_afk_duration_human%`
 
 ## Warp Formatting
 - Warp titles and descriptions use MiniMessage formatting.

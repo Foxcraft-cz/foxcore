@@ -23,6 +23,15 @@ join-messages:
   quit-broadcast-enabled: true
   personal-enabled: true
 
+afk:
+  enabled: true
+  idle-seconds: 300
+  check-interval-seconds: 5
+  broadcast-state-changes: true
+  kick:
+    enabled: true
+    after-seconds: 1800
+
 spawn:
   enabled: true
   on-respawn: false
