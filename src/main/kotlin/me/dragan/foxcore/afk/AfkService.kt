@@ -150,7 +150,9 @@ class AfkService(
 
         plugin.server.onlinePlayers.forEach { player ->
             val state = states.computeIfAbsent(player.uniqueId) { AfkState(lastActivityAtMillis = now) }
-            if (hasExplicitBypassPermission(player)) {
+            val hasFullBypass = hasPermission(player, BYPASS_PERMISSION)
+            val hasKickBypass = hasPermission(player, BYPASS_KICK_PERMISSION)
+            if (hasFullBypass) {
                 if (state.isAfk) {
                     plugin.broadcastAfkState(player, becameAfk = false)
                     states[player.uniqueId] = state.copy(
@@ -167,6 +169,7 @@ class AfkService(
             if (state.manual) {
                 if (
                     kickEnabled &&
+                    !hasKickBypass &&
                     state.isAfk &&
                     now - (state.afkSinceAtMillis ?: now) >= kickMillis
                 ) {
@@ -185,6 +188,7 @@ class AfkService(
 
             if (
                 kickEnabled &&
+                !hasKickBypass &&
                 state.isAfk &&
                 now - (state.afkSinceAtMillis ?: now) >= kickMillis
             ) {
@@ -195,11 +199,12 @@ class AfkService(
 
     companion object {
         const val BYPASS_PERMISSION = "foxcore.afk.bypass"
+        const val BYPASS_KICK_PERMISSION = "foxcore.afk.bypass-kick"
     }
 
-    private fun hasExplicitBypassPermission(player: Player): Boolean =
+    private fun hasPermission(player: Player, permission: String): Boolean =
         player.effectivePermissions.any { info ->
-            info.permission.equals(BYPASS_PERMISSION, ignoreCase = true) && info.value
+            info.permission.equals(permission, ignoreCase = true) && info.value
         }
 }
 

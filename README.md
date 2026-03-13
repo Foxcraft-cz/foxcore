@@ -57,6 +57,8 @@ Built jar output:
   Lists your homes, or another player's homes with admin permission.
 - `/onlinetime [player]` or `/playtime [player]`
   Shows current session time, total playtime, and first join date.
+- `/portal ...`
+  Admin-only portal management for hub navigation portals with wand selection, built-in `spawn`/`warp`/`rtp` actions, optional console commands, and visible particles.
 - `/loom`
   Opens a virtual loom.
 - `/warp`
@@ -126,12 +128,15 @@ Built jar output:
 ### Automatic AFK
 - Description: Tracks idle players automatically without a command.
 - Player only: no
-- Permission: `foxcore.afk.bypass`
+- Permissions:
+- `foxcore.afk.bypass`
+- `foxcore.afk.bypass-kick`
 - Notes:
 - One periodic check scans online players using configurable timings from `config.yml`.
 - Explicit actions such as chat, commands, inventory clicks, interactions, combat, teleports, and block changes reset activity.
 - Movement only resets activity after a real block-position change and ignores passive movement such as water drift, bubble columns, vehicles, gliding, and flight.
 - Players with `foxcore.afk.bypass` are excluded from AFK flagging and AFK kicks.
+- Players with `foxcore.afk.bypass-kick` are still flagged AFK normally but are not kicked by the AFK timeout.
 - The bypass is explicit and negative-style: `op` alone does not bypass AFK.
 - If PlaceholderAPI is installed, FoxCore registers `%foxcore_afk%`, `%foxcore_afk_status%`, `%foxcore_afk_duration_seconds%`, and `%foxcore_afk_duration_human%`.
 
@@ -282,6 +287,26 @@ Built jar output:
 - The target form supports online players and cached offline player profiles without doing a blocking lookup.
 - Session time is only available while the target is currently online.
 - Supports tab completion for online players when using the admin form.
+
+### `/portal ...`
+- Description: Creates and manages cuboid navigation portals using a wand or your current position.
+- Player only: yes
+- Permission: `foxcore.portal.admin`
+- Notes:
+- `/portal wand` gives you a portal wand.
+- Left click with the wand sets `pos1`, and right click sets `pos2`.
+- `/portal pos1` and `/portal pos2` set the selection from your current block.
+- `/portal create <id>` creates a portal from the current selection.
+- `/portal redefine <id>` replaces an existing portal's bounds with the current selection.
+- `/portal setaction <id> spawn` sends players to server spawn.
+- `/portal setaction <id> warp <name>` sends players to a FoxCore warp.
+- `/portal setaction <id> rtp <world>` starts RTP directly into a configured RTP world.
+- `/portal setaction <id> command <command...>` runs one console command and replaces `%player%`.
+- `/portal setcooldown <id> <seconds>` sets the per-player cooldown after a successful trigger.
+- `/portal setparticles <id> <overworld|nether|end|gold|aqua>` changes the particle preset players see near the portal.
+- Portals trigger only when a player enters from outside, require leaving before re-triggering, and also respect a per-portal cooldown.
+- A short global portal teleport immunity prevents instant portal-to-portal loops.
+- `/portal enable`, `/portal disable`, `/portal delete`, `/portal info`, and `/portal list` manage existing portals.
 
 ### `/loom`
 - Description: Opens a virtual loom.
@@ -497,6 +522,10 @@ Built jar output:
 - Excludes a player from automatic AFK flagging and AFK kicks.
 - This permission must be granted explicitly and is not implied by `op`.
 
+### `foxcore.afk.bypass-kick`
+- Default: `op`
+- Prevents AFK timeout kicks while still allowing the player to be marked AFK normally.
+
 ### `foxcore.back`
 - Default: `op`
 - Allows teleporting back to your last saved or death location.
@@ -564,6 +593,10 @@ Built jar output:
 ### `foxcore.onlinetime.others`
 - Default: `op`
 - Allows viewing another player's current session time, total playtime, and first join date.
+
+### `foxcore.portal.admin`
+- Default: `op`
+- Allows managing FoxCore portals and using the selection wand.
 
 ### `foxcore.loom`
 - Default: `op`
@@ -709,6 +742,7 @@ Built jar output:
 ## Config
 File:
 - `plugins/foxcore/config.yml`
+- `plugins/foxcore/portals.yml`
 
 Current options:
 ```yml
@@ -745,6 +779,13 @@ afk:
   kick:
     enabled: true
     after-seconds: 1800
+
+portals:
+  enabled: true
+  teleport-immunity-seconds: 2
+  particles:
+    interval-ticks: 10
+    view-distance-blocks: 24
 
 spawn:
   enabled: true
@@ -828,6 +869,19 @@ tpa:
 ### `afk.kick.after-seconds`
 - Controls how long a player may remain AFK before being kicked.
 - Players with `foxcore.afk.bypass` are excluded from the AFK system entirely.
+- Players with `foxcore.afk.bypass-kick` still enter AFK but are skipped by the AFK kick timeout.
+
+### `portals.enabled`
+- Enables or disables portal triggering and portal particles globally.
+
+### `portals.teleport-immunity-seconds`
+- Controls the short post-trigger immunity used to prevent portal-to-portal loops.
+
+### `portals.particles.interval-ticks`
+- Controls how often FoxCore renders nearby portal particles.
+
+### `portals.particles.view-distance-blocks`
+- Controls how close a player must be before they can see portal particles.
 
 ### `spawn.enabled`
 - Enables or disables the server spawn system entirely.
@@ -886,6 +940,7 @@ tpa:
 ## Translations
 - Bundled translations live in `src/main/resources/translations/`.
 - Runtime translations are stored in `plugins/foxcore/translations/`.
+- Portal definitions are stored separately in `plugins/foxcore/portals.yml`.
 - Current bundled file:
 - `messages_en.yml`
 - Join/quit broadcasts and the personal welcome lines are editable in `event.join.*` and `event.quit.*`.

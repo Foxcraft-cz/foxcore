@@ -20,6 +20,7 @@ import me.dragan.foxcore.command.HomeCommand
 import me.dragan.foxcore.command.HomesCommand
 import me.dragan.foxcore.command.InventoryOpenerCommand
 import me.dragan.foxcore.command.OnlineTimeCommand
+import me.dragan.foxcore.command.PortalCommand
 import me.dragan.foxcore.command.RenameHomeCommand
 import me.dragan.foxcore.command.RtpCommand
 import me.dragan.foxcore.command.SeenCommand
@@ -44,9 +45,11 @@ import me.dragan.foxcore.listener.AfkListener
 import me.dragan.foxcore.listener.FlyPermissionListener
 import me.dragan.foxcore.listener.GuiListener
 import me.dragan.foxcore.listener.JoinMessageListener
+import me.dragan.foxcore.listener.PortalListener
 import me.dragan.foxcore.listener.SpawnJoinListener
 import me.dragan.foxcore.listener.SpawnRespawnListener
 import me.dragan.foxcore.listener.TpaRequestCleanupListener
+import me.dragan.foxcore.portal.PortalService
 import me.dragan.foxcore.rtp.RtpService
 import me.dragan.foxcore.spawn.SpawnService
 import me.dragan.foxcore.teleport.SafeTeleportService
@@ -73,6 +76,8 @@ class FoxCorePlugin : JavaPlugin() {
         private set
     lateinit var rtpService: RtpService
         private set
+    lateinit var portals: PortalService
+        private set
     lateinit var tpaRequests: TpaRequestService
         private set
     lateinit var warps: WarpService
@@ -94,6 +99,7 @@ class FoxCorePlugin : JavaPlugin() {
         safeTeleports = SafeTeleportService(this)
         spawnService = SpawnService(this)
         rtpService = RtpService(this)
+        portals = PortalService(this)
         warps = WarpService(this, storage)
         messages = MessageService(this).also { it.reload() }
 
@@ -142,6 +148,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("home", HomeCommand(this))
         registerCommand("homes", HomesCommand(this))
         registerCommand("onlinetime", OnlineTimeCommand(this))
+        registerCommand("portal", PortalCommand(this))
         registerCommand(
             "loom",
             InventoryOpenerCommand(this, "foxcore.loom", "command.loom") { player ->
@@ -190,6 +197,7 @@ class FoxCorePlugin : JavaPlugin() {
         server.pluginManager.registerEvents(FlyPermissionListener(this), this)
         server.pluginManager.registerEvents(GuiListener(this), this)
         server.pluginManager.registerEvents(JoinMessageListener(this), this)
+        server.pluginManager.registerEvents(PortalListener(this), this)
         server.pluginManager.registerEvents(SpawnJoinListener(this), this)
         server.pluginManager.registerEvents(SpawnRespawnListener(this), this)
         server.pluginManager.registerEvents(TpaRequestCleanupListener(this), this)
@@ -201,6 +209,7 @@ class FoxCorePlugin : JavaPlugin() {
         reloadConfig()
         afk.start()
         rtpService.reload()
+        portals.reload()
         warps.reload()
         spawnService.reload()
         messages.reload()
@@ -209,6 +218,9 @@ class FoxCorePlugin : JavaPlugin() {
     override fun onDisable() {
         if (::afk.isInitialized) {
             afk.stop()
+        }
+        if (::portals.isInitialized) {
+            portals.shutdown()
         }
         if (::warps.isInitialized) {
             warps.shutdown()

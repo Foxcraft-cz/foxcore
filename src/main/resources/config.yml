@@ -32,6 +32,13 @@ afk:
     enabled: true
     after-seconds: 1800
 
+portals:
+  enabled: true
+  teleport-immunity-seconds: 2
+  particles:
+    interval-ticks: 10
+    view-distance-blocks: 24
+
 spawn:
   enabled: true
   on-respawn: false

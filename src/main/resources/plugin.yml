@@ -88,6 +88,10 @@ commands:
     description: Show session and total playtime information.
     usage: /onlinetime [player]
     permission: foxcore.onlinetime
+  portal:
+    description: Manage world navigation portals.
+    usage: /portal <wand|pos1|pos2|create|redefine|setaction|setcooldown|setparticles|enable|disable|delete|info|list>
+    permission: foxcore.portal.admin
   loom:
     description: Open a virtual loom.
     usage: /loom
@@ -316,8 +320,14 @@ permissions:
     description: Allows using random teleport without waiting for the cooldown.
     default: op
   foxcore.afk.bypass:
-    description: Prevents the AFK system from kicking you while AFK.
+    description: Excludes a player from automatic AFK flagging and AFK kicks.
     default: false
+  foxcore.afk.bypass-kick:
+    description: Prevents a player from being kicked by the AFK timeout while still allowing AFK flagging.
+    default: op
+  foxcore.portal.admin:
+    description: Allows managing FoxCore portals and using the portal selection wand.
+    default: op
   foxcore.seen:
     description: Allows viewing when a player was last online.
     default: true
