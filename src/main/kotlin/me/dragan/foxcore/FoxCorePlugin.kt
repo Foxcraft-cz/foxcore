@@ -43,6 +43,8 @@ import me.dragan.foxcore.command.WarpCommand
 import me.dragan.foxcore.config.MessageService
 import me.dragan.foxcore.config.YamlResourceSynchronizer
 import me.dragan.foxcore.gui.GuiManager
+import me.dragan.foxcore.help.ResidenceHelpInfoService
+import me.dragan.foxcore.help.PluginHelpInfoService
 import me.dragan.foxcore.listener.BackTrackingListener
 import me.dragan.foxcore.listener.AfkListener
 import me.dragan.foxcore.listener.FlyPermissionListener
@@ -75,6 +77,10 @@ class FoxCorePlugin : JavaPlugin() {
         private set
     lateinit var messages: MessageService
         private set
+    lateinit var residenceHelpInfo: ResidenceHelpInfoService
+        private set
+    lateinit var pluginHelpInfo: PluginHelpInfoService
+        private set
     lateinit var guiManager: GuiManager
         private set
     lateinit var safeTeleports: SafeTeleportService
@@ -105,6 +111,8 @@ class FoxCorePlugin : JavaPlugin() {
         storage.initialize()
         backService = BackService(this, storage)
         broadcasts = BroadcastService(this)
+        residenceHelpInfo = ResidenceHelpInfoService(this)
+        pluginHelpInfo = PluginHelpInfoService(this)
         guiManager = GuiManager()
         tpaRequests = TpaRequestService()
         afk = AfkService(this)

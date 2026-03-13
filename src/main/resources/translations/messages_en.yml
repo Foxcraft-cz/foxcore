@@ -132,6 +132,9 @@ command:
       warps:
         name: "<gold>Warps</gold>"
         description: "<gray>Public warp commands available to you.</gray>"
+      features:
+        name: "<gold>Server Features</gold>"
+        description: "<gray>Useful commands and limits from other player-facing plugins.</gray>"
       utility:
         name: "<gold>Utility</gold>"
         description: "<gray>Useful everyday commands and virtual tools.</gray>"
@@ -146,6 +149,17 @@ command:
         loading: "<gray>Current homes:</gray> <yellow>Loading...</yellow>"
       back:
         types: "<gray>Available back types:</gray> <white>%types%</white>"
+      residence:
+        max-count: "<gray>Residence limit:</gray> <white>%count%</white>"
+        max-count-unavailable: "<gray>Residence limit:</gray> <yellow>Unavailable</yellow>"
+        max-size: "<gray>Residence max size:</gray> <white>%size%</white>"
+        max-size-unavailable: "<gray>Residence max size:</gray> <yellow>Unavailable</yellow>"
+      vote:
+        pending: "<gray>Pending vote rewards:</gray> <white>%count%</white>"
+        pending-unavailable: "<gray>Pending vote rewards:</gray> <yellow>Unavailable</yellow>"
+      kits:
+        available: "<gray>Available kits:</gray> <white>%count%</white>"
+        available-unavailable: "<gray>Available kits:</gray> <yellow>Unavailable</yellow>"
       rtp:
         worlds: "<gray>Available RTP worlds:</gray> <white>%count%</white>"
       warp:
@@ -201,9 +215,30 @@ command:
       delhome:
         name: "<gold>/delhome</gold>"
         description: "<gray>Delete one of your saved homes.</gray>"
+      residence:
+        name: "<gold>/res</gold>"
+        description: "<gray>Shows your current Residence limits on this server.</gray>"
       warp:
         name: "<gold>/warp</gold>"
         description: "<gray>Use or browse public warps.</gray>"
+      vote:
+        name: "<gold>/vote</gold>"
+        description: "<gray>Vote for the server and check your available vote rewards.</gray>"
+      kits:
+        name: "<gold>/kits</gold>"
+        description: "<gray>Open your available kits and claim kit rewards.</gray>"
+      skins:
+        name: "<gold>/skin</gold>"
+        description: "<gray>Change or manage your player skin.</gray>"
+      bannermaker:
+        name: "<gold>/banner</gold>"
+        description: "<gray>Open the server's banner making feature.</gray>"
+      armorstandeditor:
+        name: "<gold>/ase</gold>"
+        description: "<gray>Edit armor stands with the server's armor stand editor.</gray>"
+      rosetimber:
+        name: "<gold>/timber</gold>"
+        description: "<gray>Use the server's timber feature for faster tree cutting.</gray>"
       afk:
         name: "<gold>/afk</gold>"
         description: "<gray>Toggle your AFK status manually.</gray>"

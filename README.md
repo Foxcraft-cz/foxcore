@@ -240,10 +240,12 @@ Built jar output:
 - Player only: yes
 - Permission: `foxcore.help`
 - Notes:
-- The main menu groups commands into `Teleport`, `Homes`, `Warps`, and `Utility`.
+- The main menu groups commands into `Teleport`, `Homes`, `Warps`, `Server Features`, and `Utility`.
 - Categories are hidden when you do not have any matching player commands in them.
 - Command entries show a short description, usage, and player-specific extra details where useful.
 - The help GUI shows dynamic information for homes, `/back`, `/rtp`, `/warp`, and spawn availability.
+- If the `Residence` plugin is loaded, the help GUI also shows a Residence info entry with the configured residence count and size limits.
+- If supported plugins are loaded, the help GUI also shows optional `Server Features` entries for vote, kits, skins, banner tools, armor stand editing, and timber.
 - Clicking a command entry closes the GUI and shows that command's description and usage in chat.
 
 ### `/fly [player]`
@@ -873,6 +875,48 @@ spawn:
 translations:
   locale: en
 
+help:
+  residence:
+    enabled: true
+    plugin-name: Residence
+    max-count-placeholders:
+      - "%residence_maxres%"
+      - "%residence_user_maxres%"
+    max-size-placeholders:
+      - "%residence_maxrsize%"
+      - "%residence_user_maxrsize%"
+  integrations:
+    vote:
+      enabled: true
+      plugin-name: VotingPlugin
+      command: "/vote"
+      pending-placeholders:
+        - "%VotingPlugin_UnClaimedVotes%"
+        - "%votingplugin_unclaimedvotes%"
+    kits:
+      enabled: true
+      plugin-name: PlayerKits2
+      command: "/kits"
+      available-placeholders:
+        - "%playerkits2_available%"
+        - "%playerkits_available%"
+    skinsrestorer:
+      enabled: true
+      plugin-name: SkinsRestorer
+      command: "/skin"
+    bannermaker:
+      enabled: true
+      plugin-name: BannerMaker
+      command: "/banner"
+    armorstandeditor:
+      enabled: true
+      plugin-name: ArmorStandEditor
+      command: "/ase"
+    rosetimber:
+      enabled: true
+      plugin-name: RoseTimber
+      command: "/timber"
+
 warp:
   teleport-cooldown-seconds: 0
 
@@ -899,6 +943,35 @@ tpa:
 - Controls which bundled translation file is loaded.
 - Current bundled locale: `en`
 - Translation files are stored in `plugins/foxcore/translations/`.
+
+### `help.residence.enabled`
+- Enables or disables the optional Residence info block in the player help GUI.
+
+### `help.residence.plugin-name`
+- Controls which plugin name FoxCore checks before showing Residence help information.
+
+### `help.residence.max-count-placeholders`
+- Lists PlaceholderAPI placeholders FoxCore will try to resolve for the player's maximum number of residences.
+- The first resolved non-empty value is shown in the help GUI.
+
+### `help.residence.max-size-placeholders`
+- Lists PlaceholderAPI placeholders FoxCore will try to resolve for the player's maximum residence size.
+- The first resolved non-empty value is shown in the help GUI.
+
+### `help.integrations.<feature>.enabled`
+- Enables or disables a specific optional plugin entry in the player help GUI.
+
+### `help.integrations.<feature>.plugin-name`
+- Controls which plugin FoxCore checks before showing that help entry.
+
+### `help.integrations.<feature>.command`
+- Controls which command label FoxCore displays in the help GUI for that feature.
+
+### `help.integrations.vote.pending-placeholders`
+- Lists PlaceholderAPI placeholders FoxCore will try to resolve for pending vote rewards.
+
+### `help.integrations.kits.available-placeholders`
+- Lists PlaceholderAPI placeholders FoxCore will try to resolve for currently available kits.
 
 ### `storage.type`
 - Selects the persistence backend.

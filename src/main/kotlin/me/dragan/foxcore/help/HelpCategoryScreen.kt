@@ -93,6 +93,14 @@ class HelpCategoryScreen(
             "help.dynamic.back.types" -> plugin.messages.text("command.help.dynamic.back.types", "types" to value)
             "help.dynamic.rtp.worlds" -> plugin.messages.text("command.help.dynamic.rtp.worlds", "count" to value)
             "help.dynamic.warp.count" -> plugin.messages.text("command.help.dynamic.warp.count", "count" to value)
+            "help.dynamic.residence.max-count" -> plugin.messages.text("command.help.dynamic.residence.max-count", "count" to value)
+            "help.dynamic.residence.max-count-unavailable" -> plugin.messages.text("command.help.dynamic.residence.max-count-unavailable")
+            "help.dynamic.residence.max-size" -> plugin.messages.text("command.help.dynamic.residence.max-size", "size" to value)
+            "help.dynamic.residence.max-size-unavailable" -> plugin.messages.text("command.help.dynamic.residence.max-size-unavailable")
+            "help.dynamic.vote.pending" -> plugin.messages.text("command.help.dynamic.vote.pending", "count" to value)
+            "help.dynamic.vote.pending-unavailable" -> plugin.messages.text("command.help.dynamic.vote.pending-unavailable")
+            "help.dynamic.kits.available" -> plugin.messages.text("command.help.dynamic.kits.available", "count" to value)
+            "help.dynamic.kits.available-unavailable" -> plugin.messages.text("command.help.dynamic.kits.available-unavailable")
             "help.dynamic.spawn.available" -> plugin.messages.text("command.help.dynamic.spawn.available")
             "help.dynamic.spawn.unset" -> plugin.messages.text("command.help.dynamic.spawn.unset")
             "help.dynamic.tpa.expiration" -> plugin.messages.text("command.help.dynamic.tpa.expiration", "seconds" to value)
@@ -117,7 +125,14 @@ class HelpCategoryScreen(
             "renamehome" -> "/renamehome <old> <new>"
             "sethomeicon" -> "/sethomeicon <name> [material]"
             "delhome" -> "/delhome <home>"
+            "residence" -> "/res"
             "warp" -> "/warp [name]"
+            "vote" -> plugin.pluginHelpInfo.commandLabel("help.integrations.vote.command", "/vote")
+            "kits" -> plugin.pluginHelpInfo.commandLabel("help.integrations.kits.command", "/kits")
+            "skins" -> plugin.pluginHelpInfo.commandLabel("help.integrations.skinsrestorer.command", "/skin")
+            "bannermaker" -> plugin.pluginHelpInfo.commandLabel("help.integrations.bannermaker.command", "/banner")
+            "armorstandeditor" -> plugin.pluginHelpInfo.commandLabel("help.integrations.armorstandeditor.command", "/ase")
+            "rosetimber" -> plugin.pluginHelpInfo.commandLabel("help.integrations.rosetimber.command", "/timber")
             "afk" -> "/afk"
             "onlinetime" -> "/onlinetime [player]"
             "hat" -> "/hat"

@@ -87,6 +87,48 @@ rtp:
 translations:
   locale: en
 
+help:
+  residence:
+    enabled: true
+    plugin-name: Residence
+    max-count-placeholders:
+      - "%residence_maxres%"
+      - "%residence_user_maxres%"
+    max-size-placeholders:
+      - "%residence_maxrsize%"
+      - "%residence_user_maxrsize%"
+  integrations:
+    vote:
+      enabled: true
+      plugin-name: VotingPlugin
+      command: "/vote"
+      pending-placeholders:
+        - "%VotingPlugin_UnClaimedVotes%"
+        - "%votingplugin_unclaimedvotes%"
+    kits:
+      enabled: true
+      plugin-name: PlayerKits2
+      command: "/kits"
+      available-placeholders:
+        - "%playerkits2_available%"
+        - "%playerkits_available%"
+    skinsrestorer:
+      enabled: true
+      plugin-name: SkinsRestorer
+      command: "/skin"
+    bannermaker:
+      enabled: true
+      plugin-name: BannerMaker
+      command: "/banner"
+    armorstandeditor:
+      enabled: true
+      plugin-name: ArmorStandEditor
+      command: "/ase"
+    rosetimber:
+      enabled: true
+      plugin-name: RoseTimber
+      command: "/timber"
+
 teleport:
   notify-target: true
   vanish-check:

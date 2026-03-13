@@ -22,7 +22,7 @@ class HelpMenuScreen(
 
         val visibleEntries = HelpCatalog.visibleEntries(plugin, viewer)
         val categories = HelpCategory.entries.filter { category -> visibleEntries.any { it.category == category } }
-        val slots = listOf(10, 12, 14, 16)
+        val slots = listOf(10, 11, 13, 15, 16)
 
         for (slot in 0 until size) {
             inventory.setItem(slot, filler())
@@ -57,7 +57,7 @@ class HelpMenuScreen(
         val viewer = plugin.server.getPlayer(session.viewerId) ?: return
         val visibleEntries = HelpCatalog.visibleEntries(plugin, viewer)
         val categories = HelpCategory.entries.filter { category -> visibleEntries.any { it.category == category } }
-        val slots = listOf(10, 12, 14, 16)
+        val slots = listOf(10, 11, 13, 15, 16)
 
         if (rawSlot == 22) {
             viewer.closeInventory()

@@ -9,5 +9,6 @@ enum class HelpCategory(
     TELEPORT("teleport", Material.ENDER_PEARL),
     HOMES("homes", Material.RED_BED),
     WARPS("warps", Material.COMPASS),
+    FEATURES("features", Material.NETHER_STAR),
     UTILITY("utility", Material.BOOK),
 }

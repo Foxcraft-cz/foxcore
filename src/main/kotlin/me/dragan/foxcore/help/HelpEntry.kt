@@ -8,6 +8,6 @@ data class HelpEntry(
     val key: String,
     val category: HelpCategory,
     val icon: Material,
-    val visibleTo: (Player) -> Boolean,
+    val visibleTo: (FoxCorePlugin, Player) -> Boolean,
     val dynamicLore: (FoxCorePlugin, Player) -> List<String> = { _, _ -> emptyList() },
 )
