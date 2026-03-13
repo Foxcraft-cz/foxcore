@@ -3,8 +3,10 @@ package me.dragan.foxcore
 import me.dragan.foxcore.afk.AfkService
 import me.dragan.foxcore.back.BackCommand
 import me.dragan.foxcore.back.BackService
+import me.dragan.foxcore.broadcast.BroadcastService
 import me.dragan.foxcore.back.storage.StorageFactory
 import me.dragan.foxcore.command.AfkCommand
+import me.dragan.foxcore.command.BroadcastCommand
 import me.dragan.foxcore.command.FoxCoreCommand
 import me.dragan.foxcore.command.FlyCommand
 import me.dragan.foxcore.command.AdminWarpCommand
@@ -15,6 +17,7 @@ import me.dragan.foxcore.command.WorldWeatherShortcutCommand
 import me.dragan.foxcore.command.WhoisCommand
 import me.dragan.foxcore.command.GamemodeShortcutCommand
 import me.dragan.foxcore.command.HeadCommand
+import me.dragan.foxcore.command.HelpCommand
 import me.dragan.foxcore.command.HatCommand
 import me.dragan.foxcore.command.HomeCommand
 import me.dragan.foxcore.command.HomesCommand
@@ -53,6 +56,8 @@ import me.dragan.foxcore.portal.PortalService
 import me.dragan.foxcore.rtp.RtpService
 import me.dragan.foxcore.spawn.SpawnService
 import me.dragan.foxcore.teleport.SafeTeleportService
+import me.dragan.foxcore.teleport.TeleportEffectService
+import me.dragan.foxcore.teleport.VanishService
 import me.dragan.foxcore.tpa.TpaRequestService
 import me.dragan.foxcore.placeholder.FoxCorePlaceholderExpansion
 import me.dragan.foxcore.warp.WarpService
@@ -66,11 +71,17 @@ class FoxCorePlugin : JavaPlugin() {
         private set
     lateinit var backService: BackService
         private set
+    lateinit var broadcasts: BroadcastService
+        private set
     lateinit var messages: MessageService
         private set
     lateinit var guiManager: GuiManager
         private set
     lateinit var safeTeleports: SafeTeleportService
+        private set
+    lateinit var teleportEffects: TeleportEffectService
+        private set
+    lateinit var vanishService: VanishService
         private set
     lateinit var spawnService: SpawnService
         private set
@@ -93,9 +104,12 @@ class FoxCorePlugin : JavaPlugin() {
         val storage = StorageFactory.create(this, config)
         storage.initialize()
         backService = BackService(this, storage)
+        broadcasts = BroadcastService(this)
         guiManager = GuiManager()
         tpaRequests = TpaRequestService()
         afk = AfkService(this)
+        teleportEffects = TeleportEffectService(this)
+        vanishService = VanishService(this)
         safeTeleports = SafeTeleportService(this)
         spawnService = SpawnService(this)
         rtpService = RtpService(this)
@@ -104,6 +118,7 @@ class FoxCorePlugin : JavaPlugin() {
         messages = MessageService(this).also { it.reload() }
 
         registerCommand("back", BackCommand(this))
+        registerCommand("broadcast", BroadcastCommand(this))
         registerCommand(
             "anvil",
             InventoryOpenerCommand(this, "foxcore.anvil", "command.anvil") { player ->
@@ -145,6 +160,7 @@ class FoxCorePlugin : JavaPlugin() {
         )
         registerCommand("hat", HatCommand(this))
         registerCommand("head", HeadCommand(this))
+        registerCommand("help", HelpCommand(this))
         registerCommand("home", HomeCommand(this))
         registerCommand("homes", HomesCommand(this))
         registerCommand("onlinetime", OnlineTimeCommand(this))
@@ -191,6 +207,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("foxcore", FoxCoreCommand(this))
         server.onlinePlayers.forEach { backService.loadPlayer(it.uniqueId) }
         afk.start()
+        broadcasts.reload()
         maybeRegisterPlaceholderExpansion()
         server.pluginManager.registerEvents(AfkListener(this), this)
         server.pluginManager.registerEvents(BackTrackingListener(this), this)
@@ -208,6 +225,7 @@ class FoxCorePlugin : JavaPlugin() {
         syncBundledFiles()
         reloadConfig()
         afk.start()
+        broadcasts.reload()
         rtpService.reload()
         portals.reload()
         warps.reload()
@@ -218,6 +236,9 @@ class FoxCorePlugin : JavaPlugin() {
     override fun onDisable() {
         if (::afk.isInitialized) {
             afk.stop()
+        }
+        if (::broadcasts.isInitialized) {
+            broadcasts.stop()
         }
         if (::portals.isInitialized) {
             portals.shutdown()

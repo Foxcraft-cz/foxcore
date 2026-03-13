@@ -35,11 +35,17 @@ command:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/anvil</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual anvil.</green>"
   back:
-    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/back</white>"
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/back [teleport|death]</white>"
     loading: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Your back data is still loading. Try again in a moment.</yellow>"
     none: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have a saved back location.</red>"
+    none-teleport: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have a saved teleport back location.</red>"
+    none-death: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have a saved death back location.</red>"
     missing-world: "<gray>[<gold>FoxCore</gold>]</gray> <red>The saved world <white>%world%</white> is not available.</red>"
-    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleported you back.</green>"
+    success-teleport: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleported you to your last teleport back location.</green>"
+    success-death: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleported you to your last death location.</green>"
+  broadcast:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/broadcast &lt;message...&gt;</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Broadcast sent.</green>"
   cartographytable:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/cartographytable</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual cartography table.</green>"
@@ -103,6 +109,137 @@ command:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/head [player] [amount]</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>That is not a valid player name for a head.</red>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Gave you <white>%amount%</white>x head of <white>%player%</white>.</green>"
+  help:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/help</white>"
+    menu-title: "<gold>FoxCore Help</gold>"
+    close: "<red>Close</red>"
+    empty-title: "<yellow>No Commands Available</yellow>"
+    empty-line1: "<gray>You do not currently have access to any player commands shown here.</gray>"
+    empty-line2: "<gray>If this seems wrong, ask staff to check your permissions.</gray>"
+    open-category: "<yellow>Click to open</yellow>"
+    back-to-categories: "<yellow>Back to Categories</yellow>"
+    previous-page: "<yellow>Previous Page</yellow>"
+    next-page: "<yellow>Next Page</yellow>"
+    category-screen-title: "<gold>%category%</gold>"
+    category:
+      count: "<gray>Available commands:</gray> <white>%count%</white>"
+      teleport:
+        name: "<gold>Teleport</gold>"
+        description: "<gray>Movement, travel, and request commands you can use.</gray>"
+      homes:
+        name: "<gold>Homes</gold>"
+        description: "<gray>Your home commands and current home limits.</gray>"
+      warps:
+        name: "<gold>Warps</gold>"
+        description: "<gray>Public warp commands available to you.</gray>"
+      utility:
+        name: "<gold>Utility</gold>"
+        description: "<gray>Useful everyday commands and virtual tools.</gray>"
+    command-header: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Command:</yellow> <white>%command%</white>"
+    command-usage: "<gray>Usage:</gray> <white>%usage%</white>"
+    command-click: "<yellow>Click this item to view the command in chat.</yellow>"
+    dynamic:
+      homes:
+        limit: "<gray>Home limit:</gray> <white>%count%</white>"
+        limit-unlimited: "<gray>Home limit:</gray> <white>Unlimited</white>"
+        current: "<gray>Current homes:</gray> <white>%count%</white>"
+        loading: "<gray>Current homes:</gray> <yellow>Loading...</yellow>"
+      back:
+        types: "<gray>Available back types:</gray> <white>%types%</white>"
+      rtp:
+        worlds: "<gray>Available RTP worlds:</gray> <white>%count%</white>"
+      warp:
+        count: "<gray>Public warps:</gray> <white>%count%</white>"
+      spawn:
+        available: "<gray>Server spawn:</gray> <green>Available</green>"
+        unset: "<gray>Server spawn:</gray> <red>Unavailable</red>"
+      tpa:
+        expiration: "<gray>Request expiration:</gray> <white>%seconds%</white>s"
+    command:
+      spawn:
+        name: "<gold>/spawn</gold>"
+        description: "<gray>Teleport yourself to the configured server spawn.</gray>"
+      back:
+        name: "<gold>/back</gold>"
+        description: "<gray>Go back to your newest permitted back location.</gray>"
+      tp:
+        name: "<gold>/tp</gold>"
+        description: "<gray>Teleport yourself to another player.</gray>"
+      tphere:
+        name: "<gold>/tphere</gold>"
+        description: "<gray>Teleport another player to you.</gray>"
+      tpa:
+        name: "<gold>/tpa</gold>"
+        description: "<gray>Send a teleport request to another player.</gray>"
+      tpahere:
+        name: "<gold>/tpahere</gold>"
+        description: "<gray>Send a teleport-here request to another player.</gray>"
+      tpaccept:
+        name: "<gold>/tpaccept</gold>"
+        description: "<gray>Accept a pending teleport request.</gray>"
+      tpadeny:
+        name: "<gold>/tpadeny</gold>"
+        description: "<gray>Deny a pending teleport request.</gray>"
+      rtp:
+        name: "<gold>/rtp</gold>"
+        description: "<gray>Teleport to a random safe location in an enabled world.</gray>"
+      home:
+        name: "<gold>/home</gold>"
+        description: "<gray>Open your homes menu or teleport to a saved home.</gray>"
+      homes:
+        name: "<gold>/homes</gold>"
+        description: "<gray>Browse your saved homes.</gray>"
+      sethome:
+        name: "<gold>/sethome</gold>"
+        description: "<gray>Set a new home at your current location.</gray>"
+      renamehome:
+        name: "<gold>/renamehome</gold>"
+        description: "<gray>Rename one of your homes.</gray>"
+      sethomeicon:
+        name: "<gold>/sethomeicon</gold>"
+        description: "<gray>Change the item icon used for one of your homes.</gray>"
+      delhome:
+        name: "<gold>/delhome</gold>"
+        description: "<gray>Delete one of your saved homes.</gray>"
+      warp:
+        name: "<gold>/warp</gold>"
+        description: "<gray>Use or browse public warps.</gray>"
+      afk:
+        name: "<gold>/afk</gold>"
+        description: "<gray>Toggle your AFK status manually.</gray>"
+      onlinetime:
+        name: "<gold>/onlinetime</gold>"
+        description: "<gray>Show your playtime and session information.</gray>"
+      hat:
+        name: "<gold>/hat</gold>"
+        description: "<gray>Put the item in your hand on your head.</gray>"
+      head:
+        name: "<gold>/head</gold>"
+        description: "<gray>Give yourself a player head item.</gray>"
+      craft:
+        name: "<gold>/craft</gold>"
+        description: "<gray>Open a virtual crafting table.</gray>"
+      enderchest:
+        name: "<gold>/enderchest</gold>"
+        description: "<gray>Open your ender chest.</gray>"
+      anvil:
+        name: "<gold>/anvil</gold>"
+        description: "<gray>Open a virtual anvil.</gray>"
+      cartographytable:
+        name: "<gold>/cartographytable</gold>"
+        description: "<gray>Open a virtual cartography table.</gray>"
+      loom:
+        name: "<gold>/loom</gold>"
+        description: "<gray>Open a virtual loom.</gray>"
+      grindstone:
+        name: "<gold>/grindstone</gold>"
+        description: "<gray>Open a virtual grindstone.</gray>"
+      smithingtable:
+        name: "<gold>/smithingtable</gold>"
+        description: "<gray>Open a virtual smithing table.</gray>"
+      stonecutter:
+        name: "<gold>/stonecutter</gold>"
+        description: "<gray>Open a virtual stonecutter.</gray>"
   sethome:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/sethome [name]</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Home names must use only letters, numbers, underscores, or dashes and be at most 32 characters long.</red>"

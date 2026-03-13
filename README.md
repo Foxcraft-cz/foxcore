@@ -18,7 +18,13 @@ Built jar output:
 - `/afk`
   Toggles your AFK state manually.
 - `/back`
-  Teleports you back to your last saved location or death location.
+  Teleports you back to your newest permitted back location.
+- `/back teleport` or `/back death`
+  Teleports you specifically to your last teleport/disconnect back location or your last death location.
+- scheduled broadcasts
+  Sends formatted server broadcast messages automatically on a timer using random selection without immediate repeats.
+- `/broadcast <message...>` or `/bc <message...>`
+  Sends a formatted manual broadcast to all online players and console.
 - `/anvil`
   Opens a virtual anvil.
 - `/cartographytable` or `/cartography`
@@ -45,6 +51,8 @@ Built jar output:
   Puts the item in your hand on your head slot.
 - `/head [player] [amount]` or `/skull [player] [amount]`
   Gives you a player head by name.
+- `/help` or `/commands`
+  Opens a player help GUI with only the commands and features available to you.
 - `/sethome [name]`
   Saves your current location as a named home.
 - `/renamehome <old> <new>`
@@ -137,19 +145,42 @@ Built jar output:
 - Movement only resets activity after a real block-position change and ignores passive movement such as water drift, bubble columns, vehicles, gliding, and flight.
 - Players with `foxcore.afk.bypass` are excluded from AFK flagging and AFK kicks.
 - Players with `foxcore.afk.bypass-kick` are still flagged AFK normally but are not kicked by the AFK timeout.
+- Players detected as vanished through FoxCore's PlaceholderAPI vanish check are also excluded from the AFK system entirely.
 - The bypass is explicit and negative-style: `op` alone does not bypass AFK.
 - If PlaceholderAPI is installed, FoxCore registers `%foxcore_afk%`, `%foxcore_afk_status%`, `%foxcore_afk_duration_seconds%`, and `%foxcore_afk_duration_human%`.
 
-### `/back`
-- Description: Teleports you back to your most recent saved back location.
+### `/back`, `/back teleport`, and `/back death`
+- Description: Teleports you back to your most recent permitted back location, or a specific back location type.
 - Player only: yes
-- Permission: `foxcore.back`
+- Permissions:
+- `foxcore.back.teleport`
+- `foxcore.back.death`
 - Notes:
-- Uses the most recent saved location from teleports, disconnects, or death.
-- Death locations can be prioritized by config.
+- `/back` chooses the newest saved destination you are allowed to use.
+- `/back teleport` uses only your saved teleport/disconnect back location and requires `foxcore.back.teleport`.
+- `/back death` uses only your saved death location and requires `foxcore.back.death`.
 - Data survives disconnects, restarts, and reloads.
 - If you are flying, you are kept in the air.
 - If you are not flying, FoxCore tries to place you on safe ground and cancels the teleport if none is found.
+- Supports tab completion for `teleport` and `death`.
+
+### Scheduled Broadcasts
+- Description: Sends configured server-wide broadcasts automatically on a repeating timer.
+- Player only: no
+- Permission: none
+- Notes:
+- Broadcast entries can be single-line or multi-line.
+- Broadcast content supports MiniMessage formatting.
+- FoxCore supports `%online%`, `%max%`, and `%server%` placeholders inside scheduled and manual broadcasts.
+- In `random` mode, FoxCore avoids repeating the same scheduled broadcast twice in a row when multiple broadcasts are configured.
+
+### `/broadcast <message...>` or `/bc <message...>`
+- Description: Sends a formatted manual broadcast to all online players and console.
+- Player only: no
+- Permission: `foxcore.broadcast`
+- Notes:
+- Supports MiniMessage formatting such as `<gold>`, `<gray>`, `<red>`, and similar tags used elsewhere in FoxCore.
+- Manual broadcasts are currently single-line.
 
 ### `/delhome <home>` and `/delhome <player> <home>`
 - Description: Deletes saved homes.
@@ -203,6 +234,17 @@ Built jar output:
 - With no arguments, gives your own head.
 - If the first argument is a number, it is treated as the amount for your own head.
 - Amount defaults to `1` and is clamped to a maximum of `64`.
+
+### `/help` or `/commands`
+- Description: Opens a player help GUI that lists only the commands available to you.
+- Player only: yes
+- Permission: `foxcore.help`
+- Notes:
+- The main menu groups commands into `Teleport`, `Homes`, `Warps`, and `Utility`.
+- Categories are hidden when you do not have any matching player commands in them.
+- Command entries show a short description, usage, and player-specific extra details where useful.
+- The help GUI shows dynamic information for homes, `/back`, `/rtp`, `/warp`, and spawn availability.
+- Clicking a command entry closes the GUI and shows that command's description and usage in chat.
 
 ### `/fly [player]`
 - Description: Toggles flight for yourself or another online player.
@@ -528,7 +570,16 @@ Built jar output:
 
 ### `foxcore.back`
 - Default: `op`
-- Allows teleporting back to your last saved or death location.
+- Reserved base node for `/back` access control if you want to grant it alongside subtype permissions.
+- FoxCore itself resolves `/back` using `foxcore.back.teleport` and `foxcore.back.death`.
+
+### `foxcore.back.teleport`
+- Default: `op`
+- Allows teleporting to your last saved teleport or disconnect back location.
+
+### `foxcore.back.death`
+- Default: `op`
+- Allows teleporting to your last saved death location.
 
 ### `foxcore.delhome`
 - Default: `true`
@@ -557,6 +608,14 @@ Built jar output:
 ### `foxcore.head`
 - Default: `op`
 - Allows giving yourself player heads by name.
+
+### `foxcore.help`
+- Default: `true`
+- Allows opening the player help GUI with `/help` or `/commands`.
+
+### `foxcore.broadcast`
+- Default: `op`
+- Allows sending manual server broadcasts with `/broadcast` or `/bc`.
 
 ### `foxcore.fly`
 - Default: `op`
@@ -771,6 +830,17 @@ join-messages:
   quit-broadcast-enabled: true
   personal-enabled: true
 
+broadcasts:
+  enabled: false
+  interval-seconds: 600
+  mode: random
+  messages:
+    - "<gray>[<gold>Discord</gold>]</gray> <yellow>Join our community on <aqua>Discord</aqua>. Use <white>/discord</white> for the invite.</yellow>"
+    - "<gray>[<gold>Vote</gold>]</gray> <yellow>Support the server and claim rewards with <white>/vote</white>.</yellow>"
+    - "<gray>[<gold>Back</gold>]</gray> <yellow>Died recently? Use <white>/back death</white> to return to your death location if you have access.</yellow>"
+    - - "<gray>[<gold>Help</gold>]</gray> <yellow>Need a quick overview of player commands?</yellow>"
+      - "<gray>[<gold>Help</gold>]</gray> <yellow>Open the command guide with <white>/foxhelp</white> or <white>/commands</white>.</yellow>"
+
 afk:
   enabled: true
   idle-seconds: 300
@@ -803,11 +873,23 @@ spawn:
 translations:
   locale: en
 
-teleport:
-  notify-target: true
-
 warp:
   teleport-cooldown-seconds: 0
+
+teleport:
+  notify-target: true
+  vanish-check:
+    enabled: true
+    placeholders:
+      - "%supervanish_isvanished%"
+      - "%premiumvanish_isvanished%"
+      - "%essentials_vanished%"
+  effects:
+    enabled: true
+    particles:
+      enabled: true
+    sounds:
+      enabled: true
 
 tpa:
   request-expiration-seconds: 60
@@ -850,6 +932,22 @@ tpa:
 - Enables or disables the personal multi-line welcome shown to the joining player.
 - The default translation includes server info and command hints.
 
+### `broadcasts.enabled`
+- Enables or disables scheduled broadcasts entirely.
+
+### `broadcasts.interval-seconds`
+- Controls how often FoxCore sends a scheduled broadcast.
+
+### `broadcasts.mode`
+- Controls how scheduled broadcasts are selected.
+- Supported values: `random`, `sequential`
+- In `random` mode, FoxCore avoids broadcasting the same message twice in a row when possible.
+
+### `broadcasts.messages`
+- Defines the scheduled broadcast pool.
+- Each entry can be either one string or a list of strings for multi-line broadcasts.
+- Supports MiniMessage formatting and the `%online%`, `%max%`, and `%server%` placeholders.
+
 ### `afk.enabled`
 - Enables or disables the automatic AFK system entirely.
 
@@ -870,6 +968,7 @@ tpa:
 - Controls how long a player may remain AFK before being kicked.
 - Players with `foxcore.afk.bypass` are excluded from the AFK system entirely.
 - Players with `foxcore.afk.bypass-kick` still enter AFK but are skipped by the AFK kick timeout.
+- Players detected as vanished through FoxCore's PlaceholderAPI vanish check are excluded from the AFK system entirely.
 
 ### `portals.enabled`
 - Enables or disables portal triggering and portal particles globally.
@@ -933,6 +1032,23 @@ tpa:
 ### `teleport.notify-target`
 - If `true`, teleport targets receive a notification message.
 
+### `teleport.vanish-check.enabled`
+- Enables or disables PlaceholderAPI-based vanish checks for teleport effects and target notifications.
+
+### `teleport.vanish-check.placeholders`
+- Lists PlaceholderAPI vanish placeholders to test.
+- If any configured placeholder resolves to `true`, `yes`, `on`, or `1`, FoxCore treats the teleported player as vanished.
+- This lets FoxCore suppress teleport particles, sounds, and target notifications without depending on a specific vanish plugin.
+
+### `teleport.effects.enabled`
+- Enables or disables FoxCore teleport particles and sounds for successful teleports.
+
+### `teleport.effects.particles.enabled`
+- Enables or disables the particle burst shown at the origin and destination of successful teleports.
+
+### `teleport.effects.sounds.enabled`
+- Enables or disables the teleport sounds played at the origin and destination of successful teleports.
+
 ### `tpa.request-expiration-seconds`
 - Controls how long a `/tpa` request remains valid.
 - Minimum effective value is `1`.
@@ -954,6 +1070,14 @@ tpa:
 - `%foxcore_afk_status%`
 - `%foxcore_afk_duration_seconds%`
 - `%foxcore_afk_duration_human%`
+- `%foxcore_logout_<playername>%`
+- `%foxcore_quit_broadcast_<playername>%`
+- `%foxcore_login_<playername>%`
+- `%foxcore_join_broadcast_<playername>%`
+- The join/quit placeholders return plain text so they can be passed to other plugins safely.
+- `%foxcore_logout_<playername>%` and `%foxcore_quit_broadcast_<playername>%` are aliases for the configured quit broadcast.
+- `%foxcore_login_<playername>%` and `%foxcore_join_broadcast_<playername>%` return the configured join broadcast text.
+- The join placeholder uses the first-join broadcast when the target player is cached and known to be a first-time player; otherwise it falls back to the normal join broadcast.
 
 ## Warp Formatting
 - Warp titles and descriptions use MiniMessage formatting.

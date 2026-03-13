@@ -152,7 +152,7 @@ class AfkService(
             val state = states.computeIfAbsent(player.uniqueId) { AfkState(lastActivityAtMillis = now) }
             val hasFullBypass = hasPermission(player, BYPASS_PERMISSION)
             val hasKickBypass = hasPermission(player, BYPASS_KICK_PERMISSION)
-            if (hasFullBypass) {
+            if (hasFullBypass || plugin.vanishService.isVanished(player)) {
                 if (state.isAfk) {
                     plugin.broadcastAfkState(player, becameAfk = false)
                     states[player.uniqueId] = state.copy(

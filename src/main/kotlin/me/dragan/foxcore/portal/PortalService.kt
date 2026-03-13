@@ -408,13 +408,13 @@ class PortalService(
             PortalPlane.XY -> ((portal.bounds.maxX - portal.bounds.minX) + 1) * ((portal.bounds.maxY - portal.bounds.minY) + 1)
             PortalPlane.XZ -> ((portal.bounds.maxX - portal.bounds.minX) + 1) * ((portal.bounds.maxZ - portal.bounds.minZ) + 1)
         }
-        return (area / 3).coerceIn(4, 16)
+        return ((area / 2) + 2).coerceIn(8, 28)
     }
 
     private fun frameParticleCount(portal: PortalDefinition): Int =
         when (portal.particlePreset) {
-            PortalParticlePreset.END -> 3
-            else -> 4
+            PortalParticlePreset.END -> 5
+            else -> 7
         }
 
     private fun load() {

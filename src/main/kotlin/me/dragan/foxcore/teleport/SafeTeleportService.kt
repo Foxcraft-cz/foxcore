@@ -1,16 +1,17 @@
 package me.dragan.foxcore.teleport
 
+import me.dragan.foxcore.FoxCorePlugin
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 
 class SafeTeleportService(
-    private val plugin: JavaPlugin,
+    private val plugin: FoxCorePlugin,
 ) {
     fun teleport(player: Player, requested: Location): SafeTeleportResult {
+        val origin = player.location.clone()
         val world = requested.world ?: return SafeTeleportResult.NO_SAFE_GROUND
 
         val destination = if (player.allowFlight) {
@@ -28,6 +29,7 @@ class SafeTeleportService(
             player.isFlying = true
         }
 
+        plugin.teleportEffects.play(player, origin, destination)
         return SafeTeleportResult.SUCCESS
     }
 

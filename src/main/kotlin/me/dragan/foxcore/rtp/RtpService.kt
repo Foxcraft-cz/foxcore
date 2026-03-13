@@ -130,6 +130,7 @@ class RtpService(
                     }
 
                     else -> {
+                        val origin = player.location.clone()
                         val success = player.teleport(result)
                         finish(player.uniqueId)
                         if (!success) {
@@ -141,6 +142,7 @@ class RtpService(
                             player.isFlying = true
                         }
 
+                        plugin.teleportEffects.play(player, origin, result)
                         cooldowns[player.uniqueId] = System.currentTimeMillis() + (settings.cooldownSeconds * 1000L)
                         onComplete(RtpResult.Success(result))
                     }

@@ -69,9 +69,10 @@ data class PortalBounds(
 
     fun randomInteriorPoint(random: java.util.concurrent.ThreadLocalRandom): PortalParticlePoint {
         val inset = 0.15
+        val outwardOffset = 0.72
         return when (preferredPlane()) {
             PortalPlane.YZ -> PortalParticlePoint(
-                x = centerX() + random.nextDouble(-0.08, 0.08),
+                x = centerX() + if (random.nextBoolean()) outwardOffset else -outwardOffset,
                 y = minY + inset + random.nextDouble((maxY - minY + 1).toDouble() - (inset * 2.0)),
                 z = minZ + inset + random.nextDouble((maxZ - minZ + 1).toDouble() - (inset * 2.0)),
             )
@@ -79,12 +80,12 @@ data class PortalBounds(
             PortalPlane.XY -> PortalParticlePoint(
                 x = minX + inset + random.nextDouble((maxX - minX + 1).toDouble() - (inset * 2.0)),
                 y = minY + inset + random.nextDouble((maxY - minY + 1).toDouble() - (inset * 2.0)),
-                z = centerZ() + random.nextDouble(-0.08, 0.08),
+                z = centerZ() + if (random.nextBoolean()) outwardOffset else -outwardOffset,
             )
 
             PortalPlane.XZ -> PortalParticlePoint(
                 x = minX + inset + random.nextDouble((maxX - minX + 1).toDouble() - (inset * 2.0)),
-                y = centerY() + random.nextDouble(-0.08, 0.08),
+                y = centerY() + if (random.nextBoolean()) outwardOffset else -outwardOffset,
                 z = minZ + inset + random.nextDouble((maxZ - minZ + 1).toDouble() - (inset * 2.0)),
             )
         }
@@ -92,7 +93,13 @@ data class PortalBounds(
 
     fun randomFramePoint(random: java.util.concurrent.ThreadLocalRandom): PortalParticlePoint {
         val edgePoints = outlinePoints(step = 1.25)
-        return edgePoints[random.nextInt(edgePoints.size)]
+        val base = edgePoints[random.nextInt(edgePoints.size)]
+        val offset = 0.72
+        return when (preferredPlane()) {
+            PortalPlane.YZ -> base.copy(x = centerX() + if (random.nextBoolean()) offset else -offset)
+            PortalPlane.XY -> base.copy(z = centerZ() + if (random.nextBoolean()) offset else -offset)
+            PortalPlane.XZ -> base.copy(y = centerY() + if (random.nextBoolean()) offset else -offset)
+        }
     }
 
     companion object {

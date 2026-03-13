@@ -13,8 +13,12 @@ commands:
     permission: foxcore.afk.command
   back:
     description: Teleport back to your last saved or death location.
-    usage: /back
-    permission: foxcore.back
+    usage: /back [teleport|death]
+  broadcast:
+    aliases: [bc]
+    description: Broadcast a formatted message to the whole server.
+    usage: /broadcast <message...>
+    permission: foxcore.broadcast
   anvil:
     description: Open a virtual anvil.
     usage: /anvil
@@ -75,6 +79,11 @@ commands:
     description: Give yourself a player head by name.
     usage: /head [player] [amount]
     permission: foxcore.head
+  help:
+    aliases: [commands, foxhelp]
+    description: Open the player help menu.
+    usage: /help
+    permission: foxcore.help
   home:
     description: Teleport to one of your homes.
     usage: /home [name]
@@ -202,8 +211,20 @@ permissions:
   foxcore.afk.command:
     description: Allows toggling your own AFK state manually.
     default: true
+  foxcore.help:
+    description: Allows opening the player help menu.
+    default: true
+  foxcore.broadcast:
+    description: Allows sending manual server broadcasts.
+    default: op
   foxcore.back:
-    description: Allows teleporting back to your last saved or death location.
+    description: Allows using the /back command.
+    default: op
+  foxcore.back.teleport:
+    description: Allows teleporting to your last saved teleport or disconnect back location.
+    default: op
+  foxcore.back.death:
+    description: Allows teleporting to your last saved death location with /back or /back death.
     default: op
   foxcore.anvil:
     description: Allows opening a virtual anvil.

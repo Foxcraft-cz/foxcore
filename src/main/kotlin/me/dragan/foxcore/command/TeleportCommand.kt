@@ -110,7 +110,7 @@ class TeleportCommand(
         }
 
         player.sendMessage(plugin.messages.text("command.tp.success", "player" to target.name))
-        if (plugin.config.getBoolean("teleport.notify-target", true)) {
+        if (plugin.config.getBoolean("teleport.notify-target", true) && !plugin.vanishService.isVanished(player)) {
             target.sendMessage(plugin.messages.text("command.tp.notify-target", "player" to player.name))
         }
 

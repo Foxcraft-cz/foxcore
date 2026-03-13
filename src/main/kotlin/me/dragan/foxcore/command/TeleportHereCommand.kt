@@ -59,7 +59,7 @@ class TeleportHereCommand(
 
         player.sendMessage(plugin.messages.text("command.tphere.success", "player" to target.name))
 
-        if (plugin.config.getBoolean("teleport.notify-target", true)) {
+        if (plugin.config.getBoolean("teleport.notify-target", true) && !plugin.vanishService.isVanished(target)) {
             target.sendMessage(plugin.messages.text("command.tphere.notify-target", "player" to player.name))
         }
 

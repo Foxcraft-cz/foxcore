@@ -23,6 +23,17 @@ join-messages:
   quit-broadcast-enabled: true
   personal-enabled: true
 
+broadcasts:
+  enabled: false
+  interval-seconds: 600
+  mode: random
+  messages:
+    - "<gray>[<gold>Discord</gold>]</gray> <yellow>Join our community on <aqua>Discord</aqua>. Use <white>/discord</white> for the invite.</yellow>"
+    - "<gray>[<gold>Vote</gold>]</gray> <yellow>Support the server and claim rewards with <white>/vote</white>.</yellow>"
+    - "<gray>[<gold>Back</gold>]</gray> <yellow>Died recently? Use <white>/back death</white> to return to your death location if you have access.</yellow>"
+    - - "<gray>[<gold>Help</gold>]</gray> <yellow>Need a quick overview of player commands?</yellow>"
+      - "<gray>[<gold>Help</gold>]</gray> <yellow>Open the command guide with <white>/foxhelp</white> or <white>/commands</white>.</yellow>"
+
 afk:
   enabled: true
   idle-seconds: 300
@@ -78,6 +89,18 @@ translations:
 
 teleport:
   notify-target: true
+  vanish-check:
+    enabled: true
+    placeholders:
+      - "%supervanish_isvanished%"
+      - "%premiumvanish_isvanished%"
+      - "%essentials_vanished%"
+  effects:
+    enabled: true
+    particles:
+      enabled: true
+    sounds:
+      enabled: true
 
 warp:
   teleport-cooldown-seconds: 0

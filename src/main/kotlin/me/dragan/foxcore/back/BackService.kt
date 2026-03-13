@@ -317,16 +317,21 @@ class BackService(
         return HomeRenameResult.Success(normalizedOldName, normalizedNewName)
     }
 
-    fun findBackDestination(player: Player): BackLookupResult {
+    fun findBackDestination(player: Player, mode: BackMode, canUseTeleport: Boolean, canUseDeath: Boolean): BackLookupResult {
         val playerId = player.uniqueId
         if (!loaded.contains(playerId)) {
             return BackLookupResult.Loading
         }
 
         val data = cache[playerId] ?: return BackLookupResult.None
-        val stored = chooseBackLocation(data) ?: return BackLookupResult.None
-        val world = plugin.server.getWorld(stored.worldName) ?: return BackLookupResult.MissingWorld(stored.worldName)
-        return BackLookupResult.Success(stored.toBukkitLocation(world))
+        val candidate = chooseBackLocation(data, mode, canUseTeleport, canUseDeath) ?: return when (mode) {
+            BackMode.AUTO -> if (!canUseTeleport && !canUseDeath) BackLookupResult.NoEligiblePermission else BackLookupResult.None
+            BackMode.TELEPORT -> if (!canUseTeleport) BackLookupResult.NoEligiblePermission else BackLookupResult.MissingLocation(BackType.TELEPORT)
+            BackMode.DEATH -> if (!canUseDeath) BackLookupResult.NoEligiblePermission else BackLookupResult.MissingLocation(BackType.DEATH)
+        }
+
+        val world = plugin.server.getWorld(candidate.location.worldName) ?: return BackLookupResult.MissingWorld(candidate.location.worldName)
+        return BackLookupResult.Success(candidate.location.toBukkitLocation(world), candidate.type)
     }
 
     fun shutdownAndFlush(players: Collection<Player>) {
@@ -370,18 +375,31 @@ class BackService(
         )
     }
 
-    private fun chooseBackLocation(data: BackData): StoredLocation? {
-        val prioritizeDeath = plugin.config.getBoolean("back.prioritize-death", true)
-        val deathAt = data.lastDeathAtMillis ?: Long.MIN_VALUE
-        val lastAt = data.lastLocationAtMillis ?: Long.MIN_VALUE
-
-        return if (prioritizeDeath && deathAt >= lastAt) {
-            data.lastDeathLocation ?: data.lastLocation
+    private fun chooseBackLocation(data: BackData, mode: BackMode, canUseTeleport: Boolean, canUseDeath: Boolean): BackCandidate? {
+        val teleportCandidate = if (canUseTeleport) {
+            data.lastLocation?.let { BackCandidate(BackType.TELEPORT, it, data.lastLocationAtMillis ?: Long.MIN_VALUE) }
         } else {
-            data.lastLocation ?: data.lastDeathLocation
+            null
+        }
+        val deathCandidate = if (canUseDeath) {
+            data.lastDeathLocation?.let { BackCandidate(BackType.DEATH, it, data.lastDeathAtMillis ?: Long.MIN_VALUE) }
+        } else {
+            null
+        }
+
+        return when (mode) {
+            BackMode.TELEPORT -> teleportCandidate
+            BackMode.DEATH -> deathCandidate
+            BackMode.AUTO -> listOfNotNull(teleportCandidate, deathCandidate).maxByOrNull(BackCandidate::timestamp)
         }
     }
 }
+
+private data class BackCandidate(
+    val type: BackType,
+    val location: StoredLocation,
+    val timestamp: Long,
+)
 
 sealed interface OfflineLocationLookup {
     data object NotFound : OfflineLocationLookup
