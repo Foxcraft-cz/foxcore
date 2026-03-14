@@ -61,6 +61,9 @@ command:
     not-found-other: "<gray>[<gold>FoxCore</gold>]</gray> <red><white>%player%</white> does not have a home named <white>%home%</white>.</red>"
     success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Deleted home <white>%home%</white>.</green>"
     success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Deleted home <white>%home%</white> from <white>%player%</white>.</green>"
+  day:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/day</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set world <white>%world%</white> time to day.</green>"
   enderchest:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/enderchest</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened your ender chest.</green>"
@@ -364,6 +367,9 @@ command:
   loom:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/loom</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual loom.</green>"
+  night:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/night</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set world <white>%world%</white> time to night.</green>"
   renamehome:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/renamehome &lt;old&gt; &lt;new&gt;</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Both home names must be valid names.</red>"
@@ -372,6 +378,9 @@ command:
     already-exists: "<gray>[<gold>FoxCore</gold>]</gray> <red>You already have a home named <white>%home%</white>.</red>"
     same-name: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Your home is already named <white>%home%</white>.</yellow>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Renamed home <white>%old%</white> to <white>%new%</white>.</green>"
+  rain:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/rain</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Started rain in world <white>%world%</white>.</green>"
   warp:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/warp [name|create|delete|rename|movehere|icon|title|description]</white>"
     menu-title: "<gold>Warps</gold>"
@@ -468,6 +477,9 @@ command:
   setspawn:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/setspawn</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Server spawn updated.</green>"
+  sun:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/sun</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Cleared weather in world <white>%world%</white>.</green>"
   speed:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/speed &lt;1-10&gt; [player]</white>"
     invalid-range: "<gray>[<gold>FoxCore</gold>]</gray> <red>Speed must be a whole number from <white>1</white> to <white>10</white>.</red>"
