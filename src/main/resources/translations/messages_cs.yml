@@ -1,0 +1,442 @@
+prefix: "<gray>[<gold>FoxCore</gold>]</gray> "
+
+event:
+  join:
+    broadcast: "<gray>[<gold>+</gold>]</gray> <green><white>%player%</white> se připojil na server.</green>"
+    first-broadcast: "<gray>[<gold>★</gold>]</gray> <gold><white>%player%</white> se připojil na server poprvé.</gold>"
+    personal-lines:
+      - "<dark_gray>--------------------------------------------------</dark_gray>"
+      - "<gold>Vítej, <white>%player%</white>!</gold> <gray>Právě jsi na serveru <white>%server%</white>.</gray>"
+      - "<gray>Online hráči:</gray> <white>%online%</white><gray>/</gray><white>%max%</white>"
+      - "<gray>Užitečné příkazy:</gray> <white>/spawn</white><gray>,</gray> <white>/home</white><gray>,</gray> <white>/homes</white>"
+      - "<dark_gray>--------------------------------------------------</dark_gray>"
+  quit:
+    broadcast: "<gray>[<gold>-</gold>]</gray> <red><white>%player%</white> opustil server.</red>"
+
+error:
+  no-permission: "<gray>[<gold>FoxCore</gold>]</gray> <red>Na toto nemáš oprávnění.</red>"
+  player-only: "<gray>[<gold>FoxCore</gold>]</gray> <red>Tento příkaz mohou použít jen hráči.</red>"
+  no-safe-ground: "<gray>[<gold>FoxCore</gold>]</gray> <red>Pro tento teleport nebylo nalezeno bezpečné místo.</red>"
+  no-safe-ground-other: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nebylo nalezeno bezpečné místo pro teleport hráče <white>%player%</white>.</red>"
+  teleport-failed: "<gray>[<gold>FoxCore</gold>]</gray> <red>Teleport se nepodařilo dokončit.</red>"
+  teleport-failed-other: "<gray>[<gold>FoxCore</gold>]</gray> <red>Teleport hráče <white>%player%</white> se nepodařilo dokončit.</red>"
+
+afk:
+  enter: "<gray>[<gold>☕</gold>]</gray> <yellow><white>%player%</white> je nyní AFK.</yellow>"
+  leave: "<gray>[<gold>☕</gold>]</gray> <green><white>%player%</white> už není AFK.</green>"
+  kick-reason: "<red>Byl jsi vyhozen za AFK.</red>"
+
+command:
+  afk:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/afk</white>"
+    enabled: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Nyní jsi označen jako AFK.</yellow>"
+    disabled: "<gray>[<gold>FoxCore</gold>]</gray> <green>Už nejsi označen jako AFK.</green>"
+  anvil:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/anvil</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřena virtuální kovadlina.</green>"
+  back:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/back [teleport|death]</white>"
+    loading: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Tvoje back data se ještě načítají. Zkus to za chvíli znovu.</yellow>"
+    none: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemáš uloženou žádnou back lokaci.</red>"
+    none-teleport: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemáš uloženou poslední teleport lokaci.</red>"
+    none-death: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemáš uloženou poslední lokaci smrti.</red>"
+    missing-world: "<gray>[<gold>FoxCore</gold>]</gray> <red>Uložený svět <white>%world%</white> není dostupný.</red>"
+    success-teleport: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval ses na svou poslední teleport lokaci.</green>"
+    success-death: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval ses na svou poslední lokaci smrti.</green>"
+  broadcast:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/broadcast &lt;zpráva...&gt;</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Broadcast byl odeslán.</green>"
+  cartographytable:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/cartographytable</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřen virtuální kartografický stůl.</green>"
+  craft:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/craft</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřen virtuální crafting stůl.</green>"
+  delhome:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/delhome &lt;home&gt;</white> <gray>nebo</gray> <white>/delhome &lt;hráč&gt; &lt;home&gt;</white>"
+    invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Toto není platný název home.</red>"
+    loading: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Home data se ještě načítají. Zkus to za chvíli znovu.</yellow>"
+    player-not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Pro hráče <white>%player%</white> nebyla nalezena žádná uložená home data.</red>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemáš home s názvem <white>%home%</white>.</red>"
+    not-found-other: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> nemá home s názvem <white>%home%</white>.</red>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Home <white>%home%</white> byla smazána.</green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Home <white>%home%</white> byla smazána hráči <white>%player%</white>.</green>"
+  dispose:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/dispose</white>"
+    title: "<gold>Odpadkový koš</gold>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřen odpadkový koš. Předměty ponechané uvnitř budou po zavření smazány.</green>"
+  day:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/day</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Čas ve světě <white>%world%</white> byl nastaven na den.</green>"
+  enderchest:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/enderchest</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřena tvoje ender chestka.</green>"
+  feed:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/feed [hráč]</white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Tvůj hlad byl doplněn.</green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Doplnil jsi hlad hráči <white>%player%</white>.</green>"
+    success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> ti doplnil hlad.</green>"
+  fly:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/fly [hráč]</white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    world-blocked: "<gray>[<gold>FoxCore</gold>]</gray> <red>Létání není ve světě <white>%world%</white> povoleno.</red>"
+    world-blocked-other: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> nemůže ve světě <white>%world%</white> létat.</red>"
+    enabled-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Létání zapnuto.</green>"
+    disabled-self: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Létání vypnuto.</yellow>"
+    enabled-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Létání bylo zapnuto hráči <white>%player%</white>.</green>"
+    disabled-other: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Létání bylo vypnuto hráči <white>%player%</white>.</yellow>"
+    enabled-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> ti zapnul létání.</green>"
+    disabled-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hráč <white>%player%</white> ti vypnul létání.</yellow>"
+    disabled-world: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Létání bylo vypnuto, protože ve světě <white>%world%</white> ho nemáš povolené.</yellow>"
+  gamemode:
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    gma:
+      usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/gma [hráč]</white>"
+      success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Herní režim nastaven na adventure.</green>"
+      success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráči <white>%player%</white> byl nastaven režim adventure.</green>"
+      success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> ti nastavil herní režim na adventure.</green>"
+    gmc:
+      usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/gmc [hráč]</white>"
+      success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Herní režim nastaven na creative.</green>"
+      success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráči <white>%player%</white> byl nastaven režim creative.</green>"
+      success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> ti nastavil herní režim na creative.</green>"
+    gms:
+      usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/gms [hráč]</white>"
+      success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Herní režim nastaven na survival.</green>"
+      success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráči <white>%player%</white> byl nastaven režim survival.</green>"
+      success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> ti nastavil herní režim na survival.</green>"
+    gmsp:
+      usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/gmsp [hráč]</white>"
+      success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Herní režim nastaven na spectator.</green>"
+      success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráči <white>%player%</white> byl nastaven režim spectator.</green>"
+      success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> ti nastavil herní režim na spectator.</green>"
+  grindstone:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/grindstone</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřen virtuální brusný kámen.</green>"
+  hat:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/hat</white>"
+    invalid-item: "<gray>[<gold>FoxCore</gold>]</gray> <red>Musíš držet platný předmět, který lze použít jako klobouk.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Předmět z ruky byl nasazen na hlavu.</green>"
+  heal:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/heal [hráč]</white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Byl jsi plně vyléčen.</green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Vyléčil jsi hráče <white>%player%</white>.</green>"
+    success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> tě vyléčil.</green>"
+  head:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/head [hráč] [množství]</white>"
+    invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Toto není platné jméno hráče pro hlavu.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Dostal jsi <white>%amount%</white>x hlavu hráče <white>%player%</white>.</green>"
+  help:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/help</white>"
+    menu-title: "<gold>Nápověda FoxCore</gold>"
+    close: "<red>Zavřít</red>"
+    empty-title: "<yellow>Žádné dostupné příkazy</yellow>"
+    empty-line1: "<gray>Momentálně nemáš přístup k žádným hráčským příkazům zobrazeným zde.</gray>"
+    empty-line2: "<gray>Pokud to nesedí, požádej admina o kontrolu oprávnění.</gray>"
+    open-category: "<yellow>Klikni pro otevření</yellow>"
+    back-to-categories: "<yellow>Zpět na kategorie</yellow>"
+    previous-page: "<yellow>Předchozí stránka</yellow>"
+    next-page: "<yellow>Další stránka</yellow>"
+    category-screen-title: "<gold>%category%</gold>"
+    category:
+      count: "<gray>Dostupné příkazy:</gray> <white>%count%</white>"
+      teleport:
+        name: "<gold>Teleporty</gold>"
+        description: "<gray>Pohyb, cestování a žádosti o teleport, které můžeš použít.</gray>"
+      homes:
+        name: "<gold>Domovy</gold>"
+        description: "<gray>Tvoje home příkazy a aktuální limity.</gray>"
+      warps:
+        name: "<gold>Warpy</gold>"
+        description: "<gray>Veřejné warp příkazy, které máš k dispozici.</gray>"
+      features:
+        name: "<gold>Serverové Funkce</gold>"
+        description: "<gray>Užitečné příkazy a limity z dalších hráčských pluginů.</gray>"
+      utility:
+        name: "<gold>Utility</gold>"
+        description: "<gray>Užitečné každodenní příkazy a virtuální nástroje.</gray>"
+    command-header: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Příkaz:</yellow> <white>%command%</white>"
+    command-usage: "<gray>Použití:</gray> <white>%usage%</white>"
+    command-click: "<yellow>Klikni pro zobrazení příkazu v chatu.</yellow>"
+    dynamic:
+      homes:
+        limit: "<gray>Limit domovů:</gray> <white>%count%</white>"
+        limit-unlimited: "<gray>Limit domovů:</gray> <white>Neomezeně</white>"
+        current: "<gray>Aktuální domovy:</gray> <white>%count%</white>"
+        loading: "<gray>Aktuální domovy:</gray> <yellow>Načítání...</yellow>"
+      back:
+        types: "<gray>Dostupné typy back:</gray> <white>%types%</white>"
+      residence:
+        max-count: "<gray>Limit residencí:</gray> <white>%count%</white>"
+        max-count-unavailable: "<gray>Limit residencí:</gray> <yellow>Nedostupné</yellow>"
+        max-size: "<gray>Max velikost residence:</gray> <white>%size%</white>"
+        max-size-unavailable: "<gray>Max velikost residence:</gray> <yellow>Nedostupné</yellow>"
+      vote:
+        pending: "<gray>Nevyzvednuté odměny za hlasování:</gray> <white>%count%</white>"
+        pending-unavailable: "<gray>Nevyzvednuté odměny za hlasování:</gray> <yellow>Nedostupné</yellow>"
+      kits:
+        available: "<gray>Dostupné kity:</gray> <white>%count%</white>"
+        available-unavailable: "<gray>Dostupné kity:</gray> <yellow>Nedostupné</yellow>"
+      rtp:
+        worlds: "<gray>Dostupné RTP světy:</gray> <white>%count%</white>"
+      warp:
+        count: "<gray>Veřejné warpy:</gray> <white>%count%</white>"
+      spawn:
+        available: "<gray>Serverový spawn:</gray> <green>Dostupný</green>"
+        unset: "<gray>Serverový spawn:</gray> <red>Nedostupný</red>"
+      tpa:
+        expiration: "<gray>Vypršení žádosti:</gray> <white>%seconds%</white>s"
+    command:
+      spawn:
+        name: "<gold>/spawn</gold>"
+        description: "<gray>Teleportuj se na nastavený serverový spawn.</gray>"
+      back:
+        name: "<gold>/back</gold>"
+        description: "<gray>Vrať se na svoji nejnovější povolenou back lokaci.</gray>"
+      tp:
+        name: "<gold>/tp</gold>"
+        description: "<gray>Teleportuj se k jinému hráči.</gray>"
+      tphere:
+        name: "<gold>/tphere</gold>"
+        description: "<gray>Teleportuj jiného hráče k sobě.</gray>"
+      tpa:
+        name: "<gold>/tpa</gold>"
+        description: "<gray>Pošli žádost o teleport jinému hráči.</gray>"
+      tpahere:
+        name: "<gold>/tpahere</gold>"
+        description: "<gray>Pošli jinému hráči žádost, aby se teleportoval k tobě.</gray>"
+      tpaccept:
+        name: "<gold>/tpaccept</gold>"
+        description: "<gray>Přijmi čekající žádost o teleport.</gray>"
+      tpadeny:
+        name: "<gold>/tpadeny</gold>"
+        description: "<gray>Odmítni čekající žádost o teleport.</gray>"
+      rtp:
+        name: "<gold>/rtp</gold>"
+        description: "<gray>Teleportuj se na náhodné bezpečné místo v povoleném světě.</gray>"
+      home:
+        name: "<gold>/home</gold>"
+        description: "<gray>Otevři své homes nebo se teleportuj na uložený domov.</gray>"
+      homes:
+        name: "<gold>/homes</gold>"
+        description: "<gray>Procházej své uložené domovy.</gray>"
+      sethome:
+        name: "<gold>/sethome</gold>"
+        description: "<gray>Nastav nový domov na své aktuální lokaci.</gray>"
+      renamehome:
+        name: "<gold>/renamehome</gold>"
+        description: "<gray>Přejmenuj jeden ze svých domovů.</gray>"
+      sethomeicon:
+        name: "<gold>/sethomeicon</gold>"
+        description: "<gray>Změň ikonu jednoho ze svých domovů.</gray>"
+      delhome:
+        name: "<gold>/delhome</gold>"
+        description: "<gray>Smaž jeden ze svých domovů.</gray>"
+      residence:
+        name: "<gold>/res</gold>"
+        description: "<gray>Zobraz své aktuální limity Residence na tomto serveru.</gray>"
+      warp:
+        name: "<gold>/warp</gold>"
+        description: "<gray>Používej nebo procházej veřejné warpy.</gray>"
+      vote:
+        name: "<gold>/vote</gold>"
+        description: "<gray>Hlasuj pro server a zkontroluj dostupné odměny.</gray>"
+      kits:
+        name: "<gold>/kits</gold>"
+        description: "<gray>Otevři dostupné kity a vyzvedni odměny.</gray>"
+      skins:
+        name: "<gold>/skin</gold>"
+        description: "<gray>Změň nebo spravuj svůj skin.</gray>"
+      bannermaker:
+        name: "<gold>/banner</gold>"
+        description: "<gray>Otevři serverovou funkci pro tvorbu bannerů.</gray>"
+      armorstandeditor:
+        name: "<gold>/ase</gold>"
+        description: "<gray>Upravuj armor standy pomocí serverového editoru.</gray>"
+      rosetimber:
+        name: "<gold>/timber</gold>"
+        description: "<gray>Použij serverovou funkci timber pro rychlejší kácení stromů.</gray>"
+      afk:
+        name: "<gold>/afk</gold>"
+        description: "<gray>Ručně přepni svůj AFK stav.</gray>"
+      feed:
+        name: "<gold>/feed</gold>"
+        description: "<gray>Doplň svůj hlad nebo hlad jiného hráče.</gray>"
+      heal:
+        name: "<gold>/heal</gold>"
+        description: "<gray>Plně vyléč sebe nebo jiného hráče.</gray>"
+      onlinetime:
+        name: "<gold>/onlinetime</gold>"
+        description: "<gray>Zobraz svou herní dobu a čas aktuální session.</gray>"
+      hat:
+        name: "<gold>/hat</gold>"
+        description: "<gray>Nasaď si předmět z ruky na hlavu.</gray>"
+      head:
+        name: "<gold>/head</gold>"
+        description: "<gray>Dej si hráčskou hlavu jako item.</gray>"
+      dispose:
+        name: "<gold>/dispose</gold>"
+        description: "<gray>Otevři koš, který po zavření smaže ponechané předměty.</gray>"
+      craft:
+        name: "<gold>/craft</gold>"
+        description: "<gray>Otevři virtuální crafting stůl.</gray>"
+      enderchest:
+        name: "<gold>/enderchest</gold>"
+        description: "<gray>Otevři svou ender chestku.</gray>"
+      anvil:
+        name: "<gold>/anvil</gold>"
+        description: "<gray>Otevři virtuální kovadlinu.</gray>"
+      cartographytable:
+        name: "<gold>/cartographytable</gold>"
+        description: "<gray>Otevři virtuální kartografický stůl.</gray>"
+      loom:
+        name: "<gold>/loom</gold>"
+        description: "<gray>Otevři virtuální tkalcovský stav.</gray>"
+      grindstone:
+        name: "<gold>/grindstone</gold>"
+        description: "<gray>Otevři virtuální brusný kámen.</gray>"
+      smithingtable:
+        name: "<gold>/smithingtable</gold>"
+        description: "<gray>Otevři virtuální kovářský stůl.</gray>"
+      stonecutter:
+        name: "<gold>/stonecutter</gold>"
+        description: "<gray>Otevři virtuální řezačku kamene.</gray>"
+  home:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/home [jméno]</white>"
+    invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Toto není platný název home.</red>"
+    loading: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Tvoje home data se ještě načítají. Zkus to za chvíli znovu.</yellow>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemáš home s názvem <white>%home%</white>.</red>"
+    missing-world: "<gray>[<gold>FoxCore</gold>]</gray> <red>Svět <white>%world%</white> pro home <white>%home%</white> není dostupný.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval ses na home <white>%home%</white>.</green>"
+  homes:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/homes [hráč]</white>"
+    loading: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Home data se ještě načítají. Zkus to za chvíli znovu.</yellow>"
+    player-not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Pro hráče <white>%player%</white> nebyla nalezena žádná uložená home data.</red>"
+    empty-self: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Nemáš žádné homes.</yellow>"
+    empty-other: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hráč <white>%player%</white> nemá žádné homes.</yellow>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Tvoje homes (<white>%count%</white>): <white>%homes%</white></green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Homes hráče <white>%player%</white> (<white>%count%</white>): <white>%homes%</white></green>"
+    teleport-other-success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval ses na home <white>%home%</white> hráče <white>%player%</white>.</green>"
+  onlinetime:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/onlinetime [hráč]</white> <gray>nebo</gray> <white>/playtime [hráč]</white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online a nebyl dostupný žádný uložený profil.</red>"
+    player: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hráč:</yellow> <white>%player%</white>"
+    session: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Session:</yellow> <white>%duration%</white>"
+    session-unavailable: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Session:</yellow> <gray>Nedostupná, když je hráč offline.</gray>"
+    total: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Celkový herní čas:</yellow> <white>%duration%</white>"
+    first-joined: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>První připojení:</yellow> <white>%date%</white>"
+    first-joined-unknown: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>První připojení:</yellow> <gray>Neznámé</gray>"
+  loom:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/loom</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřen virtuální tkalcovský stav.</green>"
+  night:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/night</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Čas ve světě <white>%world%</white> byl nastaven na noc.</green>"
+  rain:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/rain</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Ve světě <white>%world%</white> byl spuštěn déšť.</green>"
+  rtp:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/rtp</white>"
+    menu-title: "<gold>Náhodný Teleport</gold>"
+    menu-close: "<red>Zavřít</red>"
+    disabled: "<gray>[<gold>FoxCore</gold>]</gray> <red>Náhodný teleport je momentálně vypnutý.</red>"
+    no-worlds: "<gray>[<gold>FoxCore</gold>]</gray> <red>Momentálně nejsou dostupné žádné RTP světy.</red>"
+    world-disabled: "<gray>[<gold>FoxCore</gold>]</gray> <red>Náhodný teleport není ve světě <white>%world%</white> povolen.</red>"
+    world-unavailable: "<gray>[<gold>FoxCore</gold>]</gray> <red>Svět <white>%world%</white> momentálně není dostupný.</red>"
+    already-searching: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Tvůj náhodný teleport se už zpracovává.</yellow>"
+    cooldown: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Musíš počkat <white>%seconds%</white>s, než znovu použiješ <white>/rtp</white>.</yellow>"
+    searching: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hledám bezpečné náhodné místo ve světě <white>%world%</white>...</yellow>"
+    failed: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nebylo nalezeno bezpečné náhodné místo. Zkus to za chvíli znovu.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval ses na náhodné místo ve světě <white>%world%</white> na souřadnicích <white>%x%</white>, <white>%y%</white>, <white>%z%</white>.</green>"
+  seen:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/seen &lt;jménohráče&gt;</white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> ještě nebyl viděn nebo není dostupný žádný uložený profil.</red>"
+    player: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hráč:</yellow> <white>%player%</white>"
+    online-now: "<gray>[<gold>FoxCore</gold>]</gray> <green>Tento hráč je právě online.</green>"
+    last-seen: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Naposledy viděn:</yellow> <white>%date%</white> <gray>(před <white>%days%</white> dnem/dny)</gray>"
+    never-seen: "<gray>[<gold>FoxCore</gold>]</gray> <red>Pro tohoto hráče není dostupný čas posledního vidění.</red>"
+  setspawn:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/setspawn</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Serverový spawn byl aktualizován.</green>"
+  sun:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/sun</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Počasí ve světě <white>%world%</white> bylo vyjasněno.</green>"
+  speed:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/speed &lt;1-10&gt; [hráč]</white>"
+    invalid-range: "<gray>[<gold>FoxCore</gold>]</gray> <red>Rychlost musí být celé číslo od <white>1</white> do <white>10</white>.</red>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Rychlost létání nastavena na <white>%speed%</white>.</green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráči <white>%player%</white> byla nastavena rychlost létání na <white>%speed%</white>.</green>"
+    success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> ti nastavil rychlost létání na <white>%speed%</white>.</green>"
+  smithingtable:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/smithingtable</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřen virtuální kovářský stůl.</green>"
+  spawn:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/spawn [hráč]</white>"
+    not-set: "<gray>[<gold>FoxCore</gold>]</gray> <red>Serverový spawn není nastaven nebo je vypnutý.</red>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval ses na spawn.</green>"
+    success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> tě teleportoval na spawn.</green>"
+  stonecutter:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/stonecutter</white>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřena virtuální řezačka kamene.</green>"
+  foxcore:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/foxcore reload</white>"
+    reload-success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Konfigurace a překlady byly znovu načteny.</green>"
+  tp:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/tp <hráč></white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    offline-searching: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hledám uloženou lokaci hráče <white>%player%</white>...</yellow>"
+    offline-no-location: "<gray>[<gold>FoxCore</gold>]</gray> <red>Pro offline hráče <white>%player%</white> nebyla nalezena žádná uložená poslední lokace.</red>"
+    offline-missing-world: "<gray>[<gold>FoxCore</gold>]</gray> <red>Uložený svět <white>%world%</white> pro hráče <white>%player%</white> není dostupný.</red>"
+    offline-success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval ses na poslední známou lokaci offline hráče <white>%player%</white>.</green>"
+    self: "<gray>[<gold>FoxCore</gold>]</gray> <red>Už tam jsi.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval ses k hráči <white>%player%</white>.</green>"
+    notify-target: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hráč <white>%player%</white> se k tobě teleportoval.</yellow>"
+  tpa:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/tpa <hráč></white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    self: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemůžeš poslat žádost o teleport sám sobě.</red>"
+    sent: "<gray>[<gold>FoxCore</gold>]</gray> <green>Žádost o teleport byla poslána hráči <white>%player%</white>. Vyprší za <white>%seconds%</white>s.</green>"
+    received: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hráč <white>%player%</white> se chce teleportovat k tobě. Vyprší za <white>%seconds%</white>s.</yellow>"
+    received-hint-prefix: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Vyber:</yellow>"
+    buttons:
+      accept: "<green>[Přijmout]</green>"
+      accept-hover: "<green>Přijmout žádost o teleport od hráče <white>%player%</white></green>"
+      deny: "<red>[Odmítnout]</red>"
+      deny-hover: "<red>Odmítnout žádost o teleport od hráče <white>%player%</white></red>"
+  tpahere:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/tpahere <hráč></white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    self: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemůžeš poslat žádost o teleport k sobě sám sobě.</red>"
+    sent: "<gray>[<gold>FoxCore</gold>]</gray> <green>Žádost o teleport k tobě byla poslána hráči <white>%player%</white>. Vyprší za <white>%seconds%</white>s.</green>"
+    received: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hráč <white>%player%</white> chce, abys ses teleportoval k němu. Vyprší za <white>%seconds%</white>s.</yellow>"
+    received-hint-prefix: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Vyber:</yellow>"
+    buttons:
+      accept: "<green>[Přijmout]</green>"
+      accept-hover: "<green>Teleportovat se k hráči <white>%player%</white></green>"
+      deny: "<red>[Odmítnout]</red>"
+      deny-hover: "<red>Odmítnout žádost o teleport k hráči <white>%player%</white></red>"
+  tpaccept:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/tpaccept [hráč]</white>"
+    none: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemáš žádné čekající žádosti o teleport.</red>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Žádná čekající žádost od hráče <white>%player%</white>.</red>"
+    accepted: "<gray>[<gold>FoxCore</gold>]</gray> <green>Přijal jsi žádost o teleport od hráče <white>%player%</white>.</green>"
+    accepted-here: "<gray>[<gold>FoxCore</gold>]</gray> <green>Přijal jsi žádost o teleport k sobě od hráče <white>%player%</white>.</green>"
+    requester-accepted: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> přijal tvoji žádost o teleport.</green>"
+    requester-accepted-here: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> přijal tvoji žádost o teleport k sobě.</green>"
+    requester-offline: "<gray>[<gold>FoxCore</gold>]</gray> <red>Tato žádost o teleport už není platná, protože žadatel je offline.</red>"
+  tpadeny:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/tpadeny [hráč]</white>"
+    none: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemáš žádné čekající žádosti o teleport.</red>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Žádná čekající žádost od hráče <white>%player%</white>.</red>"
+    denied: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Odmítl jsi žádost o teleport od hráče <white>%player%</white>.</yellow>"
+    requester-denied: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> odmítl tvoji žádost o teleport.</red>"
+  tphere:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/tphere <hráč></white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
+    self: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemůžeš teleportovat sám sebe k sobě.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Teleportoval jsi hráče <white>%player%</white> k sobě.</green>"
+    notify-target: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Byl jsi teleportován k hráči <white>%player%</white>.</yellow>"

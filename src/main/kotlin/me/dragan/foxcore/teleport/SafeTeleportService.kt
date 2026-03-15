@@ -20,6 +20,10 @@ class SafeTeleportService(
             findSafeGroundLocation(world, requested) ?: return SafeTeleportResult.NO_SAFE_GROUND
         }
 
+        if (!isSafeDestination(world, destination, player.allowFlight)) {
+            return SafeTeleportResult.NO_SAFE_GROUND
+        }
+
         val success = player.teleport(destination)
         if (!success) {
             return SafeTeleportResult.FAILED
@@ -74,6 +78,21 @@ class SafeTeleportService(
             requested.yaw,
             requested.pitch,
         )
+
+    private fun isSafeDestination(world: World, destination: Location, canFly: Boolean): Boolean {
+        val feet = world.getBlockAt(destination.blockX, destination.blockY, destination.blockZ)
+        val head = world.getBlockAt(destination.blockX, destination.blockY + 1, destination.blockZ)
+        if (!feet.isSafeBodySpace() || !head.isSafeBodySpace()) {
+            return false
+        }
+
+        if (canFly) {
+            return true
+        }
+
+        val ground = world.getBlockAt(destination.blockX, destination.blockY - 1, destination.blockZ)
+        return ground.isSafeGround()
+    }
 
     private fun Block.isSafeGround(): Boolean {
         if (isPassable || !type.isSolid || isLiquid) {
