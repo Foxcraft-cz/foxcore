@@ -37,10 +37,14 @@ Built jar output:
   Deletes one of your saved homes.
 - `/delhome <player> <home>`
   Admin form for deleting another player's home.
+- `/dispose` or `/trash`
+  Opens a disposable chest GUI that deletes any items still inside when you close it.
 - `/day`, `/night`, `/sun`, `/rain`
   Set time or weather in your current world.
 - `/enderchest` or `/ec`
   Opens your ender chest.
+- `/feed [player]`
+  Restores hunger, saturation, and exhaustion for yourself or another online player.
 - `/fly [player]`
   Toggles flight for yourself, or for another player if you have admin permission.
 - `/gms [player]`, `/gmc [player]`, `/gma [player]`, `/gmsp [player]`
@@ -49,6 +53,8 @@ Built jar output:
   Opens a virtual grindstone.
 - `/hat`
   Puts the item in your hand on your head slot.
+- `/heal [player]`
+  Fully heals yourself or another online player and clears fire ticks.
 - `/head [player] [amount]` or `/skull [player] [amount]`
   Gives you a player head by name.
 - `/help` or `/commands`
@@ -191,6 +197,15 @@ Built jar output:
 - `/delhome <player> <home>` deletes another player's home and requires `foxcore.delhome.others`.
 - Admin deletion works from stored database data, so it can target offline players too.
 
+### `/dispose` or `/trash`
+- Description: Opens a disposal chest that permanently deletes its contents when you close it.
+- Player only: yes
+- Permission: `foxcore.dispose`
+- Notes:
+- The disposal inventory is a single chest-sized GUI.
+- Only items still left in the top disposal inventory are deleted on close.
+- Normal player inventory interaction is preserved, so you can move items in and back out before closing.
+
 ### `/day`, `/night`, `/sun`, `/rain`
 - Description: Set time or weather in your current world.
 - Player only: yes
@@ -213,6 +228,16 @@ Built jar output:
 - Notes:
 - `/ec` is an alias of `/enderchest`.
 
+### `/feed [player]`
+- Description: Restores hunger values for yourself or another online player.
+- Player only: self use yes, console yes for target form
+- Permissions:
+- `foxcore.feed`
+- `foxcore.feed.others`
+- Notes:
+- `/feed` restores your own food level, saturation, and exhaustion.
+- `/feed <player>` restores another online player's hunger and requires `foxcore.feed.others`.
+
 ### `/grindstone`
 - Description: Opens a virtual grindstone.
 - Player only: yes
@@ -225,6 +250,16 @@ Built jar output:
 - Notes:
 - Swaps your current helmet back into your hand.
 - Rejects empty hands.
+
+### `/heal [player]`
+- Description: Fully heals yourself or another online player.
+- Player only: self use yes, console yes for target form
+- Permissions:
+- `foxcore.heal`
+- `foxcore.heal.others`
+- Notes:
+- `/heal` restores your health to your current maximum health attribute and clears fire ticks.
+- `/heal <player>` heals another online player and requires `foxcore.heal.others`.
 
 ### `/head [player] [amount]` or `/skull [player] [amount]`
 - Description: Gives you a player head item by player name.

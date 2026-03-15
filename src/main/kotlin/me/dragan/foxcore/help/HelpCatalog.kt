@@ -98,9 +98,12 @@ object HelpCatalog {
         }),
 
         HelpEntry("afk", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.afk.command") }),
+        HelpEntry("feed", HelpCategory.UTILITY, Material.COOKED_BEEF, { _, player -> player.hasPermission("foxcore.feed") }),
+        HelpEntry("heal", HelpCategory.UTILITY, Material.GLISTERING_MELON_SLICE, { _, player -> player.hasPermission("foxcore.heal") }),
         HelpEntry("onlinetime", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.onlinetime") }),
         HelpEntry("hat", HelpCategory.UTILITY, Material.LEATHER_HELMET, { _, player -> player.hasPermission("foxcore.hat") }),
         HelpEntry("head", HelpCategory.UTILITY, Material.PLAYER_HEAD, { _, player -> player.hasPermission("foxcore.head") }),
+        HelpEntry("dispose", HelpCategory.UTILITY, Material.LAVA_BUCKET, { _, player -> player.hasPermission("foxcore.dispose") }),
         HelpEntry("craft", HelpCategory.UTILITY, Material.CRAFTING_TABLE, { _, player -> player.hasPermission("foxcore.craft") }),
         HelpEntry("enderchest", HelpCategory.UTILITY, Material.ENDER_CHEST, { _, player -> player.hasPermission("foxcore.enderchest") }),
         HelpEntry("anvil", HelpCategory.UTILITY, Material.ANVIL, { _, player -> player.hasPermission("foxcore.anvil") }),

@@ -134,9 +134,12 @@ class HelpCategoryScreen(
             "armorstandeditor" -> plugin.pluginHelpInfo.commandLabel("help.integrations.armorstandeditor.command", "/ase")
             "rosetimber" -> plugin.pluginHelpInfo.commandLabel("help.integrations.rosetimber.command", "/timber")
             "afk" -> "/afk"
+            "feed" -> "/feed [player]"
+            "heal" -> "/heal [player]"
             "onlinetime" -> "/onlinetime [player]"
             "hat" -> "/hat"
             "head" -> "/head [player] [amount]"
+            "dispose" -> "/dispose"
             "craft" -> "/craft"
             "enderchest" -> "/enderchest"
             "anvil" -> "/anvil"

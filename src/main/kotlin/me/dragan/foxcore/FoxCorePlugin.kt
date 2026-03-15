@@ -12,10 +12,13 @@ import me.dragan.foxcore.command.FlyCommand
 import me.dragan.foxcore.command.AdminWarpCommand
 import me.dragan.foxcore.command.DeleteHomeCommand
 import me.dragan.foxcore.command.DeleteWarpCommand
+import me.dragan.foxcore.command.DisposeCommand
+import me.dragan.foxcore.command.FeedCommand
 import me.dragan.foxcore.command.WorldTimeShortcutCommand
 import me.dragan.foxcore.command.WorldWeatherShortcutCommand
 import me.dragan.foxcore.command.WhoisCommand
 import me.dragan.foxcore.command.GamemodeShortcutCommand
+import me.dragan.foxcore.command.HealCommand
 import me.dragan.foxcore.command.HeadCommand
 import me.dragan.foxcore.command.HelpCommand
 import me.dragan.foxcore.command.HatCommand
@@ -47,6 +50,7 @@ import me.dragan.foxcore.help.ResidenceHelpInfoService
 import me.dragan.foxcore.help.PluginHelpInfoService
 import me.dragan.foxcore.listener.BackTrackingListener
 import me.dragan.foxcore.listener.AfkListener
+import me.dragan.foxcore.listener.DisposeInventoryListener
 import me.dragan.foxcore.listener.FlyPermissionListener
 import me.dragan.foxcore.listener.GuiListener
 import me.dragan.foxcore.listener.JoinMessageListener
@@ -147,6 +151,7 @@ class FoxCorePlugin : JavaPlugin() {
             },
         )
         registerCommand("delhome", DeleteHomeCommand(this))
+        registerCommand("dispose", DisposeCommand(this))
         registerCommand("day", WorldTimeShortcutCommand(this, "foxcore.day", "day", 1000L))
         registerCommand("night", WorldTimeShortcutCommand(this, "foxcore.night", "night", 13000L))
         registerCommand(
@@ -155,6 +160,7 @@ class FoxCorePlugin : JavaPlugin() {
                 player.openInventory(player.enderChest)
             },
         )
+        registerCommand("feed", FeedCommand(this))
         registerCommand("fly", FlyCommand(this))
         registerCommand("gma", GamemodeShortcutCommand(this, GameMode.ADVENTURE, "gma", "foxcore.gma", "foxcore.gma.others"))
         registerCommand("gmc", GamemodeShortcutCommand(this, GameMode.CREATIVE, "gmc", "foxcore.gmc", "foxcore.gmc.others"))
@@ -167,6 +173,7 @@ class FoxCorePlugin : JavaPlugin() {
             },
         )
         registerCommand("hat", HatCommand(this))
+        registerCommand("heal", HealCommand(this))
         registerCommand("head", HeadCommand(this))
         registerCommand("help", HelpCommand(this))
         registerCommand("home", HomeCommand(this))
@@ -219,6 +226,7 @@ class FoxCorePlugin : JavaPlugin() {
         maybeRegisterPlaceholderExpansion()
         server.pluginManager.registerEvents(AfkListener(this), this)
         server.pluginManager.registerEvents(BackTrackingListener(this), this)
+        server.pluginManager.registerEvents(DisposeInventoryListener(), this)
         server.pluginManager.registerEvents(FlyPermissionListener(this), this)
         server.pluginManager.registerEvents(GuiListener(this), this)
         server.pluginManager.registerEvents(JoinMessageListener(this), this)

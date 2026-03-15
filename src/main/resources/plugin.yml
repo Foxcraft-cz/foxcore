@@ -37,6 +37,11 @@ commands:
     description: Delete one of your homes or another player's home.
     usage: /delhome <home> | /delhome <player> <home>
     permission: foxcore.delhome
+  dispose:
+    aliases: [trash]
+    description: Open a disposal bin that deletes its contents when you close it.
+    usage: /dispose
+    permission: foxcore.dispose
   day:
     description: Set your current world time to day.
     usage: /day
@@ -46,6 +51,10 @@ commands:
     description: Open your ender chest.
     usage: /enderchest
     permission: foxcore.enderchest
+  feed:
+    description: Restore hunger for yourself or another player.
+    usage: /feed [player]
+    permission: foxcore.feed
   fly:
     description: Toggle flight for yourself or another player.
     usage: /fly [player]
@@ -74,6 +83,10 @@ commands:
     description: Put the item in your hand on your head.
     usage: /hat
     permission: foxcore.hat
+  heal:
+    description: Fully heal yourself or another player.
+    usage: /heal [player]
+    permission: foxcore.heal
   head:
     aliases: [skull]
     description: Give yourself a player head by name.
@@ -235,6 +248,9 @@ permissions:
   foxcore.craft:
     description: Allows opening a virtual crafting table.
     default: op
+  foxcore.dispose:
+    description: Allows opening a disposal bin inventory.
+    default: op
   foxcore.delhome:
     description: Allows deleting your own homes.
     default: true
@@ -246,6 +262,12 @@ permissions:
     default: op
   foxcore.enderchest:
     description: Allows opening your ender chest.
+    default: op
+  foxcore.feed:
+    description: Allows restoring your own hunger.
+    default: op
+  foxcore.feed.others:
+    description: Allows restoring another player's hunger.
     default: op
   foxcore.fly:
     description: Allows toggling your own flight.
@@ -282,6 +304,12 @@ permissions:
     default: op
   foxcore.hat:
     description: Allows placing the item in your hand on your head slot.
+    default: op
+  foxcore.heal:
+    description: Allows healing yourself.
+    default: op
+  foxcore.heal.others:
+    description: Allows healing another player.
     default: op
   foxcore.head:
     description: Allows giving yourself player heads by name.

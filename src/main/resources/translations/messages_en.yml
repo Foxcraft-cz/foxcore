@@ -61,12 +61,22 @@ command:
     not-found-other: "<gray>[<gold>FoxCore</gold>]</gray> <red><white>%player%</white> does not have a home named <white>%home%</white>.</red>"
     success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Deleted home <white>%home%</white>.</green>"
     success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Deleted home <white>%home%</white> from <white>%player%</white>.</green>"
+  dispose:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/dispose</white>"
+    title: "<gold>Disposal Bin</gold>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened the disposal bin. Items left inside are deleted when you close it.</green>"
   day:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/day</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set world <white>%world%</white> time to day.</green>"
   enderchest:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/enderchest</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened your ender chest.</green>"
+  feed:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/feed [player]</white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Your hunger has been restored.</green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Restored hunger for <white>%player%</white>.</green>"
+    success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> restored your hunger.</green>"
   fly:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/fly [player]</white>"
     not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
@@ -108,6 +118,12 @@ command:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/hat</white>"
     invalid-item: "<gray>[<gold>FoxCore</gold>]</gray> <red>You must hold a valid item to use as a hat.</red>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Placed the item in your hand on your head.</green>"
+  heal:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/heal [player]</white>"
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
+    success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>You have been fully healed.</green>"
+    success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Healed <white>%player%</white>.</green>"
+    success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> healed you.</green>"
   head:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/head [player] [amount]</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>That is not a valid player name for a head.</red>"
@@ -245,6 +261,12 @@ command:
       afk:
         name: "<gold>/afk</gold>"
         description: "<gray>Toggle your AFK status manually.</gray>"
+      feed:
+        name: "<gold>/feed</gold>"
+        description: "<gray>Restore your hunger or another player's hunger.</gray>"
+      heal:
+        name: "<gold>/heal</gold>"
+        description: "<gray>Fully heal yourself or another player.</gray>"
       onlinetime:
         name: "<gold>/onlinetime</gold>"
         description: "<gray>Show your playtime and session information.</gray>"
@@ -254,6 +276,9 @@ command:
       head:
         name: "<gold>/head</gold>"
         description: "<gray>Give yourself a player head item.</gray>"
+      dispose:
+        name: "<gold>/dispose</gold>"
+        description: "<gray>Open a bin that deletes any items left inside when closed.</gray>"
       craft:
         name: "<gold>/craft</gold>"
         description: "<gray>Open a virtual crafting table.</gray>"
