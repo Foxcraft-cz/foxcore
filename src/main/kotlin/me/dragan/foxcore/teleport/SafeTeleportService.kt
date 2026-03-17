@@ -1,6 +1,7 @@
 package me.dragan.foxcore.teleport
 
 import me.dragan.foxcore.FoxCorePlugin
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
@@ -13,14 +14,17 @@ class SafeTeleportService(
     fun teleport(player: Player, requested: Location): SafeTeleportResult {
         val origin = player.location.clone()
         val world = requested.world ?: return SafeTeleportResult.NO_SAFE_GROUND
+        val bypassAllSafety = shouldBypassAllSafety(player)
+        val bypassGroundSafety = shouldBypassGroundSafety(player)
+        val wasFlying = player.isFlying
 
-        val destination = if (player.allowFlight) {
+        val destination = if (bypassGroundSafety) {
             requested.clone()
         } else {
             findSafeGroundLocation(world, requested) ?: return SafeTeleportResult.NO_SAFE_GROUND
         }
 
-        if (!isSafeDestination(world, destination, player.allowFlight)) {
+        if (!bypassAllSafety && !isSafeDestination(world, destination, bypassGroundSafety)) {
             return SafeTeleportResult.NO_SAFE_GROUND
         }
 
@@ -29,7 +33,7 @@ class SafeTeleportService(
             return SafeTeleportResult.FAILED
         }
 
-        if (player.allowFlight) {
+        if (player.allowFlight && wasFlying) {
             player.isFlying = true
         }
 
@@ -93,6 +97,12 @@ class SafeTeleportService(
         val ground = world.getBlockAt(destination.blockX, destination.blockY - 1, destination.blockZ)
         return ground.isSafeGround()
     }
+
+    private fun shouldBypassGroundSafety(player: Player): Boolean =
+        shouldBypassAllSafety(player) || (player.allowFlight && player.isFlying)
+
+    private fun shouldBypassAllSafety(player: Player): Boolean =
+        player.gameMode == GameMode.CREATIVE || player.gameMode == GameMode.SPECTATOR
 
     private fun Block.isSafeGround(): Boolean {
         if (isPassable || !type.isSolid || isLiquid) {

@@ -45,6 +45,10 @@ Built jar output:
   Opens your ender chest.
 - `/feed [player]`
   Restores hunger, saturation, and exhaustion for yourself or another online player.
+- `/fix`
+  Repairs the damageable item in your main hand.
+- `/fixall`
+  Repairs all damaged items in your inventory.
 - `/fly [player]`
   Toggles flight for yourself, or for another player if you have admin permission.
 - `/gms [player]`, `/gmc [player]`, `/gma [player]`, `/gmsp [player]`
@@ -237,6 +241,22 @@ Built jar output:
 - Notes:
 - `/feed` restores your own food level, saturation, and exhaustion.
 - `/feed <player>` restores another online player's hunger and requires `foxcore.feed.others`.
+
+### `/fix`
+- Description: Repairs the damageable item in your main hand.
+- Player only: yes
+- Permission: `foxcore.fix`
+- Notes:
+- Repairs only the item in your main hand.
+- Fails cleanly if your hand is empty, the item is not damageable, or it is already fully repaired.
+
+### `/fixall`
+- Description: Repairs all damaged repairable items in your inventory.
+- Player only: yes
+- Permission: `foxcore.fixall`
+- Notes:
+- Repairs damaged items in your main inventory, armor slots, and offhand.
+- Ignores empty slots, undamageable items, and items that are already fully repaired.
 
 ### `/grindstone`
 - Description: Opens a virtual grindstone.
@@ -516,8 +536,10 @@ Built jar output:
 - Admins with `foxcore.tp.offline` can also teleport to an offline player's stored last location.
 - You cannot target yourself.
 - Supports tab completion for online players.
-- If you are flying, you are teleported in the air.
+- If you are in creative or spectator mode, FoxCore teleports you to the exact target location without safe-location checks.
+- If you are actively flying in survival or adventure, FoxCore keeps the exact destination instead of snapping you to ground.
 - If you are not flying, FoxCore tries to place you on safe ground and cancels the teleport if none is found.
+- If you teleport in spectator mode, the target is not notified.
 
 ### `/tphere <player>`
 - Description: Teleport another online player to you.
@@ -774,6 +796,14 @@ Built jar output:
 - Default: none
 - Allows flight in a specific world.
 - Example: `foxcore.fly.world.world_nether`
+
+### `foxcore.fix`
+- Default: `op`
+- Allows repairing the item in your main hand.
+
+### `foxcore.fixall`
+- Default: `op`
+- Allows repairing all damaged items in your inventory.
 
 ### `foxcore.setspawn`
 - Default: `op`

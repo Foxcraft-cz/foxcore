@@ -14,6 +14,8 @@ import me.dragan.foxcore.command.DeleteHomeCommand
 import me.dragan.foxcore.command.DeleteWarpCommand
 import me.dragan.foxcore.command.DisposeCommand
 import me.dragan.foxcore.command.FeedCommand
+import me.dragan.foxcore.command.FixAllCommand
+import me.dragan.foxcore.command.FixCommand
 import me.dragan.foxcore.command.WorldTimeShortcutCommand
 import me.dragan.foxcore.command.WorldWeatherShortcutCommand
 import me.dragan.foxcore.command.WhoisCommand
@@ -161,6 +163,8 @@ class FoxCorePlugin : JavaPlugin() {
             },
         )
         registerCommand("feed", FeedCommand(this))
+        registerCommand("fix", FixCommand(this))
+        registerCommand("fixall", FixAllCommand(this))
         registerCommand("fly", FlyCommand(this))
         registerCommand("gma", GamemodeShortcutCommand(this, GameMode.ADVENTURE, "gma", "foxcore.gma", "foxcore.gma.others"))
         registerCommand("gmc", GamemodeShortcutCommand(this, GameMode.CREATIVE, "gmc", "foxcore.gmc", "foxcore.gmc.others"))

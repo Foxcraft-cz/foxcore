@@ -77,6 +77,16 @@ command:
     success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Your hunger has been restored.</green>"
     success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Restored hunger for <white>%player%</white>.</green>"
     success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> restored your hunger.</green>"
+  fix:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/fix</white>"
+    invalid-item: "<gray>[<gold>FoxCore</gold>]</gray> <red>You must hold an item in your main hand.</red>"
+    not-repairable: "<gray>[<gold>FoxCore</gold>]</gray> <red>The item in your main hand cannot be repaired.</red>"
+    already-repaired: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>The item in your main hand is already fully repaired.</yellow>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Repaired the item in your main hand.</green>"
+  fixall:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/fixall</white>"
+    none-damaged: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>You do not have any damaged repairable items in your inventory.</yellow>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Repaired <white>%count%</white> damaged item(s) in your inventory.</green>"
   fly:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/fly [player]</white>"
     not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
@@ -189,6 +199,12 @@ command:
       tpa:
         expiration: "<gray>Request expiration:</gray> <white>%seconds%</white>s"
     command:
+      fix:
+        name: "<gold>/fix</gold>"
+        description: "<gray>Repair the item in your main hand.</gray>"
+      fixall:
+        name: "<gold>/fixall</gold>"
+        description: "<gray>Repair all damaged items in your inventory.</gray>"
       spawn:
         name: "<gold>/spawn</gold>"
         description: "<gray>Teleport yourself to the configured server spawn.</gray>"

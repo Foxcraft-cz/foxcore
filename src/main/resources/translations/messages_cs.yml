@@ -77,6 +77,16 @@ command:
     success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Tvůj hlad byl doplněn.</green>"
     success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Doplnil jsi hlad hráči <white>%player%</white>.</green>"
     success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> ti doplnil hlad.</green>"
+  fix:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/fix</white>"
+    invalid-item: "<gray>[<gold>FoxCore</gold>]</gray> <red>Musíš držet předmět v hlavní ruce.</red>"
+    not-repairable: "<gray>[<gold>FoxCore</gold>]</gray> <red>Předmět v hlavní ruce nelze opravit.</red>"
+    already-repaired: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Předmět v hlavní ruce je už plně opravený.</yellow>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Předmět v hlavní ruce byl opraven.</green>"
+  fixall:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/fixall</white>"
+    none-damaged: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>V inventáři nemáš žádné poškozené opravitelné předměty.</yellow>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Bylo opraveno <white>%count%</white> poškozených předmětů v tvém inventáři.</green>"
   fly:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/fly [hráč]</white>"
     not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
@@ -189,6 +199,12 @@ command:
       tpa:
         expiration: "<gray>Vypršení žádosti:</gray> <white>%seconds%</white>s"
     command:
+      fix:
+        name: "<gold>/fix</gold>"
+        description: "<gray>Oprav předmět v hlavní ruce.</gray>"
+      fixall:
+        name: "<gold>/fixall</gold>"
+        description: "<gray>Oprav všechny poškozené předměty v inventáři.</gray>"
       spawn:
         name: "<gold>/spawn</gold>"
         description: "<gray>Teleportuj se na nastavený serverový spawn.</gray>"

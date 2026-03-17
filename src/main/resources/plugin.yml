@@ -55,6 +55,14 @@ commands:
     description: Restore hunger for yourself or another player.
     usage: /feed [player]
     permission: foxcore.feed
+  fix:
+    description: Repair the item in your main hand.
+    usage: /fix
+    permission: foxcore.fix
+  fixall:
+    description: Repair all damaged items in your inventory.
+    usage: /fixall
+    permission: foxcore.fixall
   fly:
     description: Toggle flight for yourself or another player.
     usage: /fly [player]
@@ -268,6 +276,12 @@ permissions:
     default: op
   foxcore.feed.others:
     description: Allows restoring another player's hunger.
+    default: op
+  foxcore.fix:
+    description: Allows repairing the item in your main hand.
+    default: op
+  foxcore.fixall:
+    description: Allows repairing all damaged items in your inventory.
     default: op
   foxcore.fly:
     description: Allows toggling your own flight.

@@ -99,6 +99,8 @@ object HelpCatalog {
 
         HelpEntry("afk", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.afk.command") }),
         HelpEntry("feed", HelpCategory.UTILITY, Material.COOKED_BEEF, { _, player -> player.hasPermission("foxcore.feed") }),
+        HelpEntry("fix", HelpCategory.UTILITY, Material.IRON_PICKAXE, { _, player -> player.hasPermission("foxcore.fix") }),
+        HelpEntry("fixall", HelpCategory.UTILITY, Material.ANVIL, { _, player -> player.hasPermission("foxcore.fixall") }),
         HelpEntry("heal", HelpCategory.UTILITY, Material.GLISTERING_MELON_SLICE, { _, player -> player.hasPermission("foxcore.heal") }),
         HelpEntry("onlinetime", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.onlinetime") }),
         HelpEntry("hat", HelpCategory.UTILITY, Material.LEATHER_HELMET, { _, player -> player.hasPermission("foxcore.hat") }),

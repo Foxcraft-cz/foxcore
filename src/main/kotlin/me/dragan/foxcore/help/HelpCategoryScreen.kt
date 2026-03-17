@@ -135,6 +135,8 @@ class HelpCategoryScreen(
             "rosetimber" -> plugin.pluginHelpInfo.commandLabel("help.integrations.rosetimber.command", "/timber")
             "afk" -> "/afk"
             "feed" -> "/feed [player]"
+            "fix" -> "/fix"
+            "fixall" -> "/fixall"
             "heal" -> "/heal [player]"
             "onlinetime" -> "/onlinetime [player]"
             "hat" -> "/hat"

@@ -4,6 +4,7 @@ import me.dragan.foxcore.FoxCorePlugin
 import me.dragan.foxcore.back.OfflineLocationLookup
 import me.dragan.foxcore.teleport.SafeTeleportResult
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
@@ -110,7 +111,11 @@ class TeleportCommand(
         }
 
         player.sendMessage(plugin.messages.text("command.tp.success", "player" to target.name))
-        if (plugin.config.getBoolean("teleport.notify-target", true) && !plugin.vanishService.isVanished(player)) {
+        if (
+            plugin.config.getBoolean("teleport.notify-target", true) &&
+            player.gameMode != GameMode.SPECTATOR &&
+            !plugin.vanishService.isVanished(player)
+        ) {
             target.sendMessage(plugin.messages.text("command.tp.notify-target", "player" to player.name))
         }
 
