@@ -600,6 +600,7 @@ Built jar output:
 - Notes:
 - Console can run this command.
 - Reload also synchronizes bundled YAML files.
+- Reload also refreshes shortcut commands from `shortcuts.yml`.
 
 ## Permissions
 ### `foxcore.afk.command`
@@ -1004,10 +1005,28 @@ tpa:
   request-expiration-seconds: 60
 ```
 
+FoxCore also stores reloadable shortcut commands in `plugins/FoxCore/shortcuts.yml`.
+
 ### `translations.locale`
 - Controls which bundled translation file is loaded.
 - Current bundled locale: `en`
 - Translation files are stored in `plugins/foxcore/translations/`.
+
+### `shortcuts.yml`
+- Define lightweight shortcut commands without adding new Kotlin classes.
+- Each top-level key under `shortcuts:` becomes `/name`, and `aliases:` adds more labels for the same shortcut.
+- `type: message` sends MiniMessage-formatted lines to the sender.
+- `type: command` dispatches another command as the player or as console.
+- `permission` can be left empty for public shortcuts or set to a custom node such as `foxcore.shortcut.rules`.
+- `player-only` defaults to `true` so player-facing shortcuts do not accidentally expose a console flow.
+- `allow-arguments: false` blocks extra arguments; when `usage` is set, that line is shown instead.
+- `forward-arguments: true` appends typed arguments to `type: command` shortcuts.
+- Shortcuts are registered into the server command map, so they show in client command type hints after startup or `/foxcore reload`.
+- Optional `help:` metadata lets the shortcut appear in `/help`, `/commands`, and `/foxhelp`.
+- `help.category` accepts `teleport`, `homes`, `warps`, `features`, or `utility`.
+- `help.icon` uses a Bukkit material name such as `EMERALD`, `BOOK`, or `COMPASS`.
+- `help.name`, `help.description`, and `help.usage` are MiniMessage/plain-text values shown in the help GUI.
+- FoxCore skips shortcut labels that would conflict with an already registered command.
 
 ### `help.residence.enabled`
 - Enables or disables the optional Residence info block in the player help GUI.
@@ -1247,6 +1266,7 @@ tpa:
 - New bundled keys are added automatically.
 - Removed bundled keys are removed automatically.
 - Existing user values are preserved for keys that still exist.
+- This includes `shortcuts.yml` and bundled translation files.
 
 ## Current limitations
 - Only `/tp` supports offline target lookup. Other teleport commands require online players.

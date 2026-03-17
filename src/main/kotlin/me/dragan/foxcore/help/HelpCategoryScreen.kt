@@ -61,7 +61,7 @@ class HelpCategoryScreen(
                 val entry = entries.getOrNull(currentPage(session, entries.size) * pageSize + rawSlot) ?: return
                 viewer.closeInventory()
                 viewer.sendMessage(plugin.messages.text("command.help.command-header", "command" to commandLabel(entry)))
-                viewer.sendMessage(plugin.messages.text("command.help.command.${entry.key}.description"))
+                viewer.sendMessage(descriptionComponent(entry))
                 viewer.sendMessage(plugin.messages.text("command.help.command-usage", "usage" to usageLabel(entry)))
             }
         }
@@ -70,9 +70,9 @@ class HelpCategoryScreen(
     private fun entryItem(viewer: org.bukkit.entity.Player, entry: HelpEntry): ItemStack =
         ItemStack(entry.icon).apply {
             editMeta { meta ->
-                meta.displayName(plugin.messages.text("command.help.command.${entry.key}.name"))
+                meta.displayName(nameComponent(entry))
                 val lore = mutableListOf<Component>()
-                lore += plugin.messages.text("command.help.command.${entry.key}.description")
+                lore += descriptionComponent(entry)
                 lore += plugin.messages.text("command.help.command-usage", "usage" to usageLabel(entry))
                 entry.dynamicLore(plugin, viewer).forEach { token ->
                     lore += dynamicLine(token)
@@ -109,7 +109,7 @@ class HelpCategoryScreen(
     }
 
     private fun usageLabel(entry: HelpEntry): String =
-        when (entry.key) {
+        entry.customUsage?.invoke(plugin) ?: when (entry.key) {
             "spawn" -> "/spawn [player]"
             "back" -> "/back [teleport|death]"
             "tp" -> "/tp <player>"
@@ -152,6 +152,14 @@ class HelpCategoryScreen(
             "stonecutter" -> "/stonecutter"
             else -> "/${entry.key}"
         }
+
+    private fun nameComponent(entry: HelpEntry): Component =
+        entry.customName?.invoke(plugin)
+            ?: plugin.messages.text("command.help.command.${entry.key}.name")
+
+    private fun descriptionComponent(entry: HelpEntry): Component =
+        entry.customDescription?.invoke(plugin)
+            ?: plugin.messages.text("command.help.command.${entry.key}.description")
 
     private fun commandLabel(entry: HelpEntry): String =
         usageLabel(entry).substringBefore(' ')

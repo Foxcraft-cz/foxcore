@@ -117,7 +117,8 @@ object HelpCatalog {
     )
 
     fun visibleEntries(plugin: FoxCorePlugin, player: Player): List<HelpEntry> =
-        entries.filter { it.visibleTo(plugin, player) }
+        (entries + plugin.shortcuts.helpEntries())
+            .filter { it.visibleTo(plugin, player) }
 
     private fun canUseBack(player: Player): Boolean =
         player.hasPermission("foxcore.back.teleport") || player.hasPermission("foxcore.back.death")

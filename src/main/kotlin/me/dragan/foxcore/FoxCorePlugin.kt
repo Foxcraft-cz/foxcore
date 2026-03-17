@@ -62,6 +62,7 @@ import me.dragan.foxcore.listener.SpawnRespawnListener
 import me.dragan.foxcore.listener.TpaRequestCleanupListener
 import me.dragan.foxcore.portal.PortalService
 import me.dragan.foxcore.rtp.RtpService
+import me.dragan.foxcore.shortcut.ShortcutService
 import me.dragan.foxcore.spawn.SpawnService
 import me.dragan.foxcore.teleport.SafeTeleportService
 import me.dragan.foxcore.teleport.TeleportEffectService
@@ -107,6 +108,8 @@ class FoxCorePlugin : JavaPlugin() {
         private set
     lateinit var yamlSynchronizer: YamlResourceSynchronizer
         private set
+    lateinit var shortcuts: ShortcutService
+        private set
 
     override fun onEnable() {
         yamlSynchronizer = YamlResourceSynchronizer(this)
@@ -129,6 +132,7 @@ class FoxCorePlugin : JavaPlugin() {
         rtpService = RtpService(this)
         portals = PortalService(this)
         warps = WarpService(this, storage)
+        shortcuts = ShortcutService(this).also { it.reload() }
         messages = MessageService(this).also { it.reload() }
 
         registerCommand("back", BackCommand(this))
@@ -250,6 +254,7 @@ class FoxCorePlugin : JavaPlugin() {
         portals.reload()
         warps.reload()
         spawnService.reload()
+        shortcuts.reload()
         messages.reload()
     }
 
@@ -263,6 +268,9 @@ class FoxCorePlugin : JavaPlugin() {
         if (::portals.isInitialized) {
             portals.shutdown()
         }
+        if (::shortcuts.isInitialized) {
+            shortcuts.shutdown()
+        }
         if (::warps.isInitialized) {
             warps.shutdown()
         }
@@ -273,6 +281,7 @@ class FoxCorePlugin : JavaPlugin() {
 
     private fun syncBundledFiles() {
         yamlSynchronizer.sync("config.yml")
+        yamlSynchronizer.sync("shortcuts.yml")
         yamlSynchronizer.sync("translations/messages_en.yml")
     }
 

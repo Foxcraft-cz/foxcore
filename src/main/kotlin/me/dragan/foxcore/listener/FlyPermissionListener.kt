@@ -1,6 +1,7 @@
 package me.dragan.foxcore.listener
 
 import me.dragan.foxcore.FoxCorePlugin
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -27,6 +28,10 @@ class FlyPermissionListener(
     }
 
     private fun enforceWorldFlightPermission(player: Player, silent: Boolean) {
+        if (player.gameMode == GameMode.CREATIVE || player.gameMode == GameMode.SPECTATOR) {
+            return
+        }
+
         if (!player.allowFlight) {
             return
         }

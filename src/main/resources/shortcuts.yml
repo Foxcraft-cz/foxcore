@@ -1,0 +1,57 @@
+shortcuts:
+  eshop:
+    type: message
+    aliases: [shop]
+    description: "Show the server store link."
+    permission: ""
+    player-only: true
+    allow-arguments: false
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/eshop</white>"
+    help:
+      enabled: true
+      category: features
+      icon: EMERALD
+      name: "<green>/eshop</green>"
+      description: "<gray>Show the server store link.</gray>"
+      usage: "/eshop"
+    lines:
+      - "<gray>[<gold>Eshop</gold>]</gray> <yellow>Open our store at <click:open_url:'https://example.com/store'><aqua><underlined>https://example.com/store</underlined></aqua></click>.</yellow>"
+
+  rules:
+    type: message
+    aliases: [pravidla]
+    description: "Show the server rules."
+    permission: ""
+    player-only: true
+    allow-arguments: false
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/rules</white>"
+    help:
+      enabled: true
+      category: utility
+      icon: BOOK
+      name: "<yellow>/rules</yellow>"
+      description: "<gray>Show the server rules in chat.</gray>"
+      usage: "/rules"
+    lines:
+      - "<gray>[<gold>Rules</gold>]</gray> <yellow>Be respectful to other players.</yellow>"
+      - "<gray>[<gold>Rules</gold>]</gray> <yellow>No cheating, exploiting, or x-raying.</yellow>"
+      - "<gray>[<gold>Rules</gold>]</gray> <yellow>Use common sense and ask staff when unsure.</yellow>"
+
+  shopwarp:
+    type: command
+    aliases: [market]
+    description: "Open the shop warp."
+    permission: ""
+    player-only: true
+    allow-arguments: false
+    forward-arguments: false
+    run-as: player
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/shopwarp</white>"
+    help:
+      enabled: true
+      category: warps
+      icon: COMPASS
+      name: "<aqua>/shopwarp</aqua>"
+      description: "<gray>Shortcut to the public shop warp.</gray>"
+      usage: "/shopwarp"
+    command: "warp shop"
