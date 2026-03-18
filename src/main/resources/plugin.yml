@@ -51,6 +51,10 @@ commands:
     description: Open your ender chest.
     usage: /enderchest
     permission: foxcore.enderchest
+  enchant:
+    description: Apply an unsafe enchantment to the item in your hand.
+    usage: /enchant <enchantment> [level]
+    permission: foxcore.enchant
   feed:
     description: Restore hunger for yourself or another player.
     usage: /feed [player]
@@ -95,6 +99,19 @@ commands:
     description: Fully heal yourself or another player.
     usage: /heal [player]
     permission: foxcore.heal
+  item:
+    aliases: [i]
+    description: Give yourself an item by material name.
+    usage: /item <material> [amount]
+    permission: foxcore.item
+  itemname:
+    description: Rename the item in your hand with MiniMessage formatting.
+    usage: /itemname <name...>
+    permission: foxcore.itemname
+  description:
+    description: Set a description line for the item in your hand.
+    usage: /description <line> <description...>
+    permission: foxcore.description
   head:
     aliases: [skull]
     description: Give yourself a player head by name.
@@ -271,6 +288,9 @@ permissions:
   foxcore.enderchest:
     description: Allows opening your ender chest.
     default: op
+  foxcore.enchant:
+    description: Allows applying unsafe enchantments to the item in your hand.
+    default: op
   foxcore.feed:
     description: Allows restoring your own hunger.
     default: op
@@ -324,6 +344,15 @@ permissions:
     default: op
   foxcore.heal.others:
     description: Allows healing another player.
+    default: op
+  foxcore.item:
+    description: Allows giving yourself items by material name.
+    default: op
+  foxcore.itemname:
+    description: Allows renaming the item in your hand.
+    default: op
+  foxcore.description:
+    description: Allows setting custom description lines on the item in your hand.
     default: op
   foxcore.head:
     description: Allows giving yourself player heads by name.

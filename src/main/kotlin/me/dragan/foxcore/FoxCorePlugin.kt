@@ -13,6 +13,7 @@ import me.dragan.foxcore.command.AdminWarpCommand
 import me.dragan.foxcore.command.DeleteHomeCommand
 import me.dragan.foxcore.command.DeleteWarpCommand
 import me.dragan.foxcore.command.DisposeCommand
+import me.dragan.foxcore.command.EnchantCommand
 import me.dragan.foxcore.command.FeedCommand
 import me.dragan.foxcore.command.FixAllCommand
 import me.dragan.foxcore.command.FixCommand
@@ -27,6 +28,9 @@ import me.dragan.foxcore.command.HatCommand
 import me.dragan.foxcore.command.HomeCommand
 import me.dragan.foxcore.command.HomesCommand
 import me.dragan.foxcore.command.InventoryOpenerCommand
+import me.dragan.foxcore.command.ItemCommand
+import me.dragan.foxcore.command.ItemNameCommand
+import me.dragan.foxcore.command.DescriptionCommand
 import me.dragan.foxcore.command.OnlineTimeCommand
 import me.dragan.foxcore.command.PortalCommand
 import me.dragan.foxcore.command.RenameHomeCommand
@@ -160,6 +164,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("dispose", DisposeCommand(this))
         registerCommand("day", WorldTimeShortcutCommand(this, "foxcore.day", "day", 1000L))
         registerCommand("night", WorldTimeShortcutCommand(this, "foxcore.night", "night", 13000L))
+        registerCommand("enchant", EnchantCommand(this))
         registerCommand(
             "enderchest",
             InventoryOpenerCommand(this, "foxcore.enderchest", "command.enderchest") { player ->
@@ -186,7 +191,10 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("help", HelpCommand(this))
         registerCommand("home", HomeCommand(this))
         registerCommand("homes", HomesCommand(this))
+        registerCommand("item", ItemCommand(this))
+        registerCommand("itemname", ItemNameCommand(this))
         registerCommand("onlinetime", OnlineTimeCommand(this))
+        registerCommand("description", DescriptionCommand(this))
         registerCommand("portal", PortalCommand(this))
         registerCommand(
             "loom",

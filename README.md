@@ -43,6 +43,8 @@ Built jar output:
   Set time or weather in your current world.
 - `/enderchest` or `/ec`
   Opens your ender chest.
+- `/enchant <enchantment> [level]`
+  Applies an unsafe enchantment to the item in your hand.
 - `/feed [player]`
   Restores hunger, saturation, and exhaustion for yourself or another online player.
 - `/fix`
@@ -59,6 +61,12 @@ Built jar output:
   Puts the item in your hand on your head slot.
 - `/heal [player]`
   Fully heals yourself or another online player and clears fire ticks.
+- `/item <material> [amount]` or `/i <material> [amount]`
+  Gives you an item by material name.
+- `/itemname <name...>`
+  Renames the item in your hand using formatting tags.
+- `/description <line> <description...>`
+  Sets a description (lore) line on the item using MiniMessage.
 - `/head [player] [amount]` or `/skull [player] [amount]`
   Gives you a player head by name.
 - `/help` or `/commands`
@@ -232,6 +240,15 @@ Built jar output:
 - Notes:
 - `/ec` is an alias of `/enderchest`.
 
+### `/enchant <enchantment> [level]`
+- Description: Applies an unsafe enchantment to the item in your main hand.
+- Player only: yes
+- Permission: `foxcore.enchant`
+- Notes:
+- Level defaults to `1` and is clamped to a maximum of `254`.
+- Uses unsafe enchantments, so it works on normally non-enchantable items such as sticks.
+- Accepts Bukkit enchantment keys such as `sharpness`, `efficiency`, `unbreaking`, or `mending`.
+
 ### `/feed [player]`
 - Description: Restores hunger values for yourself or another online player.
 - Player only: self use yes, console yes for target form
@@ -280,6 +297,32 @@ Built jar output:
 - Notes:
 - `/heal` restores your health to your current maximum health attribute and clears fire ticks.
 - `/heal <player>` heals another online player and requires `foxcore.heal.others`.
+
+### `/item <material> [amount]` or `/i <material> [amount]`
+- Description: Gives you an item by material name.
+- Player only: yes
+- Permission: `foxcore.item`
+- Notes:
+- Amount defaults to `1` and is clamped to a maximum of `64`.
+- Accepts standard Bukkit material names such as `stone_bricks`.
+- Adds the item to your inventory and drops overflow at your feet if you are full.
+
+### `/itemname <name...>`
+- Description: Renames the item in your main hand using MiniMessage formatting.
+- Player only: yes
+- Permission: `foxcore.itemname`
+- Notes:
+- Accepts MiniMessage formatting such as `<red>`, `<gold>`, `<bold>`, and similar tags.
+- Applies the custom name directly to the item in your main hand.
+
+### `/description <line> <description...>`
+- Description: Changes a lore line on the item in your main hand.
+- Player only: yes
+- Permission: `foxcore.description`
+- Notes:
+- `line` is 1-based; the command pads empty lines automatically.
+- Lore lines support MiniMessage formatting, e.g. `<gray>`, `<aqua>`, `<bold>`.
+- Replaces only the targeted line, leaving others untouched.
 
 ### `/head [player] [amount]` or `/skull [player] [amount]`
 - Description: Gives you a player head item by player name.
@@ -805,6 +848,18 @@ Built jar output:
 ### `foxcore.fixall`
 - Default: `op`
 - Allows repairing all damaged items in your inventory.
+
+### `foxcore.enchant`
+- Default: `op`
+- Allows applying unsafe enchantments to the item in your hand.
+
+### `foxcore.item`
+- Default: `op`
+- Allows giving yourself items by material name.
+
+### `foxcore.itemname`
+- Default: `op`
+- Allows renaming the item in your hand.
 
 ### `foxcore.setspawn`
 - Default: `op`

@@ -71,6 +71,11 @@ command:
   enderchest:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/enderchest</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřena tvoje ender chestka.</green>"
+  enchant:
+    usage: '<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/enchant \<enchant\> [level]</white>'
+    invalid-item: "<gray>[<gold>FoxCore</gold>]</gray> <red>Musíš držet předmět v hlavní ruce.</red>"
+    invalid-enchantment: "<gray>[<gold>FoxCore</gold>]</gray> <red><white>%enchantment%</white> není platný enchant.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Na předmět v hlavní ruce byl použit enchant <white>%enchantment%</white> <white>%level%</white>.</green>"
   feed:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/feed [hráč]</white>"
     not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hráč <white>%player%</white> není online.</red>"
@@ -134,6 +139,20 @@ command:
     success-self: "<gray>[<gold>FoxCore</gold>]</gray> <green>Byl jsi plně vyléčen.</green>"
     success-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Vyléčil jsi hráče <white>%player%</white>.</green>"
     success-by-other: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> tě vyléčil.</green>"
+  item:
+    usage: '<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/item \<materiál\> [počet]</white>'
+    invalid-material: "<gray>[<gold>FoxCore</gold>]</gray> <red><white>%material%</white> není platný item materiál.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Dostal jsi <white>%amount%</white>x <white>%material%</white>.</green>"
+    success-overflow: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Dostal jsi <white>%amount%</white>x <white>%material%</white>. Přebytek byl vyhozen k tobě na zem, protože máš plný inventář.</yellow>"
+  itemname:
+    usage: '<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/itemname \<jméno...\></white>'
+    invalid-item: "<gray>[<gold>FoxCore</gold>]</gray> <red>Musíš držet předmět v hlavní ruce.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Předmět v hlavní ruce byl přejmenován.</green>"
+  description:
+    usage: '<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/description \<řádek\> \<popis...\></white>'
+    invalid-line: "<gray>[<gold>FoxCore</gold>]</gray> <red>Řádek musí být číslo od <white>1</white>.</red>"
+    invalid-item: "<gray>[<gold>FoxCore</gold>]</gray> <red>Musíš držet předmět v hlavní ruce.</red>"
+    success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Popisný řádek <white>%line%</white> na předmětu v hlavní ruce byl změněn.</green>"
   head:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/head [hráč] [množství]</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Toto není platné jméno hráče pro hlavu.</red>"
@@ -199,12 +218,24 @@ command:
       tpa:
         expiration: "<gray>Vypršení žádosti:</gray> <white>%seconds%</white>s"
     command:
+      enchant:
+        name: "<gold>/enchant</gold>"
+        description: "<gray>Použij unsafe enchant na předmět v hlavní ruce.</gray>"
       fix:
         name: "<gold>/fix</gold>"
         description: "<gray>Oprav předmět v hlavní ruce.</gray>"
       fixall:
         name: "<gold>/fixall</gold>"
         description: "<gray>Oprav všechny poškozené předměty v inventáři.</gray>"
+      item:
+        name: "<gold>/item</gold>"
+        description: "<gray>Dej si item podle názvu materiálu.</gray>"
+      itemname:
+        name: "<gold>/itemname</gold>"
+        description: "<gray>Přejmenuj předmět v ruce pomocí MiniMessage formátování.</gray>"
+      description:
+        name: "<gold>/description</gold>"
+        description: "<gray>Změň popisnou linii předmětu pomocí MiniMessage textu.</gray>"
       spawn:
         name: "<gold>/spawn</gold>"
         description: "<gray>Teleportuj se na nastavený serverový spawn.</gray>"
