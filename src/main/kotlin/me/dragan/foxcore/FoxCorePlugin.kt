@@ -5,6 +5,11 @@ import me.dragan.foxcore.back.BackCommand
 import me.dragan.foxcore.back.BackService
 import me.dragan.foxcore.broadcast.BroadcastService
 import me.dragan.foxcore.back.storage.StorageFactory
+import me.dragan.foxcore.chat.ChatFormatService
+import me.dragan.foxcore.chat.ChatLuckPermsService
+import me.dragan.foxcore.chat.ChatModerationService
+import me.dragan.foxcore.chat.PrivateMessageService
+import me.dragan.foxcore.chat.SpyService
 import me.dragan.foxcore.command.AfkCommand
 import me.dragan.foxcore.command.BroadcastCommand
 import me.dragan.foxcore.command.FoxCoreCommand
@@ -31,8 +36,11 @@ import me.dragan.foxcore.command.InventoryOpenerCommand
 import me.dragan.foxcore.command.ItemCommand
 import me.dragan.foxcore.command.ItemNameCommand
 import me.dragan.foxcore.command.DescriptionCommand
+import me.dragan.foxcore.command.CommandSpyCommand
+import me.dragan.foxcore.command.MessageCommand
 import me.dragan.foxcore.command.OnlineTimeCommand
 import me.dragan.foxcore.command.PortalCommand
+import me.dragan.foxcore.command.ReplyCommand
 import me.dragan.foxcore.command.RenameHomeCommand
 import me.dragan.foxcore.command.RtpCommand
 import me.dragan.foxcore.command.SeenCommand
@@ -42,6 +50,7 @@ import me.dragan.foxcore.command.SetHomeCommand
 import me.dragan.foxcore.command.SetWarpCommand
 import me.dragan.foxcore.command.SpawnCommand
 import me.dragan.foxcore.command.SpeedCommand
+import me.dragan.foxcore.command.SocialSpyCommand
 import me.dragan.foxcore.command.TpAcceptCommand
 import me.dragan.foxcore.command.TpaCommand
 import me.dragan.foxcore.command.TpaHereCommand
@@ -56,6 +65,7 @@ import me.dragan.foxcore.help.ResidenceHelpInfoService
 import me.dragan.foxcore.help.PluginHelpInfoService
 import me.dragan.foxcore.listener.BackTrackingListener
 import me.dragan.foxcore.listener.AfkListener
+import me.dragan.foxcore.listener.ChatListener
 import me.dragan.foxcore.listener.DisposeInventoryListener
 import me.dragan.foxcore.listener.FlyPermissionListener
 import me.dragan.foxcore.listener.GuiListener
@@ -63,6 +73,7 @@ import me.dragan.foxcore.listener.JoinMessageListener
 import me.dragan.foxcore.listener.PortalListener
 import me.dragan.foxcore.listener.SpawnJoinListener
 import me.dragan.foxcore.listener.SpawnRespawnListener
+import me.dragan.foxcore.listener.SpyListener
 import me.dragan.foxcore.listener.TpaRequestCleanupListener
 import me.dragan.foxcore.portal.PortalService
 import me.dragan.foxcore.rtp.RtpService
@@ -85,6 +96,16 @@ class FoxCorePlugin : JavaPlugin() {
     lateinit var backService: BackService
         private set
     lateinit var broadcasts: BroadcastService
+        private set
+    lateinit var chatFormat: ChatFormatService
+        private set
+    lateinit var chatLuckPerms: ChatLuckPermsService
+        private set
+    lateinit var chatModeration: ChatModerationService
+        private set
+    lateinit var privateMessages: PrivateMessageService
+        private set
+    lateinit var spies: SpyService
         private set
     lateinit var messages: MessageService
         private set
@@ -124,6 +145,11 @@ class FoxCorePlugin : JavaPlugin() {
         storage.initialize()
         backService = BackService(this, storage)
         broadcasts = BroadcastService(this)
+        chatLuckPerms = ChatLuckPermsService(this)
+        chatFormat = ChatFormatService(this)
+        chatModeration = ChatModerationService(this)
+        privateMessages = PrivateMessageService(this)
+        spies = SpyService(this)
         residenceHelpInfo = ResidenceHelpInfoService(this)
         pluginHelpInfo = PluginHelpInfoService(this)
         guiManager = GuiManager()
@@ -154,6 +180,7 @@ class FoxCorePlugin : JavaPlugin() {
                 player.openCartographyTable(null, true)
             },
         )
+        registerCommand("commandspy", CommandSpyCommand(this))
         registerCommand(
             "craft",
             InventoryOpenerCommand(this, "foxcore.craft", "command.craft") { player ->
@@ -202,8 +229,10 @@ class FoxCorePlugin : JavaPlugin() {
                 player.openLoom(null, true)
             },
         )
+        registerCommand("message", MessageCommand(this))
         registerCommand("renamehome", RenameHomeCommand(this))
         registerCommand("rain", WorldWeatherShortcutCommand(this, "foxcore.rain", "rain", true))
+        registerCommand("reply", ReplyCommand(this))
         registerCommand("warp", WarpCommand(this))
         registerCommand("setwarp", SetWarpCommand(this))
         registerCommand("delwarp", DeleteWarpCommand(this))
@@ -213,6 +242,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("sethome", SetHomeCommand(this))
         registerCommand("sethomeicon", SetHomeIconCommand(this))
         registerCommand("setspawn", SetSpawnCommand(this))
+        registerCommand("socialspy", SocialSpyCommand(this))
         registerCommand("sun", WorldWeatherShortcutCommand(this, "foxcore.sun", "sun", false))
         registerCommand("speed", SpeedCommand(this))
         registerCommand(
@@ -239,14 +269,19 @@ class FoxCorePlugin : JavaPlugin() {
         server.onlinePlayers.forEach { backService.loadPlayer(it.uniqueId) }
         afk.start()
         broadcasts.reload()
+        chatFormat.reload()
+        chatModeration.reload()
+        privateMessages.reload()
         maybeRegisterPlaceholderExpansion()
         server.pluginManager.registerEvents(AfkListener(this), this)
         server.pluginManager.registerEvents(BackTrackingListener(this), this)
+        server.pluginManager.registerEvents(ChatListener(this), this)
         server.pluginManager.registerEvents(DisposeInventoryListener(), this)
         server.pluginManager.registerEvents(FlyPermissionListener(this), this)
         server.pluginManager.registerEvents(GuiListener(this), this)
         server.pluginManager.registerEvents(JoinMessageListener(this), this)
         server.pluginManager.registerEvents(PortalListener(this), this)
+        server.pluginManager.registerEvents(SpyListener(this), this)
         server.pluginManager.registerEvents(SpawnJoinListener(this), this)
         server.pluginManager.registerEvents(SpawnRespawnListener(this), this)
         server.pluginManager.registerEvents(TpaRequestCleanupListener(this), this)
@@ -258,6 +293,9 @@ class FoxCorePlugin : JavaPlugin() {
         reloadConfig()
         afk.start()
         broadcasts.reload()
+        chatFormat.reload()
+        chatModeration.reload()
+        privateMessages.reload()
         rtpService.reload()
         portals.reload()
         warps.reload()

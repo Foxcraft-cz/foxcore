@@ -25,6 +25,8 @@ Built jar output:
   Sends formatted server broadcast messages automatically on a timer using random selection without immediate repeats.
 - `/broadcast <message...>` or `/bc <message...>`
   Sends a formatted manual broadcast to all online players and console.
+- public chat formatting
+  Formats normal chat with LuckPerms prefix and color metadata, sender hover info, vanish-aware delivery, and lightweight anti-spam/filtering.
 - `/anvil`
   Opens a virtual anvil.
 - `/cartographytable` or `/cartography`
@@ -67,6 +69,14 @@ Built jar output:
   Renames the item in your hand using formatting tags.
 - `/description <line> <description...>`
   Sets a description (lore) line on the item using MiniMessage.
+- `/message <player> <message...>` or `/msg <player> <message...>`
+  Sends a private message to another online player.
+- `/reply <message...>` or `/r <message...>`
+  Replies to your last private message contact.
+- `/socialspy`
+  Toggles spying on private messages.
+- `/commandspy`
+  Toggles spying on player commands except the private-message spy commands.
 - `/head [player] [amount]` or `/skull [player] [amount]`
   Gives you a player head by name.
 - `/help` or `/commands`
@@ -199,6 +209,54 @@ Built jar output:
 - Notes:
 - Supports MiniMessage formatting such as `<gold>`, `<gray>`, `<red>`, and similar tags used elsewhere in FoxCore.
 - Manual broadcasts are currently single-line.
+
+### Public Chat Formatting
+- Description: Replaces vanilla public chat with FoxCore formatting when enabled.
+- Player only: yes
+- Permission: none to speak, moderation bypass permissions optional
+- Notes:
+- Uses LuckPerms directly for `prefix`, `name_color`, and `chat_color`.
+- Uses LuckPerms directly for `prefix`, `rank_color`, `name_color`, and `chat_color`.
+- `rank_color` can include legacy formatting modifiers such as `&l`, for example `&#E86133&l`.
+- Sender names include hover info with player name, resolved rank text, and current world.
+- Sender names suggest `/message <player>` when clicked.
+- Player chat content is always treated as plain text to prevent MiniMessage/style abuse.
+- Vanished senders only reach recipients who can already see them or who have `foxcore.chat.vanish.see`.
+- Public chat moderation includes cooldowns, duplicate detection, repeated-character clamping, and regex replace/block rules.
+- Main config paths: `chat.public.*`, `chat.private.*`, `chat.luckperms.*`, `chat.spam.*`, and `chat.filters.rules`.
+
+### `/message <player> <message...>` or `/msg <player> <message...>`
+- Description: Sends a private message to an online player.
+- Player only: yes
+- Permission: `foxcore.message`
+- Notes:
+- Respects vanish visibility, so hidden players do not appear as valid targets unless you can already see them.
+- Both the name and message are interactive, and the message row includes a quick action button.
+- Shares the same regex filtering system as public chat, with its own cooldown and duplicate settings under `chat.private.*`.
+
+### `/reply <message...>` or `/r <message...>`
+- Description: Replies to your last private-message contact.
+- Player only: yes
+- Permission: `foxcore.reply`
+- Notes:
+- Reply targets are tracked by UUID.
+- If the last contact goes offline or becomes invisible to you, the reply is rejected safely.
+
+### `/socialspy`
+- Description: Toggles spying on private messages.
+- Player only: yes
+- Permission: `foxcore.socialspy`
+- Notes:
+- Shows interactive private-message copies to enabled staff.
+- Spy recipients are excluded from messages they directly sent or received.
+
+### `/commandspy`
+- Description: Toggles spying on player commands.
+- Player only: yes
+- Permission: `foxcore.commandspy`
+- Notes:
+- Shows clickable command lines from players to enabled staff.
+- Ignores `/message`, `/msg`, `/reply`, `/r`, `/socialspy`, and `/commandspy` so it does not duplicate social-spy traffic or reveal spy toggles.
 
 ### `/delhome <home>` and `/delhome <player> <home>`
 - Description: Deletes saved homes.
@@ -719,6 +777,34 @@ Built jar output:
 ### `foxcore.broadcast`
 - Default: `op`
 - Allows sending manual server broadcasts with `/broadcast` or `/bc`.
+
+### `foxcore.chat.spam.bypass`
+- Default: `op`
+- Bypasses the public chat cooldown and duplicate-message limiter.
+
+### `foxcore.chat.filter.bypass`
+- Default: `op`
+- Bypasses public chat regex filter rules.
+
+### `foxcore.chat.vanish.see`
+- Default: `op`
+- Allows receiving public chat sent by vanished players.
+
+### `foxcore.message`
+- Default: `true`
+- Allows sending private messages with `/message` or `/msg`.
+
+### `foxcore.reply`
+- Default: `true`
+- Allows replying to your last private-message contact with `/reply` or `/r`.
+
+### `foxcore.socialspy`
+- Default: `op`
+- Allows toggling private-message spy with `/socialspy`.
+
+### `foxcore.commandspy`
+- Default: `op`
+- Allows toggling player command spy with `/commandspy`.
 
 ### `foxcore.fly`
 - Default: `op`

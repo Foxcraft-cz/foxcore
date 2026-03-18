@@ -4,7 +4,7 @@ main: me.dragan.foxcore.FoxCorePlugin
 api-version: "1.21"
 authors: [Dragan]
 description: Lightweight Paper essentials-style utilities.
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, LuckPerms]
 
 commands:
   afk:
@@ -143,10 +143,28 @@ commands:
     description: Open a virtual loom.
     usage: /loom
     permission: foxcore.loom
+  message:
+    aliases: [msg]
+    description: Send a private message to another player.
+    usage: /message <player> <message...>
+    permission: foxcore.message
+  commandspy:
+    description: Toggle spying on player commands.
+    usage: /commandspy
+    permission: foxcore.commandspy
   night:
     description: Set your current world time to night.
     usage: /night
     permission: foxcore.night
+  reply:
+    aliases: [r]
+    description: Reply to the last player you messaged.
+    usage: /reply <message...>
+    permission: foxcore.reply
+  socialspy:
+    description: Toggle spying on private messages.
+    usage: /socialspy
+    permission: foxcore.socialspy
   renamehome:
     description: Rename one of your homes.
     usage: /renamehome <old> <new>
@@ -297,6 +315,15 @@ permissions:
   foxcore.feed.others:
     description: Allows restoring another player's hunger.
     default: op
+  foxcore.chat.spam.bypass:
+    description: Bypasses public chat spam protection.
+    default: op
+  foxcore.chat.filter.bypass:
+    description: Bypasses public chat regex filters.
+    default: op
+  foxcore.chat.vanish.see:
+    description: Allows receiving public chat from vanished players.
+    default: op
   foxcore.fix:
     description: Allows repairing the item in your main hand.
     default: op
@@ -344,6 +371,18 @@ permissions:
     default: op
   foxcore.heal.others:
     description: Allows healing another player.
+    default: op
+  foxcore.message:
+    description: Allows sending private messages.
+    default: true
+  foxcore.reply:
+    description: Allows replying to the last private message contact.
+    default: true
+  foxcore.commandspy:
+    description: Allows toggling command spy.
+    default: op
+  foxcore.socialspy:
+    description: Allows toggling private message spy.
     default: op
   foxcore.item:
     description: Allows giving yourself items by material name.

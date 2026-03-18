@@ -34,6 +34,45 @@ broadcasts:
     - - "<gray>[<gold>Help</gold>]</gray> <yellow>Need a quick overview of player commands?</yellow>"
       - "<gray>[<gold>Help</gold>]</gray> <yellow>Open the command guide with <white>/foxhelp</white> or <white>/commands</white>.</yellow>"
 
+chat:
+  enabled: true
+  public:
+    enabled: true
+    format: "<prefix><name><dark_gray> ></dark_gray> <message>"
+    prefix-format: "<dark_gray>(</dark_gray><prefix><dark_gray>) </dark_gray>"
+    default-name-color: "#D2CEC6"
+    default-chat-color: "#F4EEE8"
+    hover-lines:
+      - "<gray>Player:</gray> <white>%player%</white>"
+      - "<gray>Rank:</gray> <white>%rank%</white>"
+      - "<gray>World:</gray> <white>%world%</white>"
+      - "<dark_gray>></dark_gray> <yellow>Click to message</yellow>"
+  private:
+    enabled: true
+    outgoing-format: "<dark_gray>[</dark_gray><gray>to</gray> <name><dark_gray>]</dark_gray> <message> <button>"
+    incoming-format: "<dark_gray>[</dark_gray><gray>from</gray> <name><dark_gray>]</dark_gray> <message> <button>"
+    max-length: 256
+    min-interval-millis: 300
+    duplicate-window-seconds: 10
+    max-duplicates: 3
+  luckperms:
+    enabled: true
+    rank-color-key: "rank_color"
+    name-color-key: "name_color"
+    chat-color-key: "chat_color"
+  spam:
+    min-interval-millis: 800
+    max-length: 256
+    duplicate-window-seconds: 15
+    max-duplicates: 2
+    max-repeat-run: 4
+  filters:
+    enabled: false
+    rules:
+      - pattern: '(?i)\bnoob\b'
+        action: replace
+        replacement: "n**b"
+
 afk:
   enabled: true
   idle-seconds: 300

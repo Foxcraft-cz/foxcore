@@ -26,6 +26,33 @@ afk:
   leave: "<gray>[<gold>☕</gold>]</gray> <green><white>%player%</white> is no longer AFK.</green>"
   kick-reason: "<red>You were kicked for being AFK.</red>"
 
+chat:
+  public:
+    empty: "<gray>[<gold>FoxCore</gold>]</gray> <red>Your chat message is empty.</red>"
+    too-long: "<gray>[<gold>FoxCore</gold>]</gray> <red>Your chat message is too long. Maximum length is <white>%length%</white> characters.</red>"
+    spam-cooldown: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>You are chatting too fast. Slow down a bit.</yellow>"
+    spam-duplicate: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Do not repeat the same message.</yellow>"
+    blocked: "<gray>[<gold>FoxCore</gold>]</gray> <red>Your message was blocked by chat filters.</red>"
+  private:
+    disabled: "<gray>[<gold>FoxCore</gold>]</gray> <red>Private messages are currently disabled.</red>"
+    empty: "<gray>[<gold>FoxCore</gold>]</gray> <red>Your private message is empty.</red>"
+    too-long: "<gray>[<gold>FoxCore</gold>]</gray> <red>Your private message is too long. Maximum length is <white>%length%</white> characters.</red>"
+    spam-cooldown: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>You are sending private messages too fast.</yellow>"
+    spam-duplicate: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Do not repeat the same private message.</yellow>"
+    blocked: "<gray>[<gold>FoxCore</gold>]</gray> <red>Your private message was blocked by chat filters.</red>"
+    button:
+      again: "<gray>[Again]</gray>"
+      again-hover: "<yellow>Click to message again.</yellow>"
+      reply: "<yellow>[Reply]</yellow>"
+      reply-hover: "<yellow>Click to reply.</yellow>"
+
+spy:
+  social:
+    prefix: "<gray>[<gold>SocialSpy</gold>]</gray> "
+  command:
+    prefix: "<gray>[<gold>CommandSpy</gold>]</gray> "
+    hover: "<yellow>Click to suggest this command.</yellow>"
+
 command:
   afk:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/afk</white>"
@@ -236,6 +263,18 @@ command:
       description:
         name: "<gold>/description</gold>"
         description: "<gray>Change an item's description line using MiniMessage text.</gray>"
+      message:
+        name: "<gold>/message</gold>"
+        description: "<gray>Send a private message to another player.</gray>"
+      reply:
+        name: "<gold>/reply</gold>"
+        description: "<gray>Reply to the last private message contact.</gray>"
+      socialspy:
+        name: "<gold>/socialspy</gold>"
+        description: "<gray>Toggle spying on private messages.</gray>"
+      commandspy:
+        name: "<gold>/commandspy</gold>"
+        description: "<gray>Toggle spying on player commands.</gray>"
       spawn:
         name: "<gold>/spawn</gold>"
         description: "<gray>Teleport yourself to the configured server spawn.</gray>"
@@ -439,9 +478,25 @@ command:
   loom:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/loom</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened a virtual loom.</green>"
+  message:
+    usage: '<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/message \<player\> \<message...\></white>'
+    not-found: "<gray>[<gold>FoxCore</gold>]</gray> <red>Player <white>%player%</white> is not online.</red>"
+    self: "<gray>[<gold>FoxCore</gold>]</gray> <red>You cannot message yourself.</red>"
+  commandspy:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/commandspy</white>"
+    enabled: "<gray>[<gold>FoxCore</gold>]</gray> <green>Command spy enabled.</green>"
+    disabled: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Command spy disabled.</yellow>"
   night:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/night</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set world <white>%world%</white> time to night.</green>"
+  reply:
+    usage: '<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/reply \<message...\></white>'
+    none: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have anyone to reply to.</red>"
+    unavailable: "<gray>[<gold>FoxCore</gold>]</gray> <red>Your last private message target is no longer available.</red>"
+  socialspy:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/socialspy</white>"
+    enabled: "<gray>[<gold>FoxCore</gold>]</gray> <green>Social spy enabled.</green>"
+    disabled: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Social spy disabled.</yellow>"
   renamehome:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/renamehome &lt;old&gt; &lt;new&gt;</white>"
     invalid-name: "<gray>[<gold>FoxCore</gold>]</gray> <red>Both home names must be valid names.</red>"
