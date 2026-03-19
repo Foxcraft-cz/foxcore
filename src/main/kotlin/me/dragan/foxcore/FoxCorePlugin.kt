@@ -23,6 +23,7 @@ import me.dragan.foxcore.command.FeedCommand
 import me.dragan.foxcore.command.FixAllCommand
 import me.dragan.foxcore.command.FixCommand
 import me.dragan.foxcore.command.WorldTimeShortcutCommand
+import me.dragan.foxcore.command.WorldVoteCommand
 import me.dragan.foxcore.command.WorldWeatherShortcutCommand
 import me.dragan.foxcore.command.WhoisCommand
 import me.dragan.foxcore.command.GamemodeShortcutCommand
@@ -57,6 +58,7 @@ import me.dragan.foxcore.command.TpaHereCommand
 import me.dragan.foxcore.command.TpaDenyCommand
 import me.dragan.foxcore.command.TeleportCommand
 import me.dragan.foxcore.command.TeleportHereCommand
+import me.dragan.foxcore.command.VoteChoiceCommand
 import me.dragan.foxcore.command.WarpCommand
 import me.dragan.foxcore.config.MessageService
 import me.dragan.foxcore.config.YamlResourceSynchronizer
@@ -84,6 +86,9 @@ import me.dragan.foxcore.teleport.TeleportEffectService
 import me.dragan.foxcore.teleport.VanishService
 import me.dragan.foxcore.tpa.TpaRequestService
 import me.dragan.foxcore.placeholder.FoxCorePlaceholderExpansion
+import me.dragan.foxcore.vote.VoteAction
+import me.dragan.foxcore.vote.VoteChoice
+import me.dragan.foxcore.vote.VoteService
 import me.dragan.foxcore.warp.WarpService
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
@@ -135,6 +140,8 @@ class FoxCorePlugin : JavaPlugin() {
         private set
     lateinit var shortcuts: ShortcutService
         private set
+    lateinit var votes: VoteService
+        private set
 
     override fun onEnable() {
         yamlSynchronizer = YamlResourceSynchronizer(this)
@@ -164,6 +171,7 @@ class FoxCorePlugin : JavaPlugin() {
         warps = WarpService(this, storage)
         shortcuts = ShortcutService(this).also { it.reload() }
         messages = MessageService(this).also { it.reload() }
+        votes = VoteService(this)
 
         registerCommand("back", BackCommand(this))
         registerCommand("broadcast", BroadcastCommand(this))
@@ -245,6 +253,12 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("socialspy", SocialSpyCommand(this))
         registerCommand("sun", WorldWeatherShortcutCommand(this, "foxcore.sun", "sun", false))
         registerCommand("speed", SpeedCommand(this))
+        registerCommand("voteday", WorldVoteCommand(this, VoteAction.DAY))
+        registerCommand("votenight", WorldVoteCommand(this, VoteAction.NIGHT))
+        registerCommand("voteno", VoteChoiceCommand(this, VoteChoice.NO))
+        registerCommand("voterain", WorldVoteCommand(this, VoteAction.RAIN))
+        registerCommand("voteyes", VoteChoiceCommand(this, VoteChoice.YES))
+        registerCommand("votesun", WorldVoteCommand(this, VoteAction.SUN))
         registerCommand(
             "smithingtable",
             InventoryOpenerCommand(this, "foxcore.smithingtable", "command.smithingtable") { player ->
@@ -302,6 +316,7 @@ class FoxCorePlugin : JavaPlugin() {
         spawnService.reload()
         shortcuts.reload()
         messages.reload()
+        votes.reload()
     }
 
     override fun onDisable() {
@@ -317,6 +332,9 @@ class FoxCorePlugin : JavaPlugin() {
         if (::shortcuts.isInitialized) {
             shortcuts.shutdown()
         }
+        if (::votes.isInitialized) {
+            votes.shutdown()
+        }
         if (::warps.isInitialized) {
             warps.shutdown()
         }
@@ -329,6 +347,7 @@ class FoxCorePlugin : JavaPlugin() {
         yamlSynchronizer.sync("config.yml")
         yamlSynchronizer.sync("shortcuts.yml")
         yamlSynchronizer.sync("translations/messages_en.yml")
+        yamlSynchronizer.sync("translations/messages_cs.yml")
     }
 
     fun broadcastAfkState(player: Player, becameAfk: Boolean) {

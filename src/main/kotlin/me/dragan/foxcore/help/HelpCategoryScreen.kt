@@ -133,6 +133,8 @@ class HelpCategoryScreen(
             "bannermaker" -> plugin.pluginHelpInfo.commandLabel("help.integrations.bannermaker.command", "/banner")
             "armorstandeditor" -> plugin.pluginHelpInfo.commandLabel("help.integrations.armorstandeditor.command", "/ase")
             "rosetimber" -> plugin.pluginHelpInfo.commandLabel("help.integrations.rosetimber.command", "/timber")
+            "interactivechat" -> plugin.pluginHelpInfo.commandLabel("help.integrations.interactivechat.command", "/ic list")
+            "trade" -> plugin.pluginHelpInfo.commandLabel("help.integrations.axtrade.command", "/trade")
             "afk" -> "/afk"
             "enchant" -> "/enchant <enchantment> [level]"
             "feed" -> "/feed [player]"
@@ -146,6 +148,12 @@ class HelpCategoryScreen(
             "reply" -> "/reply <message...>"
             "socialspy" -> "/socialspy"
             "commandspy" -> "/commandspy"
+            "voteday" -> "/voteday [force]"
+            "votenight" -> "/votenight [force]"
+            "votesun" -> "/votesun [force]"
+            "voterain" -> "/voterain [force]"
+            "voteyes" -> "/voteyes"
+            "voteno" -> "/voteno"
             "onlinetime" -> "/onlinetime [player]"
             "hat" -> "/hat"
             "head" -> "/head [player] [amount]"

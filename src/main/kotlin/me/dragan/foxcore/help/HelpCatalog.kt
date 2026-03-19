@@ -96,6 +96,12 @@ object HelpCatalog {
         HelpEntry("rosetimber", HelpCategory.FEATURES, Material.IRON_AXE, { plugin, _ ->
             plugin.pluginHelpInfo.isPluginLoaded("help.integrations.rosetimber")
         }),
+        HelpEntry("interactivechat", HelpCategory.FEATURES, Material.BOOK, { plugin, _ ->
+            plugin.pluginHelpInfo.isPluginLoaded("help.integrations.interactivechat")
+        }),
+        HelpEntry("trade", HelpCategory.FEATURES, Material.EMERALD, { plugin, _ ->
+            plugin.pluginHelpInfo.isPluginLoaded("help.integrations.axtrade")
+        }),
 
         HelpEntry("afk", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.afk.command") }),
         HelpEntry("enchant", HelpCategory.UTILITY, Material.ENCHANTED_BOOK, { _, player -> player.hasPermission("foxcore.enchant") }),
@@ -110,6 +116,12 @@ object HelpCatalog {
         HelpEntry("reply", HelpCategory.UTILITY, Material.PAPER, { _, player -> player.hasPermission("foxcore.reply") }),
         HelpEntry("socialspy", HelpCategory.UTILITY, Material.ENDER_EYE, { _, player -> player.hasPermission("foxcore.socialspy") }),
         HelpEntry("commandspy", HelpCategory.UTILITY, Material.COMMAND_BLOCK, { _, player -> player.hasPermission("foxcore.commandspy") }),
+        HelpEntry("voteday", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.voteday") }),
+        HelpEntry("votenight", HelpCategory.UTILITY, Material.BLACK_BED, { _, player -> player.hasPermission("foxcore.votenight") }),
+        HelpEntry("votesun", HelpCategory.UTILITY, Material.SUNFLOWER, { _, player -> player.hasPermission("foxcore.votesun") }),
+        HelpEntry("voterain", HelpCategory.UTILITY, Material.WATER_BUCKET, { _, player -> player.hasPermission("foxcore.voterain") }),
+        HelpEntry("voteyes", HelpCategory.UTILITY, Material.LIME_CONCRETE, { _, _ -> true }),
+        HelpEntry("voteno", HelpCategory.UTILITY, Material.RED_CONCRETE, { _, _ -> true }),
         HelpEntry("onlinetime", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.onlinetime") }),
         HelpEntry("hat", HelpCategory.UTILITY, Material.LEATHER_HELMET, { _, player -> player.hasPermission("foxcore.hat") }),
         HelpEntry("head", HelpCategory.UTILITY, Material.PLAYER_HEAD, { _, player -> player.hasPermission("foxcore.head") }),

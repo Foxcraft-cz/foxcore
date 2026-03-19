@@ -95,6 +95,41 @@ command:
   day:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/day</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set world <white>%world%</white> time to day.</green>"
+  vote:
+    disabled: "<gray>[<gold>FoxCore</gold>]</gray> <red>World time and weather votes are currently disabled.</red>"
+    cooldown: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>You must wait <white>%seconds%</white>s before using <white>%command%</white> again.</yellow>"
+    active: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>A vote for <white>%action%</white> is already running. Vote with <white>%yes-command%</white> or <white>%no-command%</white>.</yellow>"
+    no-active: "<gray>[<gold>FoxCore</gold>]</gray> <red>There is no active vote right now.</red>"
+    started: "<gray>[<gold>FoxCore</gold>]</gray> <yellow><white>%player%</white> started a vote for <white>%action%</white> in world <white>%world%</white>. Click below or type <white>/voteyes</white> or <white>/voteno</white>. Ends in <white>%seconds%</white>s.</yellow>"
+    halfway: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>The vote for <white>%action%</white> in world <white>%world%</white> is halfway done. <white>%seconds%</white>s remain. Yes: <white>%yes%</white>, no: <white>%no%</white>.</yellow>"
+    ending-soon: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>The vote for <white>%action%</white> in world <white>%world%</white> is ending soon. <white>%seconds%</white>s remain. Yes: <white>%yes%</white>, no: <white>%no%</white>.</yellow>"
+    force-success: "<gray>[<gold>FoxCore</gold>]</gray> <green><white>%player%</white> forced <white>%action%</white> in world <white>%world%</white>.</green>"
+    passed: "<gray>[<gold>FoxCore</gold>]</gray> <green>The vote for <white>%action%</white> in world <white>%world%</white> passed. Yes: <white>%yes%</white>, no: <white>%no%</white> (<white>%percent%</white>% yes).</green>"
+    failed: "<gray>[<gold>FoxCore</gold>]</gray> <red>The vote for <white>%action%</white> in world <white>%world%</white> failed. Yes: <white>%yes%</white>, no: <white>%no%</white> (<white>%percent%</white>% yes, needs <white>%required%</white>%).</red>"
+    failed-minimum: "<gray>[<gold>FoxCore</gold>]</gray> <red>The vote for <white>%action%</white> in world <white>%world%</white> ended without enough participants. Yes: <white>%yes%</white>, no: <white>%no%</white>. At least <white>%required%</white> voters are required.</red>"
+    cancelled-reload: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>The vote for <white>%action%</white> in world <white>%world%</white> was cancelled because the plugin was reloaded.</yellow>"
+    cancelled-force: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>The vote for <white>%action%</white> in world <white>%world%</white> was cancelled because <white>%player%</white> forced the result.</yellow>"
+    bossbar: "<yellow>Vote:</yellow> <white>%action%</white> <gray>|</gray> <white>%world%</white> <gray>|</gray> <green>yes %yes%</green> <gray>/</gray> <red>no %no%</red> <gray>|</gray> <white>%seconds%</white>s"
+    recorded:
+      "yes": "<gray>[<gold>FoxCore</gold>]</gray> <green>You voted YES.</green>"
+      "no": "<gray>[<gold>FoxCore</gold>]</gray> <red>You voted NO.</red>"
+    changed:
+      "yes": "<gray>[<gold>FoxCore</gold>]</gray> <green>You changed your vote to YES.</green>"
+      "no": "<gray>[<gold>FoxCore</gold>]</gray> <red>You changed your vote to NO.</red>"
+    already:
+      "yes": "<gray>[<gold>FoxCore</gold>]</gray> <yellow>You are already voting YES.</yellow>"
+      "no": "<gray>[<gold>FoxCore</gold>]</gray> <yellow>You are already voting NO.</yellow>"
+    buttons:
+      prefix: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Vote:</yellow>"
+      "yes": "<green>[YES]</green>"
+      "yes-hover": "<green>Click to vote YES. Command: <white>%command%</white></green>"
+      "no": "<red>[NO]</red>"
+      "no-hover": "<red>Click to vote NO. Command: <white>%command%</white></red>"
+    action:
+      day: "setting day"
+      night: "setting night"
+      sun: "clearing weather"
+      rain: "starting rain"
   enderchest:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/enderchest</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened your ender chest.</green>"
@@ -275,6 +310,24 @@ command:
       commandspy:
         name: "<gold>/commandspy</gold>"
         description: "<gray>Toggle spying on player commands.</gray>"
+      voteday:
+        name: "<gold>/voteday</gold>"
+        description: "<gray>Start a vote to set day in your current world.</gray>"
+      votenight:
+        name: "<gold>/votenight</gold>"
+        description: "<gray>Start a vote to set night in your current world.</gray>"
+      votesun:
+        name: "<gold>/votesun</gold>"
+        description: "<gray>Start a vote to clear weather in your current world.</gray>"
+      voterain:
+        name: "<gold>/voterain</gold>"
+        description: "<gray>Start a vote to start rain in your current world.</gray>"
+      voteyes:
+        name: "<gold>/voteyes</gold>"
+        description: "<gray>Vote yes in the currently active world vote.</gray>"
+      voteno:
+        name: "<gold>/voteno</gold>"
+        description: "<gray>Vote no in the currently active world vote.</gray>"
       spawn:
         name: "<gold>/spawn</gold>"
         description: "<gray>Teleport yourself to the configured server spawn.</gray>"
@@ -344,6 +397,12 @@ command:
       rosetimber:
         name: "<gold>/timber</gold>"
         description: "<gray>Use the server's timber feature for faster tree cutting.</gray>"
+      interactivechat:
+        name: "<gold>/ic list</gold>"
+        description: "<gray>Show the list of available chat placeholders and emotes.</gray>"
+      trade:
+        name: "<gold>/trade</gold>"
+        description: "<gray>Send another player a secure trade request.</gray>"
       afk:
         name: "<gold>/afk</gold>"
         description: "<gray>Toggle your AFK status manually.</gray>"
@@ -489,6 +548,18 @@ command:
   night:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/night</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Set world <white>%world%</white> time to night.</green>"
+  voteday:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/voteday [force]</white>"
+  votenight:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/votenight [force]</white>"
+  voteno:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/voteno</white>"
+  voterain:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/voterain [force]</white>"
+  voteyes:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/voteyes</white>"
+  votesun:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/votesun [force]</white>"
   reply:
     usage: '<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/reply \<message...\></white>'
     none: "<gray>[<gold>FoxCore</gold>]</gray> <red>You do not have anyone to reply to.</red>"

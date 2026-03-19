@@ -119,6 +119,18 @@ Built jar output:
   Opens a virtual smithing table.
 - `/spawn [player]`
   Teleports you, or another player, to the configured server spawn.
+- `/voteday`
+  Starts a vote to set day in your current world.
+- `/votenight`
+  Starts a vote to set night in your current world.
+- `/votesun`
+  Starts a vote to clear weather in your current world.
+- `/voterain`
+  Starts a vote to start rain in your current world.
+- `/voteyes`
+  Votes yes in the currently active vote.
+- `/voteno`
+  Votes no in the currently active vote.
 - `/stonecutter`
   Opens a virtual stonecutter.
 - `/tp <player>`
@@ -401,7 +413,7 @@ Built jar output:
 - Command entries show a short description, usage, and player-specific extra details where useful.
 - The help GUI shows dynamic information for homes, `/back`, `/rtp`, `/warp`, and spawn availability.
 - If the `Residence` plugin is loaded, the help GUI also shows a Residence info entry with the configured residence count and size limits.
-- If supported plugins are loaded, the help GUI also shows optional `Server Features` entries for vote, kits, skins, banner tools, armor stand editing, and timber.
+- If supported plugins are loaded, the help GUI also shows optional `Server Features` entries for vote, kits, skins, banner tools, armor stand editing, timber, `/ic list`, and `/trade`.
 - Clicking a command entry closes the GUI and shows that command's description and usage in chat.
 
 ### `/fly [player]`
@@ -622,6 +634,62 @@ Built jar output:
 - `/spawn <player>` teleports another online player to spawn and requires `foxcore.spawn.others`.
 - If spawn is disabled or unset, the command fails cleanly.
 - Uses the same safe teleport rules as other FoxCore teleports.
+
+### `/voteday [force]`
+- Description: Starts a vote to set day in your current world.
+- Player only: yes
+- Permission: none for voting, `foxcore.voteday` to start
+- Notes:
+- Starting a vote requires `foxcore.voteday`.
+- Forcing the result with `/voteday force` requires `foxcore.voteday.force`.
+- The player who starts the vote is automatically counted as voting yes.
+- Any player can vote using `/voteyes` or `/voteno`, even without a permission node.
+- The vote announces itself in chat, shows clickable yes/no buttons, and displays a bossbar countdown.
+- If at least `votes.required-yes-ratio` of cast votes are yes when the timer ends, the world time is set to day.
+- Uses the global cooldown configured at `votes.commands.voteday.cooldown-seconds`.
+
+### `/votenight [force]`
+- Description: Starts a vote to set night in your current world.
+- Player only: yes
+- Permission: none for voting, `foxcore.votenight` to start
+- Notes:
+- Starting a vote requires `foxcore.votenight`.
+- Forcing the result with `/votenight force` requires `foxcore.votenight.force`.
+- The player who starts the vote is automatically counted as voting yes.
+- Any player can vote using `/voteyes` or `/voteno`, even without a permission node.
+- Uses the global cooldown configured at `votes.commands.votenight.cooldown-seconds`.
+
+### `/votesun [force]`
+- Description: Starts a vote to clear weather in your current world.
+- Player only: yes
+- Permission: none for voting, `foxcore.votesun` to start
+- Notes:
+- Starting a vote requires `foxcore.votesun`.
+- Forcing the result with `/votesun force` requires `foxcore.votesun.force`.
+- The player who starts the vote is automatically counted as voting yes.
+- Any player can vote using `/voteyes` or `/voteno`, even without a permission node.
+- Uses the global cooldown configured at `votes.commands.votesun.cooldown-seconds`.
+
+### `/voterain [force]`
+- Description: Starts a vote to start rain in your current world.
+- Player only: yes
+- Permission: none for voting, `foxcore.voterain` to start
+- Notes:
+- Starting a vote requires `foxcore.voterain`.
+- Forcing the result with `/voterain force` requires `foxcore.voterain.force`.
+- The player who starts the vote is automatically counted as voting yes.
+- Any player can vote using `/voteyes` or `/voteno`, even without a permission node.
+- Uses the global cooldown configured at `votes.commands.voterain.cooldown-seconds`.
+
+### `/voteyes`
+- Description: Votes yes in the currently active world vote.
+- Player only: yes
+- Permission: none
+
+### `/voteno`
+- Description: Votes no in the currently active world vote.
+- Player only: yes
+- Permission: none
 
 ### `/stonecutter`
 - Description: Opens a virtual stonecutter.
@@ -971,6 +1039,14 @@ Built jar output:
 - Default: `op`
 - Allows teleporting another player to the server spawn.
 
+### `foxcore.voteday`, `foxcore.votenight`, `foxcore.votesun`, `foxcore.voterain`
+- Default: `op`
+- Allow starting the corresponding world vote.
+
+### `foxcore.voteday.force`, `foxcore.votenight.force`, `foxcore.votesun.force`, `foxcore.voterain.force`
+- Default: `op`
+- Allow forcing the corresponding world vote command without waiting for the result.
+
 ### `foxcore.stonecutter`
 - Default: `op`
 - Allows opening a virtual stonecutter.
@@ -1049,6 +1125,22 @@ broadcasts:
     - "<gray>[<gold>Back</gold>]</gray> <yellow>Died recently? Use <white>/back death</white> to return to your death location if you have access.</yellow>"
     - - "<gray>[<gold>Help</gold>]</gray> <yellow>Need a quick overview of player commands?</yellow>"
       - "<gray>[<gold>Help</gold>]</gray> <yellow>Open the command guide with <white>/foxhelp</white> or <white>/commands</white>.</yellow>"
+
+votes:
+  enabled: true
+  duration-seconds: 30
+  ending-soon-seconds: 5
+  required-yes-ratio: 0.60
+  minimum-participants: 1
+  commands:
+    voteday:
+      cooldown-seconds: 600
+    votenight:
+      cooldown-seconds: 600
+    votesun:
+      cooldown-seconds: 300
+    voterain:
+      cooldown-seconds: 300
 
 afk:
   enabled: true
@@ -1152,6 +1244,27 @@ FoxCore also stores reloadable shortcut commands in `plugins/FoxCore/shortcuts.y
 - Controls which bundled translation file is loaded.
 - Current bundled locale: `en`
 - Translation files are stored in `plugins/foxcore/translations/`.
+
+### `votes.enabled`
+- Enables or disables world vote commands.
+
+### `votes.duration-seconds`
+- Controls how long each active vote stays open.
+
+### `votes.ending-soon-seconds`
+- Controls how many seconds before the end FoxCore sends the final warning message.
+- FoxCore also sends one automatic reminder at the halfway point of the vote.
+
+### `votes.required-yes-ratio`
+- Sets the yes-vote ratio required for a vote to pass.
+- `0.60` means at least 60% of cast votes must be yes.
+
+### `votes.minimum-participants`
+- Sets the minimum number of cast votes required before a vote can succeed.
+
+### `votes.commands.<command>.cooldown-seconds`
+- Controls the global cooldown for the matching vote command.
+- Supported keys are `voteday`, `votenight`, `votesun`, and `voterain`.
 
 ### `shortcuts.yml`
 - Define lightweight shortcut commands without adding new Kotlin classes.

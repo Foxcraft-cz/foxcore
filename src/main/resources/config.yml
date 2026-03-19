@@ -34,6 +34,22 @@ broadcasts:
     - - "<gray>[<gold>Help</gold>]</gray> <yellow>Need a quick overview of player commands?</yellow>"
       - "<gray>[<gold>Help</gold>]</gray> <yellow>Open the command guide with <white>/foxhelp</white> or <white>/commands</white>.</yellow>"
 
+votes:
+  enabled: true
+  duration-seconds: 30
+  ending-soon-seconds: 5
+  required-yes-ratio: 0.60
+  minimum-participants: 1
+  commands:
+    voteday:
+      cooldown-seconds: 600
+    votenight:
+      cooldown-seconds: 600
+    votesun:
+      cooldown-seconds: 300
+    voterain:
+      cooldown-seconds: 300
+
 chat:
   enabled: true
   public:
@@ -167,6 +183,14 @@ help:
       enabled: true
       plugin-name: RoseTimber
       command: "/timber"
+    interactivechat:
+      enabled: true
+      plugin-name: InteractiveChat
+      command: "/ic list"
+    axtrade:
+      enabled: true
+      plugin-name: AxTrade
+      command: "/trade"
 
 teleport:
   notify-target: true

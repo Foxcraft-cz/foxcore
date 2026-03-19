@@ -95,6 +95,41 @@ command:
   day:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/day</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Čas ve světě <white>%world%</white> byl nastaven na den.</green>"
+  vote:
+    disabled: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hlasování o čase a počasí jsou momentálně vypnutá.</red>"
+    cooldown: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Na <white>%command%</white> musíš ještě počkat <white>%seconds%</white>s.</yellow>"
+    active: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Už běží hlasování o <white>%action%</white>. Hlasuj přes <white>%yes-command%</white> nebo <white>%no-command%</white>.</yellow>"
+    no-active: "<gray>[<gold>FoxCore</gold>]</gray> <red>Momentálně neběží žádné aktivní hlasování.</red>"
+    started: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hráč <white>%player%</white> zahájil hlasování o <white>%action%</white> ve světě <white>%world%</white>. Hlasuj kliknutím níže nebo napiš <white>/voteyes</white> nebo <white>/voteno</white>. Konec za <white>%seconds%</white>s.</yellow>"
+    halfway: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hlasování o <white>%action%</white> ve světě <white>%world%</white> je v polovině. Zbývá <white>%seconds%</white>s. Pro: <white>%yes%</white>, proti: <white>%no%</white>.</yellow>"
+    ending-soon: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hlasování o <white>%action%</white> ve světě <white>%world%</white> brzy končí. Zbývá <white>%seconds%</white>s. Pro: <white>%yes%</white>, proti: <white>%no%</white>.</yellow>"
+    force-success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hráč <white>%player%</white> vynutil <white>%action%</white> ve světě <white>%world%</white>.</green>"
+    passed: "<gray>[<gold>FoxCore</gold>]</gray> <green>Hlasování o <white>%action%</white> ve světě <white>%world%</white> prošlo. Pro: <white>%yes%</white>, proti: <white>%no%</white> (<white>%percent%</white>% pro).</green>"
+    failed: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hlasování o <white>%action%</white> ve světě <white>%world%</white> neprošlo. Pro: <white>%yes%</white>, proti: <white>%no%</white> (<white>%percent%</white>% pro, potřeba <white>%required%</white>%).</red>"
+    failed-minimum: "<gray>[<gold>FoxCore</gold>]</gray> <red>Hlasování o <white>%action%</white> ve světě <white>%world%</white> skončilo bez výsledku. Pro: <white>%yes%</white>, proti: <white>%no%</white>. Je potřeba alespoň <white>%required%</white> hlasujících.</red>"
+    cancelled-reload: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hlasování o <white>%action%</white> ve světě <white>%world%</white> bylo ukončeno kvůli reloadu pluginu.</yellow>"
+    cancelled-force: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hlasování o <white>%action%</white> ve světě <white>%world%</white> bylo ukončeno, protože ho hráč <white>%player%</white> přepsal force akcí.</yellow>"
+    bossbar: "<yellow>Hlasování:</yellow> <white>%action%</white> <gray>|</gray> <white>%world%</white> <gray>|</gray> <green>pro %yes%</green> <gray>/</gray> <red>proti %no%</red> <gray>|</gray> <white>%seconds%</white>s"
+    recorded:
+      "yes": "<gray>[<gold>FoxCore</gold>]</gray> <green>Hlasoval jsi PRO.</green>"
+      "no": "<gray>[<gold>FoxCore</gold>]</gray> <red>Hlasoval jsi PROTI.</red>"
+    changed:
+      "yes": "<gray>[<gold>FoxCore</gold>]</gray> <green>Změnil jsi hlas na PRO.</green>"
+      "no": "<gray>[<gold>FoxCore</gold>]</gray> <red>Změnil jsi hlas na PROTI.</red>"
+    already:
+      "yes": "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Už hlasuješ PRO.</yellow>"
+      "no": "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Už hlasuješ PROTI.</yellow>"
+    buttons:
+      prefix: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Hlasování:</yellow>"
+      "yes": "<green>[PRO]</green>"
+      "yes-hover": "<green>Klikni pro hlasování PRO. Příkaz: <white>%command%</white></green>"
+      "no": "<red>[PROTI]</red>"
+      "no-hover": "<red>Klikni pro hlasování PROTI. Příkaz: <white>%command%</white></red>"
+    action:
+      day: "nastavení dne"
+      night: "nastavení noci"
+      sun: "vyjasnění počasí"
+      rain: "spuštění deště"
   enderchest:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/enderchest</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřena tvoje ender chestka.</green>"
@@ -275,6 +310,24 @@ command:
       commandspy:
         name: "<gold>/commandspy</gold>"
         description: "<gray>Přepni špehování hráčských příkazů.</gray>"
+      voteday:
+        name: "<gold>/voteday</gold>"
+        description: "<gray>Začni hlasování o nastavení dne v aktuálním světě.</gray>"
+      votenight:
+        name: "<gold>/votenight</gold>"
+        description: "<gray>Začni hlasování o nastavení noci v aktuálním světě.</gray>"
+      votesun:
+        name: "<gold>/votesun</gold>"
+        description: "<gray>Začni hlasování o vyjasnění počasí v aktuálním světě.</gray>"
+      voterain:
+        name: "<gold>/voterain</gold>"
+        description: "<gray>Začni hlasování o spuštění deště v aktuálním světě.</gray>"
+      voteyes:
+        name: "<gold>/voteyes</gold>"
+        description: "<gray>Hlasuj PRO v právě aktivním hlasování.</gray>"
+      voteno:
+        name: "<gold>/voteno</gold>"
+        description: "<gray>Hlasuj PROTI v právě aktivním hlasování.</gray>"
       spawn:
         name: "<gold>/spawn</gold>"
         description: "<gray>Teleportuj se na nastavený serverový spawn.</gray>"
@@ -344,6 +397,12 @@ command:
       rosetimber:
         name: "<gold>/timber</gold>"
         description: "<gray>Použij serverovou funkci timber pro rychlejší kácení stromů.</gray>"
+      interactivechat:
+        name: "<gold>/ic list</gold>"
+        description: "<gray>Zobraz seznam dostupných chat placeholderů a emotů.</gray>"
+      trade:
+        name: "<gold>/trade</gold>"
+        description: "<gray>Pošli jinému hráči žádost o bezpečný obchod.</gray>"
       afk:
         name: "<gold>/afk</gold>"
         description: "<gray>Ručně přepni svůj AFK stav.</gray>"
@@ -428,6 +487,18 @@ command:
   night:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/night</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Čas ve světě <white>%world%</white> byl nastaven na noc.</green>"
+  voteday:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/voteday [force]</white>"
+  votenight:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/votenight [force]</white>"
+  voteno:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/voteno</white>"
+  voterain:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/voterain [force]</white>"
+  voteyes:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/voteyes</white>"
+  votesun:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/votesun [force]</white>"
   reply:
     usage: '<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/reply \<zpráva...\></white>'
     none: "<gray>[<gold>FoxCore</gold>]</gray> <red>Nemáš komu odpovědět.</red>"

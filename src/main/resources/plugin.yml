@@ -258,6 +258,24 @@ commands:
     description: Deny a pending teleport request.
     usage: /tpadeny [player]
     permission: foxcore.tpadeny
+  voteday:
+    description: Start or participate in a vote to set day in your current world.
+    usage: /voteday [force]
+  votenight:
+    description: Start or participate in a vote to set night in your current world.
+    usage: /votenight [force]
+  votesun:
+    description: Start or participate in a vote to clear weather in your current world.
+    usage: /votesun [force]
+  voterain:
+    description: Start or participate in a vote to start rain in your current world.
+    usage: /voterain [force]
+  voteyes:
+    description: Vote yes in the currently active world vote.
+    usage: /voteyes
+  voteno:
+    description: Vote no in the currently active world vote.
+    usage: /voteno
   foxcore:
     description: Main FoxCore administration command.
     usage: /foxcore reload
@@ -521,4 +539,28 @@ permissions:
     default: op
   foxcore.reload:
     description: Allows reloading FoxCore configuration and translations.
+    default: op
+  foxcore.voteday:
+    description: Allows starting a /voteday vote.
+    default: op
+  foxcore.voteday.force:
+    description: Allows forcing /voteday without waiting for the vote result.
+    default: op
+  foxcore.votenight:
+    description: Allows starting a /votenight vote.
+    default: op
+  foxcore.votenight.force:
+    description: Allows forcing /votenight without waiting for the vote result.
+    default: op
+  foxcore.votesun:
+    description: Allows starting a /votesun vote.
+    default: op
+  foxcore.votesun.force:
+    description: Allows forcing /votesun without waiting for the vote result.
+    default: op
+  foxcore.voterain:
+    description: Allows starting a /voterain vote.
+    default: op
+  foxcore.voterain.force:
+    description: Allows forcing /voterain without waiting for the vote result.
     default: op
