@@ -41,8 +41,12 @@ import me.dragan.foxcore.command.CommandSpyCommand
 import me.dragan.foxcore.command.MessageCommand
 import me.dragan.foxcore.command.OnlineTimeCommand
 import me.dragan.foxcore.command.PortalCommand
+import me.dragan.foxcore.command.RankExpiryCommand
+import me.dragan.foxcore.command.ReportCommand
+import me.dragan.foxcore.command.ReportsCommand
 import me.dragan.foxcore.command.ReplyCommand
 import me.dragan.foxcore.command.RenameHomeCommand
+import me.dragan.foxcore.command.RewardsCommand
 import me.dragan.foxcore.command.RtpCommand
 import me.dragan.foxcore.command.SeenCommand
 import me.dragan.foxcore.command.SetSpawnCommand
@@ -73,11 +77,17 @@ import me.dragan.foxcore.listener.FlyPermissionListener
 import me.dragan.foxcore.listener.GuiListener
 import me.dragan.foxcore.listener.JoinMessageListener
 import me.dragan.foxcore.listener.PortalListener
+import me.dragan.foxcore.listener.ReportActivityListener
+import me.dragan.foxcore.listener.RewardJoinListener
 import me.dragan.foxcore.listener.SpawnJoinListener
 import me.dragan.foxcore.listener.SpawnRespawnListener
 import me.dragan.foxcore.listener.SpyListener
 import me.dragan.foxcore.listener.TpaRequestCleanupListener
 import me.dragan.foxcore.portal.PortalService
+import me.dragan.foxcore.report.ReportActivityTracker
+import me.dragan.foxcore.report.ReportService
+import me.dragan.foxcore.reward.RewardItemFactory
+import me.dragan.foxcore.reward.RewardService
 import me.dragan.foxcore.rtp.RtpService
 import me.dragan.foxcore.shortcut.ShortcutService
 import me.dragan.foxcore.spawn.SpawnService
@@ -110,6 +120,10 @@ class FoxCorePlugin : JavaPlugin() {
         private set
     lateinit var privateMessages: PrivateMessageService
         private set
+    lateinit var reportActivity: ReportActivityTracker
+        private set
+    lateinit var reports: ReportService
+        private set
     lateinit var spies: SpyService
         private set
     lateinit var messages: MessageService
@@ -119,6 +133,10 @@ class FoxCorePlugin : JavaPlugin() {
     lateinit var pluginHelpInfo: PluginHelpInfoService
         private set
     lateinit var guiManager: GuiManager
+        private set
+    lateinit var rewards: RewardService
+        private set
+    lateinit var rewardItems: RewardItemFactory
         private set
     lateinit var safeTeleports: SafeTeleportService
         private set
@@ -156,10 +174,14 @@ class FoxCorePlugin : JavaPlugin() {
         chatFormat = ChatFormatService(this)
         chatModeration = ChatModerationService(this)
         privateMessages = PrivateMessageService(this)
+        reportActivity = ReportActivityTracker(this).also { it.reload() }
+        reports = ReportService(this, storage, reportActivity).also { it.reload() }
         spies = SpyService(this)
         residenceHelpInfo = ResidenceHelpInfoService(this)
         pluginHelpInfo = PluginHelpInfoService(this)
         guiManager = GuiManager()
+        rewardItems = RewardItemFactory(this)
+        rewards = RewardService(this, storage).also { it.reload() }
         tpaRequests = TpaRequestService()
         afk = AfkService(this)
         teleportEffects = TeleportEffectService(this)
@@ -230,7 +252,10 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("itemname", ItemNameCommand(this))
         registerCommand("onlinetime", OnlineTimeCommand(this))
         registerCommand("description", DescriptionCommand(this))
+        registerCommand("konecranku", RankExpiryCommand(this))
         registerCommand("portal", PortalCommand(this))
+        registerCommand("report", ReportCommand(this))
+        registerCommand("reports", ReportsCommand(this))
         registerCommand(
             "loom",
             InventoryOpenerCommand(this, "foxcore.loom", "command.loom") { player ->
@@ -241,6 +266,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("renamehome", RenameHomeCommand(this))
         registerCommand("rain", WorldWeatherShortcutCommand(this, "foxcore.rain", "rain", true))
         registerCommand("reply", ReplyCommand(this))
+        registerCommand("rewards", RewardsCommand(this))
         registerCommand("warp", WarpCommand(this))
         registerCommand("setwarp", SetWarpCommand(this))
         registerCommand("delwarp", DeleteWarpCommand(this))
@@ -295,6 +321,8 @@ class FoxCorePlugin : JavaPlugin() {
         server.pluginManager.registerEvents(GuiListener(this), this)
         server.pluginManager.registerEvents(JoinMessageListener(this), this)
         server.pluginManager.registerEvents(PortalListener(this), this)
+        server.pluginManager.registerEvents(ReportActivityListener(this), this)
+        server.pluginManager.registerEvents(RewardJoinListener(this), this)
         server.pluginManager.registerEvents(SpyListener(this), this)
         server.pluginManager.registerEvents(SpawnJoinListener(this), this)
         server.pluginManager.registerEvents(SpawnRespawnListener(this), this)
@@ -312,6 +340,9 @@ class FoxCorePlugin : JavaPlugin() {
         privateMessages.reload()
         rtpService.reload()
         portals.reload()
+        reportActivity.reload()
+        reports.reload()
+        rewards.reload()
         warps.reload()
         spawnService.reload()
         shortcuts.reload()
@@ -335,6 +366,12 @@ class FoxCorePlugin : JavaPlugin() {
         if (::votes.isInitialized) {
             votes.shutdown()
         }
+        if (::reports.isInitialized) {
+            reports.shutdown()
+        }
+        if (::rewards.isInitialized) {
+            rewards.shutdown()
+        }
         if (::warps.isInitialized) {
             warps.shutdown()
         }
@@ -348,6 +385,8 @@ class FoxCorePlugin : JavaPlugin() {
         yamlSynchronizer.sync("shortcuts.yml")
         yamlSynchronizer.sync("translations/messages_en.yml")
         yamlSynchronizer.sync("translations/messages_cs.yml")
+        yamlSynchronizer.sync("rewards/tracks/daily.yml")
+        yamlSynchronizer.sync("rewards/tracks/votes.yml")
     }
 
     fun broadcastAfkState(player: Player, becameAfk: Boolean) {

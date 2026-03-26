@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.teleport.SafeTeleportResult
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -21,6 +22,7 @@ class SpawnCommand(
             0 -> teleportSelf(sender)
             1 -> teleportOther(sender, args[0])
             else -> {
+                (sender as? Player)?.let(PlayerFeedback::error)
                 sender.sendMessage(plugin.messages.text("command.spawn.usage"))
                 true
             }
@@ -52,12 +54,14 @@ class SpawnCommand(
         }
 
         if (!player.hasPermission("foxcore.spawn")) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
 
         val spawn = plugin.spawnService.getSpawn()
         if (spawn == null) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.spawn.not-set"))
             return true
         }
@@ -67,12 +71,14 @@ class SpawnCommand(
 
     private fun teleportOther(sender: CommandSender, targetName: String): Boolean {
         if (!sender.hasPermission("foxcore.spawn.others")) {
+            (sender as? Player)?.let(PlayerFeedback::error)
             sender.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
 
         val spawn = plugin.spawnService.getSpawn()
         if (spawn == null) {
+            (sender as? Player)?.let(PlayerFeedback::error)
             sender.sendMessage(plugin.messages.text("command.spawn.not-set"))
             return true
         }
@@ -81,6 +87,7 @@ class SpawnCommand(
             ?: Bukkit.getOnlinePlayers().firstOrNull { it.name.equals(targetName, ignoreCase = true) }
 
         if (target == null) {
+            (sender as? Player)?.let(PlayerFeedback::error)
             sender.sendMessage(plugin.messages.text("command.spawn.not-found", "player" to targetName))
             return true
         }
@@ -92,15 +99,18 @@ class SpawnCommand(
         return when (plugin.safeTeleports.teleport(player, spawn)) {
             SafeTeleportResult.SUCCESS -> {
                 if (self) {
+                    PlayerFeedback.teleport(player)
                     player.sendMessage(plugin.messages.text("command.spawn.success"))
                 } else {
                     requireNotNull(senderName)
+                    PlayerFeedback.teleport(player)
                     player.sendMessage(plugin.messages.text("command.spawn.success-by-other", "player" to senderName))
                 }
                 true
             }
 
             SafeTeleportResult.NO_SAFE_GROUND -> {
+                PlayerFeedback.error(player)
                 if (self) {
                     player.sendMessage(plugin.messages.text("error.no-safe-ground"))
                 } else {
@@ -110,6 +120,7 @@ class SpawnCommand(
             }
 
             SafeTeleportResult.FAILED -> {
+                PlayerFeedback.error(player)
                 if (self) {
                     player.sendMessage(plugin.messages.text("error.teleport-failed"))
                 } else {

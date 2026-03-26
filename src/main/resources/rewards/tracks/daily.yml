@@ -1,0 +1,126 @@
+id: daily
+order: 10
+title: "<gold>Daily Login</gold>"
+icon: CLOCK
+summary:
+  - "<gray>Log in every day to build your streak and unlock the next reward.</gray>"
+view-permission: "foxcore.rewards.daily.view"
+claim-permission: "foxcore.rewards.daily.claim"
+progress:
+  type: daily_streak
+  timezone: "Europe/Prague"
+rewards:
+  - id: day_1
+    required: 1
+    icon: BREAD
+    title: "<yellow>Day 1</yellow>"
+    description:
+      - "<gray>Start your streak with a small daily bundle.</gray>"
+    commands:
+      - "give %player% minecraft:bread 4"
+      - "xp add %player% 5 points"
+  - id: day_2
+    required: 2
+    icon: COOKED_BEEF
+    title: "<yellow>Day 2</yellow>"
+    description:
+      - "<gray>A simple follow-up reward for keeping the streak alive.</gray>"
+    commands:
+      - "give %player% minecraft:cooked_beef 6"
+  - id: day_3
+    required: 3
+    icon: IRON_INGOT
+    title: "<yellow>Day 3</yellow>"
+    description:
+      - "<gray>Keep the streak alive for stronger rewards.</gray>"
+    commands:
+      - "give %player% minecraft:iron_ingot 3"
+  - id: day_4
+    required: 4
+    icon: EXPERIENCE_BOTTLE
+    title: "<yellow>Day 4</yellow>"
+    description:
+      - "<gray>A bit of stored experience for your next project.</gray>"
+    commands:
+      - "give %player% minecraft:experience_bottle 8"
+  - id: day_5
+    required: 5
+    icon: GOLD_INGOT
+    title: "<yellow>Day 5</yellow>"
+    description:
+      - "<gray>The middle of the first week starts paying off.</gray>"
+    commands:
+      - "give %player% minecraft:gold_ingot 4"
+  - id: day_6
+    required: 6
+    icon: LAPIS_LAZULI
+    title: "<yellow>Day 6</yellow>"
+    description:
+      - "<gray>A useful enchanting support reward before the weekly milestone.</gray>"
+    commands:
+      - "give %player% minecraft:lapis_lazuli 12"
+  - id: day_7
+    required: 7
+    icon: DIAMOND
+    title: "<yellow>Day 7</yellow>"
+    description:
+      - "<gray>Reach a full week for a premium streak reward.</gray>"
+    commands:
+      - "give %player% minecraft:diamond 2"
+  - id: day_8
+    required: 8
+    icon: OAK_LOG
+    title: "<yellow>Day 8</yellow>"
+    description:
+      - "<gray>Week two starts with a practical building bundle.</gray>"
+    commands:
+      - "give %player% minecraft:oak_log 16"
+  - id: day_9
+    required: 9
+    icon: REDSTONE
+    title: "<yellow>Day 9</yellow>"
+    description:
+      - "<gray>Useful for farms, machines, and other contraptions.</gray>"
+    commands:
+      - "give %player% minecraft:redstone 16"
+  - id: day_10
+    required: 10
+    icon: EMERALD
+    title: "<yellow>Day 10</yellow>"
+    description:
+      - "<gray>A stronger economy-style milestone reward.</gray>"
+    commands:
+      - "give %player% minecraft:emerald 4"
+  - id: day_11
+    required: 11
+    icon: ENDER_PEARL
+    title: "<yellow>Day 11</yellow>"
+    description:
+      - "<gray>Mobility reward for late-stage streak players.</gray>"
+    commands:
+      - "give %player% minecraft:ender_pearl 4"
+  - id: day_12
+    required: 12
+    icon: OBSIDIAN
+    title: "<yellow>Day 12</yellow>"
+    description:
+      - "<gray>A chunky resource bundle as the streak approaches the finale.</gray>"
+    commands:
+      - "give %player% minecraft:obsidian 8"
+  - id: day_13
+    required: 13
+    icon: TOTEM_OF_UNDYING
+    title: "<yellow>Day 13</yellow>"
+    description:
+      - "<gray>A high-value safety reward before the final milestone.</gray>"
+    commands:
+      - "give %player% minecraft:totem_of_undying 1"
+  - id: day_14
+    required: 14
+    icon: NETHERITE_INGOT
+    title: "<gold>Day 14</gold>"
+    description:
+      - "<gray>Two full weeks completed. This is the showcase capstone reward.</gray>"
+    commands:
+      - "give %player% minecraft:netherite_ingot 1"
+      - "xp add %player% 20 levels"

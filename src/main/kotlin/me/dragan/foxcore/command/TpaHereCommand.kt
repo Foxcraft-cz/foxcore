@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.tpa.TpaRequestType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
@@ -27,22 +28,26 @@ class TpaHereCommand(
         }
 
         if (!player.hasPermission("foxcore.tpahere")) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
 
         if (args.size != 1) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.tpahere.usage"))
             return true
         }
 
         val target = findOnlinePlayer(args[0])
         if (target == null) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.tpahere.not-found", "player" to args[0]))
             return true
         }
 
         if (target.uniqueId == player.uniqueId) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.tpahere.self"))
             return true
         }
@@ -65,6 +70,8 @@ class TpaHereCommand(
             ),
         )
         target.sendMessage(buildActionRow(player.name))
+        PlayerFeedback.requestSent(player)
+        PlayerFeedback.requestReceived(target)
         return true
     }
 

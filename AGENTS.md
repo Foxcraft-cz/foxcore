@@ -10,6 +10,7 @@
 ## Product direction
 - This plugin is a lightweight essentials-style utility plugin for Paper.
 - Keep features small, explicit, and safe by default.
+- Important player-facing actions should provide immediate feedback. Prefer concise chat feedback plus fitting sound effects for significant actions, especially GUI navigation, confirmations, teleports, and errors.
 - Current first feature set:
 - `/tp <player>` teleports the sender to an online player.
 - `/foxcore reload` reloads config and translations.

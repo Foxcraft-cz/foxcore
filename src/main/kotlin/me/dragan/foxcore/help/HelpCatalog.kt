@@ -114,6 +114,7 @@ object HelpCatalog {
         HelpEntry("description", HelpCategory.UTILITY, Material.PAPER, { _, player -> player.hasPermission("foxcore.description") }),
         HelpEntry("message", HelpCategory.UTILITY, Material.WRITABLE_BOOK, { _, player -> player.hasPermission("foxcore.message") }),
         HelpEntry("reply", HelpCategory.UTILITY, Material.PAPER, { _, player -> player.hasPermission("foxcore.reply") }),
+        HelpEntry("report", HelpCategory.UTILITY, Material.PAPER, { _, player -> player.hasPermission("foxcore.report.create") }),
         HelpEntry("socialspy", HelpCategory.UTILITY, Material.ENDER_EYE, { _, player -> player.hasPermission("foxcore.socialspy") }),
         HelpEntry("commandspy", HelpCategory.UTILITY, Material.COMMAND_BLOCK, { _, player -> player.hasPermission("foxcore.commandspy") }),
         HelpEntry("voteday", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.voteday") }),

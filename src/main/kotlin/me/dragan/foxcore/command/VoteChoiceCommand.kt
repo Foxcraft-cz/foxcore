@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.vote.VoteCastResult
 import me.dragan.foxcore.vote.VoteChoice
 import org.bukkit.command.Command
@@ -30,18 +31,22 @@ class VoteChoiceCommand(
 
         return when (val result = plugin.votes.castVote(player, choice)) {
             VoteCastResult.NoActiveVote -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.vote.no-active"))
                 true
             }
             is VoteCastResult.Recorded -> {
+                PlayerFeedback.voteCast(player)
                 player.sendMessage(plugin.messages.text("command.vote.recorded.${result.choice.name.lowercase()}"))
                 true
             }
             is VoteCastResult.Changed -> {
+                PlayerFeedback.voteCast(player)
                 player.sendMessage(plugin.messages.text("command.vote.changed.${result.choice.name.lowercase()}"))
                 true
             }
             is VoteCastResult.AlreadyVoted -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.vote.already.${result.choice.name.lowercase()}"))
                 true
             }

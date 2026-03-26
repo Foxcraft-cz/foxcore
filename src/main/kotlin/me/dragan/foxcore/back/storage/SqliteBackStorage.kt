@@ -17,6 +17,10 @@ class SqliteBackStorage(
     tableName = "player_back",
     homeTableName = "player_home",
     warpTableName = "warp",
+    reportTableName = "report",
+    reportActivityTableName = "report_activity",
+    rewardClaimTableName = "reward_claim",
+    rewardDailyStateTableName = "reward_daily_state",
 ) {
     override fun createTableSql(): String =
         """
@@ -100,6 +104,77 @@ class SqliteBackStorage(
         )
         """.trimIndent()
 
+    override fun createReportTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $reportTableName (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            type TEXT NOT NULL,
+            status TEXT NOT NULL,
+            reason TEXT NOT NULL,
+            reason_normalized TEXT NOT NULL,
+            created_at INTEGER NOT NULL,
+            reported_uuid TEXT NOT NULL,
+            reported_name TEXT NOT NULL,
+            reported_world TEXT NOT NULL,
+            reported_x REAL NOT NULL,
+            reported_y REAL NOT NULL,
+            reported_z REAL NOT NULL,
+            reported_yaw REAL NOT NULL,
+            reported_pitch REAL NOT NULL,
+            reported_online INTEGER NOT NULL,
+            reported_gamemode TEXT NOT NULL,
+            reporter_uuid TEXT NOT NULL,
+            reporter_name TEXT NOT NULL,
+            reporter_world TEXT NOT NULL,
+            reporter_x REAL NOT NULL,
+            reporter_y REAL NOT NULL,
+            reporter_z REAL NOT NULL,
+            reporter_yaw REAL NOT NULL,
+            reporter_pitch REAL NOT NULL,
+            reporter_online INTEGER NOT NULL,
+            reporter_gamemode TEXT NOT NULL,
+            resolver_uuid TEXT NULL,
+            resolver_name TEXT NULL,
+            resolved_at INTEGER NULL
+        )
+        """.trimIndent()
+
+    override fun createReportActivityTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $reportActivityTableName (
+            report_id INTEGER NOT NULL,
+            entry_index INTEGER NOT NULL,
+            entry_type TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_at INTEGER NOT NULL,
+            PRIMARY KEY (report_id, entry_index)
+        )
+        """.trimIndent()
+
+    override fun createRewardClaimTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $rewardClaimTableName (
+            player_uuid TEXT NOT NULL,
+            track_id TEXT NOT NULL,
+            reward_id TEXT NOT NULL,
+            cycle_key TEXT NOT NULL,
+            claimed_at INTEGER NOT NULL,
+            PRIMARY KEY (player_uuid, track_id, reward_id, cycle_key)
+        )
+        """.trimIndent()
+
+    override fun createRewardDailyStateTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $rewardDailyStateTableName (
+            player_uuid TEXT NOT NULL,
+            track_id TEXT NOT NULL,
+            streak INTEGER NOT NULL,
+            last_join_date TEXT NOT NULL,
+            cycle INTEGER NOT NULL,
+            PRIMARY KEY (player_uuid, track_id)
+        )
+        """.trimIndent()
+
     override fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData) = Unit
 
     override fun upsertWarpSql(): String =
@@ -126,6 +201,13 @@ class SqliteBackStorage(
 
     override fun bindWarpUpsertTail(statement: PreparedStatement, name: String, data: me.dragan.foxcore.warp.WarpData) = Unit
 
+    override fun insertRewardClaimSql(): String =
+        """
+        INSERT OR IGNORE INTO $rewardClaimTableName (
+            player_uuid, track_id, reward_id, cycle_key, claimed_at
+        ) VALUES (?, ?, ?, ?, ?)
+        """.trimIndent()
+
     override fun renameWarpSql(): String =
         """
         UPDATE $warpTableName
@@ -148,6 +230,18 @@ class SqliteBackStorage(
         }
         statement.runCatching {
             executeUpdate("ALTER TABLE $warpTableName ADD COLUMN description TEXT NULL")
+        }
+        statement.runCatching {
+            executeUpdate("CREATE INDEX idx_${reportTableName}_type_status_created ON $reportTableName (type, status, created_at)")
+        }
+        statement.runCatching {
+            executeUpdate("CREATE INDEX idx_${reportTableName}_reported_uuid ON $reportTableName (reported_uuid)")
+        }
+        statement.runCatching {
+            executeUpdate("CREATE INDEX idx_${reportTableName}_duplicate_lookup ON $reportTableName (status, reporter_uuid, reported_uuid, reason_normalized, created_at)")
+        }
+        statement.runCatching {
+            executeUpdate("CREATE INDEX idx_${rewardClaimTableName}_player_track ON $rewardClaimTableName (player_uuid, track_id)")
         }
     }
 

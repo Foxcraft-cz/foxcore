@@ -4,11 +4,10 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 
 object StorageFactory {
-    fun create(plugin: JavaPlugin, config: FileConfiguration): BackStorage =
+    fun create(plugin: JavaPlugin, config: FileConfiguration): FoxCoreStorage =
         when (config.getString("storage.type", "sqlite")?.lowercase()) {
             "sqlite" -> SqliteBackStorage(plugin, config)
             "mysql" -> MysqlBackStorage(config)
             else -> error("Unsupported storage.type. Supported values: sqlite, mysql")
         }
 }
-

@@ -1,6 +1,7 @@
 package me.dragan.foxcore.vote
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
@@ -80,6 +81,7 @@ class VoteService(
             ),
         )
         broadcast(buildVoteButtons(vote))
+        plugin.server.onlinePlayers.forEach(PlayerFeedback::voteStarted)
         ensureTicker()
         return VoteStartResult.Started(durationSeconds)
     }
@@ -102,6 +104,7 @@ class VoteService(
                 "world" to player.world.name,
             ),
         )
+        plugin.server.onlinePlayers.forEach(PlayerFeedback::votePassed)
     }
 
     fun castVote(player: Player, choice: VoteChoice): VoteCastResult {
@@ -180,6 +183,7 @@ class VoteService(
                     "required" to minimumParticipants.toString(),
                 ),
             )
+            plugin.server.onlinePlayers.forEach(PlayerFeedback::voteFailed)
             return
         }
 
@@ -195,6 +199,7 @@ class VoteService(
                     "percent" to formatPercent(yesRatio),
                 ),
             )
+            plugin.server.onlinePlayers.forEach(PlayerFeedback::votePassed)
             return
         }
 
@@ -209,6 +214,7 @@ class VoteService(
                 "required" to formatPercent(requiredRatio),
             ),
         )
+        plugin.server.onlinePlayers.forEach(PlayerFeedback::voteFailed)
     }
 
     private fun cancelActiveVote(reason: CancelReason?) {

@@ -1,6 +1,7 @@
 package me.dragan.foxcore.warp
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.gui.GuiScreen
 import me.dragan.foxcore.gui.GuiSession
 import me.dragan.foxcore.teleport.SafeTeleportResult
@@ -60,18 +61,24 @@ class WarpGuiScreen(
         val viewer = session.viewer() ?: return
         when (rawSlot) {
             45 -> if (currentPage(session) > 0) {
+                PlayerFeedback.navigation(viewer)
                 session.state["page"] = currentPage(session) - 1
                 render(session)
             }
 
-            49 -> viewer.closeInventory()
+            49 -> {
+                PlayerFeedback.guiClose(viewer)
+                viewer.closeInventory()
+            }
             53 -> if (currentPage(session) + 1 < totalPages()) {
+                PlayerFeedback.navigation(viewer)
                 session.state["page"] = currentPage(session) + 1
                 render(session)
             }
 
             in 0 until pageSize -> {
                 val warp = warps.getOrNull(currentPage(session) * pageSize + rawSlot) ?: return
+                PlayerFeedback.guiClose(viewer)
                 viewer.closeInventory()
                 teleportToWarp(viewer, warp)
             }
@@ -81,12 +88,14 @@ class WarpGuiScreen(
     private fun teleportToWarp(player: org.bukkit.entity.Player, warp: WarpData) {
         val cooldown = plugin.warps.remainingTeleportCooldownSeconds(player)
         if (cooldown > 0 && !player.hasPermission("foxcore.warp.bypasscooldown")) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.warp.cooldown", "seconds" to cooldown.toString()))
             return
         }
 
         val world = plugin.server.getWorld(warp.location.worldName)
         if (world == null) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.warp.missing-world", "warp" to warp.name, "world" to warp.location.worldName))
             return
         }
@@ -94,14 +103,17 @@ class WarpGuiScreen(
         when (plugin.safeTeleports.teleport(player, warp.location.toBukkitLocation(world))) {
             SafeTeleportResult.SUCCESS -> {
                 plugin.warps.markTeleportUsed(player)
+                PlayerFeedback.teleport(player)
                 player.sendMessage(plugin.messages.text("command.warp.success", "warp" to warp.name))
             }
 
             SafeTeleportResult.NO_SAFE_GROUND -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("error.no-safe-ground"))
             }
 
             SafeTeleportResult.FAILED -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("error.teleport-failed"))
             }
         }

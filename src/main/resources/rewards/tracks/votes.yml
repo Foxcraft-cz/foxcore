@@ -1,0 +1,37 @@
+id: votes
+order: 20
+title: "<aqua>Vote Rewards</aqua>"
+icon: EMERALD
+summary:
+  - "<gray>Progress in this path is driven by PlaceholderAPI vote counters.</gray>"
+view-permission: "foxcore.rewards.votes.view"
+claim-permission: "foxcore.rewards.votes.claim"
+progress:
+  type: placeholder
+  value-placeholder: "%VotingPlugin_TotalVotes%"
+  cycle-key: "global"
+rewards:
+  - id: votes_5
+    required: 5
+    icon: GOLD_INGOT
+    title: "<gold>5 Votes</gold>"
+    description:
+      - "<gray>Claim a starter reward after your first votes.</gray>"
+    commands:
+      - "give %player% minecraft:gold_ingot 4"
+  - id: votes_10
+    required: 10
+    icon: EMERALD
+    title: "<gold>10 Votes</gold>"
+    description:
+      - "<gray>Voting consistently unlocks better material rewards.</gray>"
+    commands:
+      - "give %player% minecraft:emerald 3"
+  - id: votes_25
+    required: 25
+    icon: DIAMOND
+    title: "<gold>25 Votes</gold>"
+    description:
+      - "<gray>Long-term supporters can claim a premium milestone.</gray>"
+    commands:
+      - "give %player% minecraft:diamond 3"

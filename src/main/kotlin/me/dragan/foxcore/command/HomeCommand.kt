@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.home.HomeBrowseResult
 import me.dragan.foxcore.home.HomesGuiScreen
 import me.dragan.foxcore.home.HomeLookupResult
@@ -26,6 +27,7 @@ class HomeCommand(
         }
 
         if (!player.hasPermission("foxcore.home")) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
@@ -34,6 +36,7 @@ class HomeCommand(
             0 -> openHomesGui(player)
             1 -> teleportToHome(player, args[0])
             else -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.home.usage"))
                 true
             }
@@ -43,22 +46,26 @@ class HomeCommand(
     private fun teleportToHome(player: Player, requestedHomeName: String): Boolean {
         val homeName = HomeNames.normalize(requestedHomeName)
         if (!HomeNames.isValid(homeName)) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.home.invalid-name"))
             return true
         }
 
         return when (val result = plugin.backService.findHome(player, homeName)) {
             HomeLookupResult.Loading -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.home.loading"))
                 true
             }
 
             is HomeLookupResult.NotFound -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.home.not-found", "home" to result.homeName))
                 true
             }
 
             is HomeLookupResult.MissingWorld -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(
                     plugin.messages.text(
                         "command.home.missing-world",
@@ -72,14 +79,17 @@ class HomeCommand(
             is HomeLookupResult.Success -> {
                 when (plugin.safeTeleports.teleport(player, result.location)) {
                     SafeTeleportResult.SUCCESS -> {
+                        PlayerFeedback.teleport(player)
                         player.sendMessage(plugin.messages.text("command.home.success", "home" to result.homeName))
                     }
 
                     SafeTeleportResult.NO_SAFE_GROUND -> {
+                        PlayerFeedback.error(player)
                         player.sendMessage(plugin.messages.text("error.no-safe-ground"))
                     }
 
                     SafeTeleportResult.FAILED -> {
+                        PlayerFeedback.error(player)
                         player.sendMessage(plugin.messages.text("error.teleport-failed"))
                     }
                 }
@@ -91,21 +101,25 @@ class HomeCommand(
     private fun openHomesGui(player: Player): Boolean {
         return when (val result = plugin.backService.browseHomes(player)) {
             HomeBrowseResult.Loading -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.home.loading"))
                 true
             }
 
             is HomeBrowseResult.Empty -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.homes.empty-self"))
                 true
             }
 
             is HomeBrowseResult.Success -> {
+                PlayerFeedback.guiOpen(player)
                 plugin.guiManager.open(player, HomesGuiScreen(plugin, result.playerName, result.homes, true))
                 true
             }
 
             is HomeBrowseResult.NotFound -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.homes.empty-self"))
                 true
             }

@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.tpa.TpaResolveStatus
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -23,11 +24,13 @@ class TpaDenyCommand(
         }
 
         if (!player.hasPermission("foxcore.tpadeny")) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
 
         if (args.size > 1) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.tpadeny.usage"))
             return true
         }
@@ -44,20 +47,25 @@ class TpaDenyCommand(
                 val requesterName = requester?.name ?: result.request?.requesterName ?: args.firstOrNull().orEmpty()
                 requester?.sendMessage(plugin.messages.text("command.tpadeny.requester-denied", "player" to player.name))
                 player.sendMessage(plugin.messages.text("command.tpadeny.denied", "player" to requesterName))
+                PlayerFeedback.softSuccess(player)
+                requester?.let(PlayerFeedback::error)
                 true
             }
 
             TpaResolveStatus.NO_PENDING -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.tpadeny.none"))
                 true
             }
 
             TpaResolveStatus.NOT_FOUND_FOR_REQUESTER -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.tpadeny.not-found", "player" to args[0]))
                 true
             }
 
             TpaResolveStatus.REQUESTER_OFFLINE -> {
+                PlayerFeedback.softSuccess(player)
                 player.sendMessage(plugin.messages.text("command.tpadeny.denied", "player" to requireNotNull(result.request).requesterName))
                 true
             }

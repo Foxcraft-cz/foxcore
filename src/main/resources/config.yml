@@ -210,5 +210,41 @@ teleport:
 warp:
   teleport-cooldown-seconds: 0
 
+rewards:
+  enabled: true
+  join-notifications:
+    enabled: true
+    delay-ticks: 40
+
+reports:
+  enabled: true
+  cooldown-seconds: 60
+  min-reason-length: 5
+  max-reason-length: 250
+  duplicate-window-seconds: 300
+  staff-target-permission: "foxcore.report.staff-target"
+  notifications:
+    chat:
+      enabled: true
+    sound:
+      enabled: true
+      key: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.1
+  discord:
+    enabled: false
+    use-discordsrv: true
+    channel-id: ""
+  activity:
+    chat-history-size: 10
+    command-history-size: 10
+    ignore-commands:
+      - "login"
+      - "register"
+      - "l"
+      - "reg"
+    ignore-command-regex: []
+    ignore-chat-regex: []
+
 tpa:
   request-expiration-seconds: 60

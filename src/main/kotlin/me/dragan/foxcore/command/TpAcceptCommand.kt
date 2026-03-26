@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.teleport.SafeTeleportResult
 import me.dragan.foxcore.tpa.TpaResolveStatus
 import me.dragan.foxcore.tpa.TpaRequestType
@@ -25,11 +26,13 @@ class TpAcceptCommand(
         }
 
         if (!player.hasPermission("foxcore.tpaccept")) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
 
         if (args.size > 1) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("command.tpaccept.usage"))
             return true
         }
@@ -59,12 +62,16 @@ class TpAcceptCommand(
                 when (plugin.safeTeleports.teleport(teleportedPlayer, targetLocation)) {
                     SafeTeleportResult.SUCCESS -> Unit
                     SafeTeleportResult.NO_SAFE_GROUND -> {
+                        PlayerFeedback.error(player)
+                        PlayerFeedback.error(requester)
                         player.sendMessage(plugin.messages.text("error.no-safe-ground"))
                         requester.sendMessage(plugin.messages.text("error.no-safe-ground"))
                         return true
                     }
 
                     SafeTeleportResult.FAILED -> {
+                        PlayerFeedback.error(player)
+                        PlayerFeedback.error(requester)
                         player.sendMessage(plugin.messages.text("error.teleport-failed"))
                         requester.sendMessage(plugin.messages.text("error.teleport-failed"))
                         return true
@@ -82,20 +89,26 @@ class TpAcceptCommand(
 
                 requester.sendMessage(plugin.messages.text(requesterAcceptedKey, "player" to player.name))
                 player.sendMessage(plugin.messages.text(acceptedKey, "player" to requester.name))
+                PlayerFeedback.success(player)
+                PlayerFeedback.success(requester)
+                PlayerFeedback.teleport(teleportedPlayer)
                 true
             }
 
             TpaResolveStatus.NO_PENDING -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.tpaccept.none"))
                 true
             }
 
             TpaResolveStatus.NOT_FOUND_FOR_REQUESTER -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.tpaccept.not-found", "player" to args[0]))
                 true
             }
 
             TpaResolveStatus.REQUESTER_OFFLINE -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.tpaccept.requester-offline"))
                 true
             }

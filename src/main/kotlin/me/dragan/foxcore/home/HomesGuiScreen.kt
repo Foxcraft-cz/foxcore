@@ -1,6 +1,7 @@
 package me.dragan.foxcore.home
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.teleport.SafeTeleportResult
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -71,15 +72,20 @@ class HomesGuiScreen(
         when (rawSlot) {
             45 -> {
                 if (currentPage(session) > 0) {
+                    PlayerFeedback.navigation(viewer)
                     session.state["page"] = currentPage(session) - 1
                     render(session)
                 }
             }
 
-            49 -> viewer.closeInventory()
+            49 -> {
+                PlayerFeedback.guiClose(viewer)
+                viewer.closeInventory()
+            }
 
             53 -> {
                 if (currentPage(session) + 1 < totalPages()) {
+                    PlayerFeedback.navigation(viewer)
                     session.state["page"] = currentPage(session) + 1
                     render(session)
                 }
@@ -91,6 +97,7 @@ class HomesGuiScreen(
                 val stored = homes[homeName] ?: return
                 val world = plugin.server.getWorld(stored.location.worldName)
                 if (world == null) {
+                    PlayerFeedback.error(viewer)
                     viewer.sendMessage(
                         plugin.messages.text(
                             "command.home.missing-world",
@@ -98,22 +105,27 @@ class HomesGuiScreen(
                             "world" to stored.location.worldName,
                         ),
                     )
+                    PlayerFeedback.guiClose(viewer)
                     viewer.closeInventory()
                     return
                 }
 
+                PlayerFeedback.guiClose(viewer)
                 viewer.closeInventory()
                 when (plugin.safeTeleports.teleport(viewer, stored.location.toBukkitLocation(world))) {
                     SafeTeleportResult.SUCCESS -> {
+                        PlayerFeedback.teleport(viewer)
                         val key = if (selfView) "command.home.success" else "command.homes.teleport-other-success"
                         viewer.sendMessage(plugin.messages.text(key, "home" to homeName, "player" to ownerName))
                     }
 
                     SafeTeleportResult.NO_SAFE_GROUND -> {
+                        PlayerFeedback.error(viewer)
                         viewer.sendMessage(plugin.messages.text("error.no-safe-ground"))
                     }
 
                     SafeTeleportResult.FAILED -> {
+                        PlayerFeedback.error(viewer)
                         viewer.sendMessage(plugin.messages.text("error.teleport-failed"))
                     }
                 }

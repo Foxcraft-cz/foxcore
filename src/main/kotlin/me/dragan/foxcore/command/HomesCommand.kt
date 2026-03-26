@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.home.HomeBrowseResult
 import me.dragan.foxcore.home.HomesGuiScreen
 import org.bukkit.Bukkit
@@ -22,6 +23,7 @@ class HomesCommand(
             0 -> listSelf(sender)
             1 -> listOther(sender, args[0])
             else -> {
+                (sender as? Player)?.let(PlayerFeedback::error)
                 sender.sendMessage(plugin.messages.text("command.homes.usage"))
                 true
             }
@@ -53,6 +55,7 @@ class HomesCommand(
         }
 
         if (!player.hasPermission("foxcore.homes")) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
@@ -62,6 +65,7 @@ class HomesCommand(
 
     private fun listOther(sender: CommandSender, requestedName: String): Boolean {
         if (!sender.hasPermission("foxcore.homes.others")) {
+            (sender as? Player)?.let(PlayerFeedback::error)
             sender.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
@@ -80,19 +84,23 @@ class HomesCommand(
     private fun openHomesGui(sender: Player, result: HomeBrowseResult, self: Boolean): Boolean {
         when (result) {
             HomeBrowseResult.Loading -> {
+                PlayerFeedback.error(sender)
                 sender.sendMessage(plugin.messages.text("command.homes.loading"))
             }
 
             is HomeBrowseResult.NotFound -> {
+                PlayerFeedback.error(sender)
                 sender.sendMessage(plugin.messages.text("command.homes.player-not-found", "player" to result.requestedPlayerName))
             }
 
             is HomeBrowseResult.Empty -> {
+                PlayerFeedback.error(sender)
                 val key = if (self) "command.homes.empty-self" else "command.homes.empty-other"
                 sender.sendMessage(plugin.messages.text(key, "player" to result.playerName))
             }
 
             is HomeBrowseResult.Success -> {
+                PlayerFeedback.guiOpen(sender)
                 plugin.guiManager.open(sender, HomesGuiScreen(plugin, result.playerName, result.homes, self))
             }
         }

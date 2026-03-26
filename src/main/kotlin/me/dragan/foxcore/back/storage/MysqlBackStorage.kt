@@ -14,6 +14,10 @@ class MysqlBackStorage(
     tableName = buildTableName(config),
     homeTableName = buildHomeTableName(config),
     warpTableName = buildWarpTableName(config),
+    reportTableName = buildReportTableName(config),
+    reportActivityTableName = buildReportActivityTableName(config),
+    rewardClaimTableName = buildRewardClaimTableName(config),
+    rewardDailyStateTableName = buildRewardDailyStateTableName(config),
 ) {
     override fun createTableSql(): String =
         """
@@ -98,6 +102,82 @@ class MysqlBackStorage(
         )
         """.trimIndent()
 
+    override fun createReportTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $reportTableName (
+            id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            type VARCHAR(16) NOT NULL,
+            status VARCHAR(16) NOT NULL,
+            reason TEXT NOT NULL,
+            reason_normalized TEXT NOT NULL,
+            created_at BIGINT NOT NULL,
+            reported_uuid VARCHAR(36) NOT NULL,
+            reported_name VARCHAR(16) NOT NULL,
+            reported_world VARCHAR(255) NOT NULL,
+            reported_x DOUBLE NOT NULL,
+            reported_y DOUBLE NOT NULL,
+            reported_z DOUBLE NOT NULL,
+            reported_yaw FLOAT NOT NULL,
+            reported_pitch FLOAT NOT NULL,
+            reported_online TINYINT(1) NOT NULL,
+            reported_gamemode VARCHAR(32) NOT NULL,
+            reporter_uuid VARCHAR(36) NOT NULL,
+            reporter_name VARCHAR(16) NOT NULL,
+            reporter_world VARCHAR(255) NOT NULL,
+            reporter_x DOUBLE NOT NULL,
+            reporter_y DOUBLE NOT NULL,
+            reporter_z DOUBLE NOT NULL,
+            reporter_yaw FLOAT NOT NULL,
+            reporter_pitch FLOAT NOT NULL,
+            reporter_online TINYINT(1) NOT NULL,
+            reporter_gamemode VARCHAR(32) NOT NULL,
+            resolver_uuid VARCHAR(36) NULL,
+            resolver_name VARCHAR(16) NULL,
+            resolved_at BIGINT NULL,
+            INDEX idx_${reportTableName}_type_status_created (type, status, created_at),
+            INDEX idx_${reportTableName}_reported_uuid (reported_uuid),
+            INDEX idx_${reportTableName}_duplicate_lookup (status, reporter_uuid, reported_uuid, created_at)
+        )
+        """.trimIndent()
+
+    override fun createReportActivityTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $reportActivityTableName (
+            report_id BIGINT NOT NULL,
+            entry_index INT NOT NULL,
+            entry_type VARCHAR(16) NOT NULL,
+            content TEXT NOT NULL,
+            created_at BIGINT NOT NULL,
+            PRIMARY KEY (report_id, entry_index),
+            INDEX idx_${reportActivityTableName}_report_id (report_id)
+        )
+        """.trimIndent()
+
+    override fun createRewardClaimTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $rewardClaimTableName (
+            player_uuid VARCHAR(36) NOT NULL,
+            track_id VARCHAR(64) NOT NULL,
+            reward_id VARCHAR(64) NOT NULL,
+            cycle_key VARCHAR(255) NOT NULL,
+            claimed_at BIGINT NOT NULL,
+            PRIMARY KEY (player_uuid, track_id, reward_id, cycle_key),
+            INDEX idx_${rewardClaimTableName}_player_track (player_uuid, track_id)
+        )
+        """.trimIndent()
+
+    override fun createRewardDailyStateTableSql(): String =
+        """
+        CREATE TABLE IF NOT EXISTS $rewardDailyStateTableName (
+            player_uuid VARCHAR(36) NOT NULL,
+            track_id VARCHAR(64) NOT NULL,
+            streak INT NOT NULL,
+            last_join_date VARCHAR(32) NOT NULL,
+            cycle INT NOT NULL,
+            PRIMARY KEY (player_uuid, track_id)
+        )
+        """.trimIndent()
+
     override fun bindUpsertTail(statement: PreparedStatement, playerId: UUID, data: BackData) {
         statement.setString(17, data.playerName)
         bindLocation(statement, 18, data.lastLocation)
@@ -138,6 +218,13 @@ class MysqlBackStorage(
         statement.setString(25, data.description)
     }
 
+    override fun insertRewardClaimSql(): String =
+        """
+        INSERT IGNORE INTO $rewardClaimTableName (
+            player_uuid, track_id, reward_id, cycle_key, claimed_at
+        ) VALUES (?, ?, ?, ?, ?)
+        """.trimIndent()
+
     override fun renameWarpSql(): String =
         """
         UPDATE $warpTableName
@@ -160,6 +247,15 @@ class MysqlBackStorage(
         }
         statement.runCatching {
             executeUpdate("ALTER TABLE $warpTableName ADD COLUMN description TEXT NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $reportTableName ADD COLUMN resolver_uuid VARCHAR(36) NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $reportTableName ADD COLUMN resolver_name VARCHAR(16) NULL")
+        }
+        statement.runCatching {
+            executeUpdate("ALTER TABLE $reportTableName ADD COLUMN resolved_at BIGINT NULL")
         }
     }
 
@@ -194,6 +290,26 @@ class MysqlBackStorage(
         private fun buildWarpTableName(config: FileConfiguration): String {
             val prefix = config.getString("storage.mysql.table-prefix", "foxcore_").orEmpty()
             return "${prefix}warp"
+        }
+
+        private fun buildRewardClaimTableName(config: FileConfiguration): String {
+            val prefix = config.getString("storage.mysql.table-prefix", "foxcore_").orEmpty()
+            return "${prefix}reward_claim"
+        }
+
+        private fun buildRewardDailyStateTableName(config: FileConfiguration): String {
+            val prefix = config.getString("storage.mysql.table-prefix", "foxcore_").orEmpty()
+            return "${prefix}reward_daily_state"
+        }
+
+        private fun buildReportTableName(config: FileConfiguration): String {
+            val prefix = config.getString("storage.mysql.table-prefix", "foxcore_").orEmpty()
+            return "${prefix}report"
+        }
+
+        private fun buildReportActivityTableName(config: FileConfiguration): String {
+            val prefix = config.getString("storage.mysql.table-prefix", "foxcore_").orEmpty()
+            return "${prefix}report_activity"
         }
     }
 }

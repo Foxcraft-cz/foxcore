@@ -1,5 +1,6 @@
 package me.dragan.foxcore.config
 
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
@@ -22,15 +23,8 @@ class YamlResourceSynchronizer(
             ?: error("Bundled resource '$resourcePath' is missing")
 
         val current = YamlConfiguration.loadConfiguration(target)
-        val normalized = YamlConfiguration()
-
-        for (key in defaults.getKeys(true)) {
-            if (defaults.isConfigurationSection(key)) {
-                continue
-            }
-
-            val value = if (current.contains(key)) current.get(key) else defaults.get(key)
-            normalized.set(key, value)
+        val normalized = YamlConfiguration().also { merged ->
+            mergeSections(defaults, current, merged)
         }
 
         if (normalized.saveToString() != current.saveToString()) {
@@ -39,5 +33,35 @@ class YamlResourceSynchronizer(
 
         return target
     }
-}
 
+    private fun mergeSections(
+        defaults: ConfigurationSection,
+        current: ConfigurationSection,
+        target: ConfigurationSection,
+    ) {
+        val keys = linkedSetOf<String>()
+        keys.addAll(defaults.getKeys(false))
+        keys.addAll(current.getKeys(false))
+
+        for (key in keys) {
+            val currentHasValue = current.contains(key)
+            val defaultsHasValue = defaults.contains(key)
+            val currentIsSection = current.isConfigurationSection(key)
+            val defaultsIsSection = defaults.isConfigurationSection(key)
+
+            when {
+                currentIsSection || defaultsIsSection -> {
+                    val nestedTarget = target.createSection(key)
+                    mergeSections(
+                        defaults.getConfigurationSection(key) ?: YamlConfiguration(),
+                        current.getConfigurationSection(key) ?: YamlConfiguration(),
+                        nestedTarget,
+                    )
+                }
+
+                currentHasValue -> target.set(key, current.get(key))
+                defaultsHasValue -> target.set(key, defaults.get(key))
+            }
+        }
+    }
+}

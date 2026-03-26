@@ -4,6 +4,7 @@ import me.dragan.foxcore.FoxCorePlugin
 import me.dragan.foxcore.back.BackMode.AUTO
 import me.dragan.foxcore.back.BackMode.DEATH
 import me.dragan.foxcore.back.BackMode.TELEPORT
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.teleport.SafeTeleportResult
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -30,12 +31,14 @@ class BackCommand(
                 "teleport", "tp" -> TELEPORT
                 "death" -> DEATH
                 else -> {
+                    PlayerFeedback.error(player)
                     player.sendMessage(plugin.messages.text("command.back.usage"))
                     return true
                 }
             }
 
             else -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.back.usage"))
                 return true
             }
@@ -45,10 +48,20 @@ class BackCommand(
         val canUseDeath = player.hasPermission(DEATH_PERMISSION)
 
         when (val result = plugin.backService.findBackDestination(player, mode, canUseTeleport, canUseDeath)) {
-            is BackLookupResult.Loading -> player.sendMessage(plugin.messages.text("command.back.loading"))
-            is BackLookupResult.NoEligiblePermission -> player.sendMessage(plugin.messages.text("error.no-permission"))
-            is BackLookupResult.None -> player.sendMessage(plugin.messages.text("command.back.none"))
+            is BackLookupResult.Loading -> {
+                PlayerFeedback.error(player)
+                player.sendMessage(plugin.messages.text("command.back.loading"))
+            }
+            is BackLookupResult.NoEligiblePermission -> {
+                PlayerFeedback.error(player)
+                player.sendMessage(plugin.messages.text("error.no-permission"))
+            }
+            is BackLookupResult.None -> {
+                PlayerFeedback.error(player)
+                player.sendMessage(plugin.messages.text("command.back.none"))
+            }
             is BackLookupResult.MissingLocation -> {
+                PlayerFeedback.error(player)
                 val key = when (result.type) {
                     BackType.TELEPORT -> "command.back.none-teleport"
                     BackType.DEATH -> "command.back.none-death"
@@ -56,6 +69,7 @@ class BackCommand(
                 player.sendMessage(plugin.messages.text(key))
             }
             is BackLookupResult.MissingWorld -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.back.missing-world", "world" to result.worldName))
             }
 
@@ -63,14 +77,21 @@ class BackCommand(
                 plugin.backService.recordManualBackOrigin(player)
                 when (plugin.safeTeleports.teleport(player, result.location)) {
                     SafeTeleportResult.SUCCESS -> {
+                        PlayerFeedback.teleport(player)
                         val key = when (result.type) {
                             BackType.TELEPORT -> "command.back.success-teleport"
                             BackType.DEATH -> "command.back.success-death"
                         }
                         player.sendMessage(plugin.messages.text(key))
                     }
-                    SafeTeleportResult.NO_SAFE_GROUND -> player.sendMessage(plugin.messages.text("error.no-safe-ground"))
-                    SafeTeleportResult.FAILED -> player.sendMessage(plugin.messages.text("error.teleport-failed"))
+                    SafeTeleportResult.NO_SAFE_GROUND -> {
+                        PlayerFeedback.error(player)
+                        player.sendMessage(plugin.messages.text("error.no-safe-ground"))
+                    }
+                    SafeTeleportResult.FAILED -> {
+                        PlayerFeedback.error(player)
+                        player.sendMessage(plugin.messages.text("error.teleport-failed"))
+                    }
                 }
             }
         }

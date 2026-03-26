@@ -95,6 +95,14 @@ Built jar output:
   Shows current session time, total playtime, and first join date.
 - `/portal ...`
   Admin-only portal management for hub navigation portals with wand selection, built-in `spawn`/`warp`/`rtp` actions, optional console commands, and visible particles.
+- `/report <player> <reason...>`
+  Creates a report against an online player or staff member and stores a report snapshot in the database.
+- `/reports`
+  Opens the admin reports GUI with separate player/staff queues and resolved-history views.
+- `/reports <id>`
+  Opens a specific report directly from chat notifications or manual lookup.
+- `/rewards [track]`
+  Opens the reward-path hub or a specific configured reward path with battle-pass style progress and claimable milestones.
 - `/loom`
   Opens a virtual loom.
 - `/warp`
@@ -147,6 +155,47 @@ Built jar output:
   Denies the last pending teleport request, or a specific player's request.
 - `/foxcore reload`
   Reloads config and translations.
+
+### Reports
+- Description: Database-backed player/staff reporting with GUI-first admin review.
+- Player only: yes
+- Permissions:
+- `foxcore.report.create`
+- `foxcore.report.view.player`
+- `foxcore.report.view.staff`
+- `foxcore.report.resolve.player`
+- `foxcore.report.resolve.staff`
+- `foxcore.report.teleport.player`
+- `foxcore.report.teleport.staff`
+- `foxcore.report.notify.player`
+- `foxcore.report.notify.staff`
+- `foxcore.report.staff-target`
+- Notes:
+- `/report <player> <reason...>` only targets online players and auto-classifies the report as `player` or `staff` based on the configured target permission.
+- Reports store report/reporter location snapshots, gamemode, timestamp, reason, and the last configured number of chat messages and commands used by the reported player.
+- Admin workflow is centered around `/reports`, which opens GUI views for open player reports, open staff reports, and resolved history lists shown as player heads.
+- Report detail GUI supports teleporting to stored snapshots and resolving reports as confirmed or rejected.
+- New reports can notify online staff via chat and sound, and can optionally forward a notification to Discord through DiscordSRV.
+- Main config path: `reports.*`
+
+### Rewards
+- Description: Modular reward paths with GUI previews, persistent anti-dup claim tracking, PlaceholderAPI-driven counters, and daily login streak progression.
+- Player only: yes
+- Permissions:
+- `foxcore.rewards`
+- `foxcore.rewards.<track>.view`
+- `foxcore.rewards.<track>.claim`
+- Notes:
+- `/rewards` opens a hub showing every configured reward path the player is allowed to view.
+- `/rewards <track>` opens a specific reward path directly and jumps to the page around the player's current progression breakpoint: the latest currently reachable unclaimed reward at that breakpoint, otherwise the next locked reward.
+- Reward paths are defined as separate YAML files in `rewards/tracks/*.yml`, so different reward types can keep their own permissions, icons, commands, and progression settings.
+- Track and reward icons support optional `oraxen-item` ids for GUI rendering when Oraxen is installed; `icon:` remains the vanilla fallback.
+- Each reward supports multiple console commands, executed as one claim.
+- FoxCore stores claims with a per-player, per-track, per-reward, per-cycle unique key to prevent duplicate claims even under double clicks or repeated requests.
+- `placeholder` progress reads a numeric PlaceholderAPI placeholder and supports a configurable cycle key for future seasonal resets.
+- `daily_streak` progress increases when the player joins on consecutive calendar days in the configured timezone and resets to a new claim cycle when the streak is broken.
+- On join, FoxCore can notify players about each reward path that currently has claimable rewards.
+- Main config paths: `rewards.*` and `rewards/tracks/*.yml`
 
 ## Commands
 ### `/afk`

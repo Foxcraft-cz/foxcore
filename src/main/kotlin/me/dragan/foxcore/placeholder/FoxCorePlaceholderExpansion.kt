@@ -1,9 +1,11 @@
 package me.dragan.foxcore.placeholder
 
+import me.clip.placeholderapi.PlaceholderAPI
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import me.dragan.foxcore.FoxCorePlugin
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.OfflinePlayer
+import org.bukkit.entity.Player
 
 class FoxCorePlaceholderExpansion(
     private val plugin: FoxCorePlugin,
@@ -25,6 +27,9 @@ class FoxCorePlaceholderExpansion(
             lowerParams == "afk_status" -> player?.uniqueId?.let { id -> plugin.afk.afkSinceMillis(id)?.let { "afk" } ?: "active" } ?: ""
             lowerParams == "afk_duration_seconds" -> player?.uniqueId?.let(plugin.afk::afkDurationSeconds)?.toString() ?: ""
             lowerParams == "afk_duration_human" -> player?.uniqueId?.let(plugin.afk::afkDurationHuman) ?: ""
+            lowerParams == "rank_expiry_rank" -> (player as? Player)?.let(::rankExpiry)?.rankName ?: ""
+            lowerParams == "rank_expiry_time" -> (player as? Player)?.let(::rankExpiry)?.timeRemaining ?: ""
+            lowerParams == "rank_expiry_chat" -> (player as? Player)?.let(::rankExpiryChat) ?: ""
             lowerParams.startsWith("logout_") -> quitBroadcast(params.substringAfter('_'))
             lowerParams.startsWith("quit_broadcast_") -> quitBroadcast(params.substringAfter("quit_broadcast_"))
             lowerParams.startsWith("login_") -> joinBroadcast(params.substringAfter('_'))
@@ -74,6 +79,24 @@ class FoxCorePlaceholderExpansion(
             ?: plugin.server.onlinePlayers.firstOrNull { it.name.equals(playerName, ignoreCase = true) }
             ?: plugin.server.getOfflinePlayerIfCached(playerName)
 
+    private fun rankExpiry(player: Player): RankExpiry? =
+        RANK_CANDIDATES.firstNotNullOfOrNull { candidate ->
+            resolveLuckPermsPlaceholder(player, candidate.placeholder)?.let { value ->
+                RankExpiry(candidate.rankName, value)
+            }
+        }
+
+    private fun rankExpiryChat(player: Player): String =
+        rankExpiry(player)?.let { "${it.rankName} za ${it.timeRemaining}" } ?: "bez dočasného ranku"
+
+    private fun resolveLuckPermsPlaceholder(player: Player, placeholder: String): String? =
+        PlaceholderAPI.setPlaceholders(player, placeholder)
+            .trim()
+            .takeIf(::isResolvedValue)
+
+    private fun isResolvedValue(value: String): Boolean =
+        value.isNotEmpty() && !value.contains('%')
+
     private fun commonPlaceholders(playerName: String): Array<Pair<String, String>> {
         val onlineCount = plugin.server.onlinePlayers.size.toString()
         val maxPlayers = plugin.server.maxPlayers.toString()
@@ -83,6 +106,24 @@ class FoxCorePlaceholderExpansion(
             "online" to onlineCount,
             "max" to maxPlayers,
             "server" to serverName,
+        )
+    }
+
+    private data class RankExpiry(
+        val rankName: String,
+        val timeRemaining: String,
+    )
+
+    private data class RankCandidate(
+        val rankName: String,
+        val placeholder: String,
+    )
+
+    companion object {
+        private val RANK_CANDIDATES = listOf(
+            RankCandidate("Sampion", "%luckperms_group_expiry_time_premium%"),
+            RankCandidate("Mistr", "%luckperms_group_expiry_time_vip%"),
+            RankCandidate("Patron", "%luckperms_group_expiry_time_pro%"),
         )
     }
 }

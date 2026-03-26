@@ -4,7 +4,7 @@ main: me.dragan.foxcore.FoxCorePlugin
 api-version: "1.21"
 authors: [Dragan]
 description: Lightweight Paper essentials-style utilities.
-softdepend: [PlaceholderAPI, LuckPerms]
+softdepend: [PlaceholderAPI, LuckPerms, DiscordSRV, Oraxen]
 
 commands:
   afk:
@@ -112,6 +112,9 @@ commands:
     description: Set a description line for the item in your hand.
     usage: /description <line> <description...>
     permission: foxcore.description
+  konecranku:
+    description: Show when your temporary rank expires.
+    usage: /konecranku
   head:
     aliases: [skull]
     description: Give yourself a player head by name.
@@ -139,6 +142,17 @@ commands:
     description: Manage world navigation portals.
     usage: /portal <wand|pos1|pos2|create|redefine|setaction|setcooldown|setparticles|enable|disable|delete|info|list>
     permission: foxcore.portal.admin
+  report:
+    description: Report an online player or staff member.
+    usage: /report <player> <reason...>
+    permission: foxcore.report.create
+  reports:
+    description: Open the reports administration GUI.
+    usage: /reports [report-id]
+  rewards:
+    description: Browse and claim configured reward paths.
+    usage: /rewards [track]
+    permission: foxcore.rewards
   loom:
     description: Open a virtual loom.
     usage: /loom
@@ -519,6 +533,36 @@ permissions:
   foxcore.tp:
     description: Allows teleporting to another player.
     default: op
+  foxcore.report.create:
+    description: Allows creating reports about online players.
+    default: true
+  foxcore.report.view.player:
+    description: Allows viewing player reports.
+    default: op
+  foxcore.report.view.staff:
+    description: Allows viewing staff reports.
+    default: op
+  foxcore.report.resolve.player:
+    description: Allows resolving player reports.
+    default: op
+  foxcore.report.resolve.staff:
+    description: Allows resolving staff reports.
+    default: op
+  foxcore.report.teleport.player:
+    description: Allows teleporting to player report snapshots.
+    default: op
+  foxcore.report.teleport.staff:
+    description: Allows teleporting to staff report snapshots.
+    default: op
+  foxcore.report.notify.player:
+    description: Receives notifications for new player reports.
+    default: op
+  foxcore.report.notify.staff:
+    description: Receives notifications for new staff reports.
+    default: op
+  foxcore.report.staff-target:
+    description: Marks a player as a staff-report target.
+    default: false
   foxcore.tp.offline:
     description: Allows teleporting to an offline player's stored last location.
     default: op
@@ -540,6 +584,21 @@ permissions:
   foxcore.reload:
     description: Allows reloading FoxCore configuration and translations.
     default: op
+  foxcore.rewards:
+    description: Allows opening the rewards command and reward GUIs.
+    default: true
+  foxcore.rewards.daily.view:
+    description: Allows viewing the bundled daily reward path.
+    default: true
+  foxcore.rewards.daily.claim:
+    description: Allows claiming rewards from the bundled daily reward path.
+    default: true
+  foxcore.rewards.votes.view:
+    description: Allows viewing the bundled vote reward path.
+    default: true
+  foxcore.rewards.votes.claim:
+    description: Allows claiming rewards from the bundled vote reward path.
+    default: true
   foxcore.voteday:
     description: Allows starting a /voteday vote.
     default: op

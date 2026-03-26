@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.Command
@@ -24,21 +25,25 @@ class SeenCommand(
         args: Array<out String>,
     ): Boolean {
         if (!sender.hasPermission(PERMISSION)) {
+            (sender as? Player)?.let(PlayerFeedback::error)
             sender.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
 
         if (args.size != 1) {
+            (sender as? Player)?.let(PlayerFeedback::error)
             sender.sendMessage(plugin.messages.text("command.seen.usage"))
             return true
         }
 
         val target = findTarget(args[0])
         if (target == null) {
+            (sender as? Player)?.let(PlayerFeedback::error)
             sender.sendMessage(plugin.messages.text("command.seen.not-found", "player" to args[0]))
             return true
         }
 
+        (sender as? Player)?.let(PlayerFeedback::softSuccess)
         sendSeenDetails(sender, target)
         return true
     }

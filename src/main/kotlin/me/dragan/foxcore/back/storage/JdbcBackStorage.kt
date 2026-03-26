@@ -4,10 +4,22 @@ import com.zaxxer.hikari.HikariDataSource
 import me.dragan.foxcore.back.BackData
 import me.dragan.foxcore.back.StoredLocation
 import me.dragan.foxcore.home.HomeData
+import me.dragan.foxcore.reward.RewardClaimRecord
+import me.dragan.foxcore.reward.RewardDailyStateRecord
+import me.dragan.foxcore.report.NewReportRecord
+import me.dragan.foxcore.report.ReportActivitySnapshot
+import me.dragan.foxcore.report.ReportActivityType
+import me.dragan.foxcore.report.ReportDetail
+import me.dragan.foxcore.report.ReportListEntry
+import me.dragan.foxcore.report.ReportLocationSnapshot
+import me.dragan.foxcore.report.ReportStatus
+import me.dragan.foxcore.report.ReportTargetSummary
+import me.dragan.foxcore.report.ReportType
 import me.dragan.foxcore.warp.WarpData
 import me.dragan.foxcore.warp.WarpScope
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+import java.sql.Statement
 import java.sql.Types
 import java.util.UUID
 
@@ -16,7 +28,11 @@ abstract class JdbcBackStorage(
     protected val tableName: String,
     protected val homeTableName: String,
     protected val warpTableName: String,
-) : BackStorage {
+    protected val reportTableName: String,
+    protected val reportActivityTableName: String,
+    protected val rewardClaimTableName: String,
+    protected val rewardDailyStateTableName: String,
+) : FoxCoreStorage {
 
     override fun initialize() {
         dataSource.connection.use { connection ->
@@ -24,6 +40,10 @@ abstract class JdbcBackStorage(
                 statement.executeUpdate(createTableSql())
                 statement.executeUpdate(createHomeTableSql())
                 statement.executeUpdate(createWarpTableSql())
+                statement.executeUpdate(createReportTableSql())
+                statement.executeUpdate(createReportActivityTableSql())
+                statement.executeUpdate(createRewardClaimTableSql())
+                statement.executeUpdate(createRewardDailyStateTableSql())
                 migrateSchema(statement)
             }
         }
@@ -141,6 +161,257 @@ abstract class JdbcBackStorage(
         }
     }
 
+    override fun createReport(record: NewReportRecord): Long {
+        dataSource.connection.use { connection ->
+            val previousAutoCommit = connection.autoCommit
+            connection.autoCommit = false
+            try {
+                val reportId = connection.prepareStatement(insertReportSql(), Statement.RETURN_GENERATED_KEYS).use { statement ->
+                    fillReportStatement(statement, record)
+                    statement.executeUpdate()
+                    statement.generatedKeys.use { keys ->
+                        if (!keys.next()) {
+                            error("Failed to create report row: no generated key returned")
+                        }
+                        keys.getLong(1)
+                    }
+                }
+                connection.prepareStatement(insertReportActivitySql()).use { statement ->
+                    record.activities.forEachIndexed { index, activity ->
+                        statement.setLong(1, reportId)
+                        statement.setInt(2, index)
+                        statement.setString(3, activity.type.name)
+                        statement.setString(4, activity.content)
+                        statement.setLong(5, activity.createdAtMillis)
+                        statement.addBatch()
+                    }
+                    statement.executeBatch()
+                }
+                connection.commit()
+                return reportId
+            } catch (exception: Exception) {
+                connection.rollback()
+                throw exception
+            } finally {
+                connection.autoCommit = previousAutoCommit
+            }
+        }
+    }
+
+    override fun hasRecentOpenDuplicate(
+        reporterId: String,
+        reportedId: String,
+        normalizedReason: String,
+        createdAfterMillis: Long,
+    ): Boolean {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(recentDuplicateSql()).use { statement ->
+                statement.setString(1, ReportStatus.OPEN.name)
+                statement.setString(2, reporterId)
+                statement.setString(3, reportedId)
+                statement.setString(4, normalizedReason)
+                statement.setLong(5, createdAfterMillis)
+                statement.executeQuery().use { result ->
+                    return result.next()
+                }
+            }
+        }
+    }
+
+    override fun listReportTargetSummaries(type: ReportType, resolved: Boolean): List<ReportTargetSummary> {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(reportTargetSummarySql(resolved)).use { statement ->
+                statement.setString(1, type.name)
+                statement.setString(2, ReportStatus.OPEN.name)
+                statement.executeQuery().use { result ->
+                    val summaries = linkedMapOf<String, ReportTargetSummary>()
+                    while (result.next()) {
+                        val targetId = result.getString("reported_uuid")
+                        if (!summaries.containsKey(targetId)) {
+                            summaries[targetId] = ReportTargetSummary(
+                                type = type,
+                                targetId = targetId,
+                                targetName = result.getString("reported_name"),
+                                count = 1,
+                                latestCreatedAtMillis = result.getLong("created_at"),
+                                latestReason = result.getString("reason"),
+                            )
+                        } else {
+                            val existing = summaries.getValue(targetId)
+                            summaries[targetId] = existing.copy(count = existing.count + 1)
+                        }
+                    }
+                    return summaries.values.toList()
+                }
+            }
+        }
+    }
+
+    override fun listReportsForTarget(type: ReportType, resolved: Boolean, targetId: String): List<ReportListEntry> {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(reportListSql(resolved)).use { statement ->
+                statement.setString(1, type.name)
+                statement.setString(2, targetId)
+                statement.setString(3, ReportStatus.OPEN.name)
+                statement.executeQuery().use { result ->
+                    val reports = mutableListOf<ReportListEntry>()
+                    while (result.next()) {
+                        reports += ReportListEntry(
+                            id = result.getLong("id"),
+                            type = ReportType.valueOf(result.getString("type")),
+                            status = ReportStatus.valueOf(result.getString("status")),
+                            reason = result.getString("reason"),
+                            createdAtMillis = result.getLong("created_at"),
+                            reportedId = result.getString("reported_uuid"),
+                            reportedName = result.getString("reported_name"),
+                            reporterId = result.getString("reporter_uuid"),
+                            reporterName = result.getString("reporter_name"),
+                            resolverName = result.getString("resolver_name"),
+                            resolvedAtMillis = result.getLongOrNull("resolved_at"),
+                        )
+                    }
+                    return reports
+                }
+            }
+        }
+    }
+
+    override fun findReportById(id: Long): ReportDetail? {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(reportDetailSql()).use { statement ->
+                statement.setLong(1, id)
+                statement.executeQuery().use { result ->
+                    if (!result.next()) {
+                        return null
+                    }
+
+                    return ReportDetail(
+                        id = result.getLong("id"),
+                        type = ReportType.valueOf(result.getString("type")),
+                        status = ReportStatus.valueOf(result.getString("status")),
+                        reason = result.getString("reason"),
+                        createdAtMillis = result.getLong("created_at"),
+                        reportedId = result.getString("reported_uuid"),
+                        reportedName = result.getString("reported_name"),
+                        reportedLocation = readReportLocation(result, "reported"),
+                        reportedOnline = result.getBoolean("reported_online"),
+                        reportedGameMode = result.getString("reported_gamemode"),
+                        reporterId = result.getString("reporter_uuid"),
+                        reporterName = result.getString("reporter_name"),
+                        reporterLocation = readReportLocation(result, "reporter"),
+                        reporterOnline = result.getBoolean("reporter_online"),
+                        reporterGameMode = result.getString("reporter_gamemode"),
+                        resolverId = result.getString("resolver_uuid"),
+                        resolverName = result.getString("resolver_name"),
+                        resolvedAtMillis = result.getLongOrNull("resolved_at"),
+                        activities = loadReportActivities(connection, id),
+                    )
+                }
+            }
+        }
+    }
+
+    override fun resolveReport(
+        id: Long,
+        status: ReportStatus,
+        resolverId: String,
+        resolverName: String,
+        resolvedAtMillis: Long,
+    ): Boolean {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(resolveReportSql()).use { statement ->
+                statement.setString(1, status.name)
+                statement.setString(2, resolverId)
+                statement.setString(3, resolverName)
+                statement.setLong(4, resolvedAtMillis)
+                statement.setLong(5, id)
+                statement.setString(6, ReportStatus.OPEN.name)
+                return statement.executeUpdate() > 0
+            }
+        }
+    }
+
+    override fun loadRewardClaims(playerId: UUID): List<RewardClaimRecord> {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(selectRewardClaimsSql()).use { statement ->
+                statement.setString(1, playerId.toString())
+                statement.executeQuery().use { result ->
+                    val claims = mutableListOf<RewardClaimRecord>()
+                    while (result.next()) {
+                        claims += RewardClaimRecord(
+                            trackId = result.getString("track_id"),
+                            rewardId = result.getString("reward_id"),
+                            cycleKey = result.getString("cycle_key"),
+                            claimedAtMillis = result.getLong("claimed_at"),
+                        )
+                    }
+                    return claims
+                }
+            }
+        }
+    }
+
+    override fun loadRewardDailyStates(playerId: UUID): List<RewardDailyStateRecord> {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(selectRewardDailyStatesSql()).use { statement ->
+                statement.setString(1, playerId.toString())
+                statement.executeQuery().use { result ->
+                    val states = mutableListOf<RewardDailyStateRecord>()
+                    while (result.next()) {
+                        states += RewardDailyStateRecord(
+                            trackId = result.getString("track_id"),
+                            streak = result.getInt("streak"),
+                            lastJoinDate = result.getString("last_join_date"),
+                            cycle = result.getInt("cycle"),
+                        )
+                    }
+                    return states
+                }
+            }
+        }
+    }
+
+    override fun saveRewardDailyState(playerId: UUID, state: RewardDailyStateRecord) {
+        dataSource.connection.use { connection ->
+            val previousAutoCommit = connection.autoCommit
+            connection.autoCommit = false
+            try {
+                connection.prepareStatement(deleteRewardDailyStateSql()).use { statement ->
+                    statement.setString(1, playerId.toString())
+                    statement.setString(2, state.trackId)
+                    statement.executeUpdate()
+                }
+                connection.prepareStatement(insertRewardDailyStateSql()).use { statement ->
+                    statement.setString(1, playerId.toString())
+                    statement.setString(2, state.trackId)
+                    statement.setInt(3, state.streak)
+                    statement.setString(4, state.lastJoinDate)
+                    statement.setInt(5, state.cycle)
+                    statement.executeUpdate()
+                }
+                connection.commit()
+            } catch (exception: Exception) {
+                connection.rollback()
+                throw exception
+            } finally {
+                connection.autoCommit = previousAutoCommit
+            }
+        }
+    }
+
+    override fun claimReward(playerId: UUID, claim: RewardClaimRecord): Boolean {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(insertRewardClaimSql()).use { statement ->
+                statement.setString(1, playerId.toString())
+                statement.setString(2, claim.trackId)
+                statement.setString(3, claim.rewardId)
+                statement.setString(4, claim.cycleKey)
+                statement.setLong(5, claim.claimedAtMillis)
+                return statement.executeUpdate() > 0
+            }
+        }
+    }
+
     override fun loadAllWarps(): Map<String, WarpData> {
         dataSource.connection.use { connection ->
             connection.prepareStatement(selectWarpsSql()).use { statement ->
@@ -220,6 +491,14 @@ abstract class JdbcBackStorage(
 
     protected abstract fun createWarpTableSql(): String
 
+    protected abstract fun createReportTableSql(): String
+
+    protected abstract fun createReportActivityTableSql(): String
+
+    protected abstract fun createRewardClaimTableSql(): String
+
+    protected abstract fun createRewardDailyStateTableSql(): String
+
     protected abstract fun upsertSql(): String
 
     protected abstract fun upsertWarpSql(): String
@@ -250,6 +529,117 @@ abstract class JdbcBackStorage(
         WHERE LOWER(player_name) = ?
         ORDER BY COALESCE(last_location_at, 0) DESC
         LIMIT 1
+        """.trimIndent()
+
+    protected open fun insertReportSql(): String =
+        """
+        INSERT INTO $reportTableName (
+            type, status, reason, reason_normalized, created_at,
+            reported_uuid, reported_name, reported_world, reported_x, reported_y, reported_z, reported_yaw, reported_pitch, reported_online, reported_gamemode,
+            reporter_uuid, reporter_name, reporter_world, reporter_x, reporter_y, reporter_z, reporter_yaw, reporter_pitch, reporter_online, reporter_gamemode,
+            resolver_uuid, resolver_name, resolved_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """.trimIndent()
+
+    protected open fun insertReportActivitySql(): String =
+        """
+        INSERT INTO $reportActivityTableName (
+            report_id, entry_index, entry_type, content, created_at
+        ) VALUES (?, ?, ?, ?, ?)
+        """.trimIndent()
+
+    protected open fun insertRewardClaimSql(): String =
+        """
+        INSERT INTO $rewardClaimTableName (
+            player_uuid, track_id, reward_id, cycle_key, claimed_at
+        ) VALUES (?, ?, ?, ?, ?)
+        """.trimIndent()
+
+    protected open fun selectRewardClaimsSql(): String =
+        """
+        SELECT track_id, reward_id, cycle_key, claimed_at
+        FROM $rewardClaimTableName
+        WHERE player_uuid = ?
+        ORDER BY claimed_at ASC
+        """.trimIndent()
+
+    protected open fun selectRewardDailyStatesSql(): String =
+        """
+        SELECT track_id, streak, last_join_date, cycle
+        FROM $rewardDailyStateTableName
+        WHERE player_uuid = ?
+        ORDER BY track_id ASC
+        """.trimIndent()
+
+    protected open fun deleteRewardDailyStateSql(): String =
+        """
+        DELETE FROM $rewardDailyStateTableName
+        WHERE player_uuid = ? AND track_id = ?
+        """.trimIndent()
+
+    protected open fun insertRewardDailyStateSql(): String =
+        """
+        INSERT INTO $rewardDailyStateTableName (
+            player_uuid, track_id, streak, last_join_date, cycle
+        ) VALUES (?, ?, ?, ?, ?)
+        """.trimIndent()
+
+    protected open fun recentDuplicateSql(): String =
+        """
+        SELECT 1
+        FROM $reportTableName
+        WHERE status = ?
+          AND reporter_uuid = ?
+          AND reported_uuid = ?
+          AND reason_normalized = ?
+          AND created_at >= ?
+        LIMIT 1
+        """.trimIndent()
+
+    protected open fun reportTargetSummarySql(resolved: Boolean): String =
+        """
+        SELECT reported_uuid, reported_name, reason, created_at
+        FROM $reportTableName
+        WHERE type = ? AND status ${if (resolved) "<>" else "="} ?
+        ORDER BY created_at DESC
+        """.trimIndent()
+
+    protected open fun reportListSql(resolved: Boolean): String =
+        """
+        SELECT id, type, status, reason, created_at,
+               reported_uuid, reported_name,
+               reporter_uuid, reporter_name,
+               resolver_name, resolved_at
+        FROM $reportTableName
+        WHERE type = ?
+          AND reported_uuid = ?
+          AND status ${if (resolved) "<>" else "="} ?
+        ORDER BY created_at DESC
+        """.trimIndent()
+
+    protected open fun reportDetailSql(): String =
+        """
+        SELECT id, type, status, reason, created_at,
+               reported_uuid, reported_name, reported_world, reported_x, reported_y, reported_z, reported_yaw, reported_pitch, reported_online, reported_gamemode,
+               reporter_uuid, reporter_name, reporter_world, reporter_x, reporter_y, reporter_z, reporter_yaw, reporter_pitch, reporter_online, reporter_gamemode,
+               resolver_uuid, resolver_name, resolved_at
+        FROM $reportTableName
+        WHERE id = ?
+        """.trimIndent()
+
+    protected open fun reportActivitySql(): String =
+        """
+        SELECT entry_type, content, created_at
+        FROM $reportActivityTableName
+        WHERE report_id = ?
+        ORDER BY entry_index ASC
+        """.trimIndent()
+
+    protected open fun resolveReportSql(): String =
+        """
+        UPDATE $reportTableName
+        SET status = ?, resolver_uuid = ?, resolver_name = ?, resolved_at = ?
+        WHERE id = ? AND status = ?
         """.trimIndent()
 
     protected open fun deleteHomesSql(): String =
@@ -290,6 +680,27 @@ abstract class JdbcBackStorage(
         bindLong(statement, 16, data.lastDeathAtMillis)
     }
 
+    protected fun fillReportStatement(statement: PreparedStatement, record: NewReportRecord) {
+        statement.setString(1, record.type.name)
+        statement.setString(2, record.status.name)
+        statement.setString(3, record.reason)
+        statement.setString(4, record.normalizedReason)
+        statement.setLong(5, record.createdAtMillis)
+        statement.setString(6, record.reportedId)
+        statement.setString(7, record.reportedName)
+        bindReportLocation(statement, 8, record.reportedLocation)
+        statement.setBoolean(14, record.reportedOnline)
+        statement.setString(15, record.reportedGameMode)
+        statement.setString(16, record.reporterId)
+        statement.setString(17, record.reporterName)
+        bindReportLocation(statement, 18, record.reporterLocation)
+        statement.setBoolean(24, record.reporterOnline)
+        statement.setString(25, record.reporterGameMode)
+        statement.setNull(26, Types.VARCHAR)
+        statement.setNull(27, Types.VARCHAR)
+        statement.setNull(28, Types.BIGINT)
+    }
+
     protected fun bindLocation(statement: PreparedStatement, startIndex: Int, location: StoredLocation?) {
         if (location == null) {
             statement.setNull(startIndex, Types.VARCHAR)
@@ -309,6 +720,15 @@ abstract class JdbcBackStorage(
         statement.setFloat(startIndex + 5, location.pitch)
     }
 
+    protected fun bindReportLocation(statement: PreparedStatement, startIndex: Int, location: ReportLocationSnapshot) {
+        statement.setString(startIndex, location.worldName)
+        statement.setDouble(startIndex + 1, location.x)
+        statement.setDouble(startIndex + 2, location.y)
+        statement.setDouble(startIndex + 3, location.z)
+        statement.setFloat(startIndex + 4, location.yaw)
+        statement.setFloat(startIndex + 5, location.pitch)
+    }
+
     protected fun bindLong(statement: PreparedStatement, index: Int, value: Long?) {
         if (value == null) {
             statement.setNull(index, Types.BIGINT)
@@ -316,6 +736,21 @@ abstract class JdbcBackStorage(
             statement.setLong(index, value)
         }
     }
+
+    protected fun ResultSet.getLongOrNull(column: String): Long? {
+        val value = getLong(column)
+        return if (wasNull()) null else value
+    }
+
+    protected fun readReportLocation(result: ResultSet, prefix: String): ReportLocationSnapshot =
+        ReportLocationSnapshot(
+            worldName = result.getString("${prefix}_world"),
+            x = result.getDouble("${prefix}_x"),
+            y = result.getDouble("${prefix}_y"),
+            z = result.getDouble("${prefix}_z"),
+            yaw = result.getFloat("${prefix}_yaw"),
+            pitch = result.getFloat("${prefix}_pitch"),
+        )
 
     private fun readLocation(
         world: String?,
@@ -326,11 +761,6 @@ abstract class JdbcBackStorage(
         pitch: Float,
     ): StoredLocation? =
         if (world == null) null else StoredLocation(world, x, y, z, yaw, pitch)
-
-    private fun ResultSet.getLongOrNull(column: String): Long? {
-        val value = getLong(column)
-        return if (wasNull()) null else value
-    }
 
     private fun loadHomes(connection: java.sql.Connection, playerId: String): Map<String, HomeData> {
         connection.prepareStatement(selectHomesSql()).use { statement ->
@@ -352,6 +782,23 @@ abstract class JdbcBackStorage(
                     )
                 }
                 return homes.toSortedMap()
+            }
+        }
+    }
+
+    private fun loadReportActivities(connection: java.sql.Connection, reportId: Long): List<ReportActivitySnapshot> {
+        connection.prepareStatement(reportActivitySql()).use { statement ->
+            statement.setLong(1, reportId)
+            statement.executeQuery().use { result ->
+                val activities = mutableListOf<ReportActivitySnapshot>()
+                while (result.next()) {
+                    activities += ReportActivitySnapshot(
+                        type = ReportActivityType.valueOf(result.getString("entry_type")),
+                        content = result.getString("content"),
+                        createdAtMillis = result.getLong("created_at"),
+                    )
+                }
+                return activities
             }
         }
     }

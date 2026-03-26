@@ -33,6 +33,7 @@ class ChatListener(
                 return@Runnable
             }
 
+            plugin.reportActivity.recordChat(player.uniqueId, result.message)
             val formatted = plugin.chatFormat.formatPublic(player, result.message)
             val senderVanished = plugin.vanishService.isVanished(player)
             plugin.server.onlinePlayers

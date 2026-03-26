@@ -146,6 +146,7 @@ class HelpCategoryScreen(
             "description" -> "/description <line> <description...>"
             "message" -> "/message <player> <message...>"
             "reply" -> "/reply <message...>"
+            "report" -> "/report <player> <reason...>"
             "socialspy" -> "/socialspy"
             "commandspy" -> "/commandspy"
             "voteday" -> "/voteday [force]"

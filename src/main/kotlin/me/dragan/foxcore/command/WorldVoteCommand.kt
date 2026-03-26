@@ -1,6 +1,7 @@
 package me.dragan.foxcore.command
 
 import me.dragan.foxcore.FoxCorePlugin
+import me.dragan.foxcore.feedback.PlayerFeedback
 import me.dragan.foxcore.vote.VoteAction
 import me.dragan.foxcore.vote.VoteStartResult
 import org.bukkit.command.Command
@@ -59,16 +60,19 @@ class WorldVoteCommand(
 
     private fun handleStart(player: Player): Boolean {
         if (!player.hasPermission(action.startPermission)) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
 
         return when (val result = plugin.votes.startVote(player, action)) {
             VoteStartResult.Disabled -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(plugin.messages.text("command.vote.disabled"))
                 true
             }
             is VoteStartResult.Cooldown -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(
                     plugin.messages.text(
                         "command.vote.cooldown",
@@ -79,6 +83,7 @@ class WorldVoteCommand(
                 true
             }
             is VoteStartResult.Active -> {
+                PlayerFeedback.error(player)
                 player.sendMessage(
                     plugin.messages.text(
                         "command.vote.active",
@@ -89,17 +94,22 @@ class WorldVoteCommand(
                 )
                 true
             }
-            is VoteStartResult.Started -> true
+            is VoteStartResult.Started -> {
+                PlayerFeedback.success(player)
+                true
+            }
         }
     }
 
     private fun handleForce(player: Player): Boolean {
         if (!player.hasPermission(action.forcePermission)) {
+            PlayerFeedback.error(player)
             player.sendMessage(plugin.messages.text("error.no-permission"))
             return true
         }
 
         plugin.votes.forceVote(player, action)
+        PlayerFeedback.success(player)
         return true
     }
 }
