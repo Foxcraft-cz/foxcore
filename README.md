@@ -135,6 +135,8 @@ Built jar output:
   Starts a vote to clear weather in your current world.
 - `/voterain`
   Starts a vote to start rain in your current world.
+- `/votestorm`
+  Starts a vote to start a thunderstorm in your current world.
 - `/voteyes`
   Votes yes in the currently active vote.
 - `/voteno`
@@ -730,6 +732,17 @@ Built jar output:
 - Any player can vote using `/voteyes` or `/voteno`, even without a permission node.
 - Uses the global cooldown configured at `votes.commands.voterain.cooldown-seconds`.
 
+### `/votestorm [force]`
+- Description: Starts a vote to start a thunderstorm in your current world.
+- Player only: yes
+- Permission: none for voting, `foxcore.votestorm` to start
+- Notes:
+- Starting a vote requires `foxcore.votestorm`.
+- Forcing the result with `/votestorm force` requires `foxcore.votestorm.force`.
+- The player who starts the vote is automatically counted as voting yes.
+- Any player can vote using `/voteyes` or `/voteno`, even without a permission node.
+- Uses the global cooldown configured at `votes.commands.votestorm.cooldown-seconds`.
+
 ### `/voteyes`
 - Description: Votes yes in the currently active world vote.
 - Player only: yes
@@ -1088,11 +1101,11 @@ Built jar output:
 - Default: `op`
 - Allows teleporting another player to the server spawn.
 
-### `foxcore.voteday`, `foxcore.votenight`, `foxcore.votesun`, `foxcore.voterain`
+### `foxcore.voteday`, `foxcore.votenight`, `foxcore.votesun`, `foxcore.voterain`, `foxcore.votestorm`
 - Default: `op`
 - Allow starting the corresponding world vote.
 
-### `foxcore.voteday.force`, `foxcore.votenight.force`, `foxcore.votesun.force`, `foxcore.voterain.force`
+### `foxcore.voteday.force`, `foxcore.votenight.force`, `foxcore.votesun.force`, `foxcore.voterain.force`, `foxcore.votestorm.force`
 - Default: `op`
 - Allow forcing the corresponding world vote command without waiting for the result.
 
@@ -1189,6 +1202,8 @@ votes:
     votesun:
       cooldown-seconds: 300
     voterain:
+      cooldown-seconds: 300
+    votestorm:
       cooldown-seconds: 300
 
 afk:
@@ -1313,7 +1328,7 @@ FoxCore also stores reloadable shortcut commands in `plugins/FoxCore/shortcuts.y
 
 ### `votes.commands.<command>.cooldown-seconds`
 - Controls the global cooldown for the matching vote command.
-- Supported keys are `voteday`, `votenight`, `votesun`, and `voterain`.
+- Supported keys are `voteday`, `votenight`, `votesun`, `voterain`, and `votestorm`.
 
 ### `shortcuts.yml`
 - Define lightweight shortcut commands without adding new Kotlin classes.

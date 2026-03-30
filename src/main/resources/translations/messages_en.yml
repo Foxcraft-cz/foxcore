@@ -130,6 +130,7 @@ command:
       night: "setting night"
       sun: "clearing weather"
       rain: "starting rain"
+      storm: "starting a thunderstorm"
   enderchest:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/enderchest</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Opened your ender chest.</green>"
@@ -330,6 +331,9 @@ command:
       voterain:
         name: "<gold>/voterain</gold>"
         description: "<gray>Start a vote to start rain in your current world.</gray>"
+      votestorm:
+        name: "<gold>/votestorm</gold>"
+        description: "<gray>Start a vote to start a thunderstorm in your current world.</gray>"
       voteyes:
         name: "<gold>/voteyes</gold>"
         description: "<gray>Vote yes in the currently active world vote.</gray>"
@@ -564,6 +568,8 @@ command:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/voteno</white>"
   voterain:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/voterain [force]</white>"
+  votestorm:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/votestorm [force]</white>"
   voteyes:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Usage:</yellow> <white>/voteyes</white>"
   votesun:

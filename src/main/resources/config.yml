@@ -49,6 +49,8 @@ votes:
       cooldown-seconds: 300
     voterain:
       cooldown-seconds: 300
+    votestorm:
+      cooldown-seconds: 300
 
 chat:
   enabled: true

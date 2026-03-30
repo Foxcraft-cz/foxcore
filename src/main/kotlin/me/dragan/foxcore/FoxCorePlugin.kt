@@ -283,6 +283,7 @@ class FoxCorePlugin : JavaPlugin() {
         registerCommand("votenight", WorldVoteCommand(this, VoteAction.NIGHT))
         registerCommand("voteno", VoteChoiceCommand(this, VoteChoice.NO))
         registerCommand("voterain", WorldVoteCommand(this, VoteAction.RAIN))
+        registerCommand("votestorm", WorldVoteCommand(this, VoteAction.STORM))
         registerCommand("voteyes", VoteChoiceCommand(this, VoteChoice.YES))
         registerCommand("votesun", WorldVoteCommand(this, VoteAction.SUN))
         registerCommand(

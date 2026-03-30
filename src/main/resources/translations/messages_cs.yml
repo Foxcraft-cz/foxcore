@@ -130,6 +130,7 @@ command:
       night: "nastavení noci"
       sun: "vyjasnění počasí"
       rain: "spuštění deště"
+      storm: "spuštění bouřky"
   enderchest:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/enderchest</white>"
     success: "<gray>[<gold>FoxCore</gold>]</gray> <green>Otevřena tvoje ender chestka.</green>"
@@ -330,6 +331,9 @@ command:
       voterain:
         name: "<gold>/voterain</gold>"
         description: "<gray>Začni hlasování o spuštění deště v aktuálním světě.</gray>"
+      votestorm:
+        name: "<gold>/votestorm</gold>"
+        description: "<gray>Začni hlasování o spuštění bouřky v aktuálním světě.</gray>"
       voteyes:
         name: "<gold>/voteyes</gold>"
         description: "<gray>Hlasuj PRO v právě aktivním hlasování.</gray>"
@@ -503,6 +507,8 @@ command:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/voteno</white>"
   voterain:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/voterain [force]</white>"
+  votestorm:
+    usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/votestorm [force]</white>"
   voteyes:
     usage: "<gray>[<gold>FoxCore</gold>]</gray> <yellow>Použití:</yellow> <white>/voteyes</white>"
   votesun:

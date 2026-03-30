@@ -153,6 +153,7 @@ class HelpCategoryScreen(
             "votenight" -> "/votenight [force]"
             "votesun" -> "/votesun [force]"
             "voterain" -> "/voterain [force]"
+            "votestorm" -> "/votestorm [force]"
             "voteyes" -> "/voteyes"
             "voteno" -> "/voteno"
             "onlinetime" -> "/onlinetime [player]"

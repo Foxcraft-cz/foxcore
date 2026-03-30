@@ -420,6 +420,21 @@ enum class VoteAction(
         apply = { world ->
             world.setStorm(true)
             world.isThundering = false
+            world.weatherDuration = 6000
+            world.thunderDuration = 0
+        },
+    ),
+    STORM(
+        commandLabel = "votestorm",
+        startPermission = "foxcore.votestorm",
+        forcePermission = "foxcore.votestorm.force",
+        translationKey = "command.vote.action.storm",
+        bossBarColor = BossBar.Color.RED,
+        apply = { world ->
+            world.setStorm(true)
+            world.isThundering = true
+            world.weatherDuration = 6000
+            world.thunderDuration = 6000
         },
     ),
 }

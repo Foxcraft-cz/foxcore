@@ -121,6 +121,7 @@ object HelpCatalog {
         HelpEntry("votenight", HelpCategory.UTILITY, Material.BLACK_BED, { _, player -> player.hasPermission("foxcore.votenight") }),
         HelpEntry("votesun", HelpCategory.UTILITY, Material.SUNFLOWER, { _, player -> player.hasPermission("foxcore.votesun") }),
         HelpEntry("voterain", HelpCategory.UTILITY, Material.WATER_BUCKET, { _, player -> player.hasPermission("foxcore.voterain") }),
+        HelpEntry("votestorm", HelpCategory.UTILITY, Material.LIGHTNING_ROD, { _, player -> player.hasPermission("foxcore.votestorm") }),
         HelpEntry("voteyes", HelpCategory.UTILITY, Material.LIME_CONCRETE, { _, _ -> true }),
         HelpEntry("voteno", HelpCategory.UTILITY, Material.RED_CONCRETE, { _, _ -> true }),
         HelpEntry("onlinetime", HelpCategory.UTILITY, Material.CLOCK, { _, player -> player.hasPermission("foxcore.onlinetime") }),

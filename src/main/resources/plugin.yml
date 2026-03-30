@@ -284,6 +284,9 @@ commands:
   voterain:
     description: Start or participate in a vote to start rain in your current world.
     usage: /voterain [force]
+  votestorm:
+    description: Start or participate in a vote to start a thunderstorm in your current world.
+    usage: /votestorm [force]
   voteyes:
     description: Vote yes in the currently active world vote.
     usage: /voteyes
@@ -622,4 +625,10 @@ permissions:
     default: op
   foxcore.voterain.force:
     description: Allows forcing /voterain without waiting for the vote result.
+    default: op
+  foxcore.votestorm:
+    description: Allows starting a /votestorm vote.
+    default: op
+  foxcore.votestorm.force:
+    description: Allows forcing /votestorm without waiting for the vote result.
     default: op
