@@ -657,6 +657,9 @@ report:
   notify:
     created: "<gray>[<gold>Reporty</gold>]</gray> <yellow>Nový <white>%type%</white> report <white>#%id%</white>: <white>%reporter%</white> reportoval hráče <white>%reported%</white> kvůli <white>%reason%</white>.</yellow>"
     hover: "<yellow>Klikni pro otevření tohoto reportu.</yellow>"
+    join: "<gray>[<gold>Reporty</gold>]</gray> <yellow>Čeká na tebe <white>%count%</white> aktivních reportů k řešení: <white>%summary%</white>.</yellow>"
+    join-button: " <gold>[Otevřít menu]</gold>"
+    join-hover: "<yellow>Klikni pro otevření menu reportů.</yellow>"
   status:
     open: "<yellow>Otevřený</yellow>"
     confirmed: "<green>Potvrzený</green>"

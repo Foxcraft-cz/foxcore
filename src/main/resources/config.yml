@@ -233,6 +233,9 @@ reports:
       key: "ENTITY_EXPERIENCE_ORB_PICKUP"
       volume: 1.0
       pitch: 1.1
+  join-notifications:
+    enabled: true
+    delay-ticks: 40
   discord:
     enabled: false
     use-discordsrv: true

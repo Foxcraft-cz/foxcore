@@ -178,6 +178,7 @@ Built jar output:
 - Admin workflow is centered around `/reports`, which opens GUI views for open player reports, open staff reports, and resolved history lists shown as player heads.
 - Report detail GUI supports teleporting to stored snapshots and resolving reports as confirmed or rejected.
 - New reports can notify online staff via chat and sound, and can optionally forward a notification to Discord through DiscordSRV.
+- Staff joining the server can receive a delayed clickable reminder about currently open reports they can view, opening `/reports` directly from chat.
 - Main config path: `reports.*`
 
 ### Rewards

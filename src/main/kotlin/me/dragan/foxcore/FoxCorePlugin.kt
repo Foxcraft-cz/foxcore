@@ -78,6 +78,7 @@ import me.dragan.foxcore.listener.GuiListener
 import me.dragan.foxcore.listener.JoinMessageListener
 import me.dragan.foxcore.listener.PortalListener
 import me.dragan.foxcore.listener.ReportActivityListener
+import me.dragan.foxcore.listener.ReportJoinListener
 import me.dragan.foxcore.listener.RewardJoinListener
 import me.dragan.foxcore.listener.SpawnJoinListener
 import me.dragan.foxcore.listener.SpawnRespawnListener
@@ -323,6 +324,7 @@ class FoxCorePlugin : JavaPlugin() {
         server.pluginManager.registerEvents(JoinMessageListener(this), this)
         server.pluginManager.registerEvents(PortalListener(this), this)
         server.pluginManager.registerEvents(ReportActivityListener(this), this)
+        server.pluginManager.registerEvents(ReportJoinListener(this), this)
         server.pluginManager.registerEvents(RewardJoinListener(this), this)
         server.pluginManager.registerEvents(SpyListener(this), this)
         server.pluginManager.registerEvents(SpawnJoinListener(this), this)

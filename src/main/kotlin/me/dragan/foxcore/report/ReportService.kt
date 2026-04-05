@@ -42,6 +42,8 @@ class ReportService(
             notificationSound = parseSound(plugin.config.getString("reports.notifications.sound.key", "ENTITY_EXPERIENCE_ORB_PICKUP")),
             notificationSoundVolume = plugin.config.getDouble("reports.notifications.sound.volume", 1.0).toFloat().coerceAtLeast(0f),
             notificationSoundPitch = plugin.config.getDouble("reports.notifications.sound.pitch", 1.1).toFloat().coerceAtLeast(0f),
+            joinNotificationsEnabled = plugin.config.getBoolean("reports.join-notifications.enabled", true),
+            joinNotificationDelayTicks = plugin.config.getLong("reports.join-notifications.delay-ticks", 40L).coerceAtLeast(0L),
         )
         discordNotifier.reload()
     }
@@ -144,6 +146,53 @@ class ReportService(
         }
     }
 
+    fun notifyJoin(player: Player) {
+        val currentSettings = settings
+        if (!currentSettings.enabled || !currentSettings.joinNotificationsEnabled) {
+            return
+        }
+
+        plugin.server.scheduler.runTaskLater(
+            plugin,
+            Runnable {
+                if (!player.isOnline) {
+                    return@Runnable
+                }
+
+                val accessibleTypes = ReportType.entries.filter { hasViewAccess(player, it) }
+                if (accessibleTypes.isEmpty()) {
+                    return@Runnable
+                }
+
+                executor.execute {
+                    val openCounts = linkedMapOf<ReportType, Int>()
+                    accessibleTypes.forEach { type ->
+                        val count = storage.listReportTargetSummaries(type, resolved = false).sumOf(ReportTargetSummary::count)
+                        if (count > 0) {
+                            openCounts[type] = count
+                        }
+                    }
+
+                    val totalCount = openCounts.values.sum()
+                    if (totalCount <= 0) {
+                        return@execute
+                    }
+
+                    plugin.server.scheduler.runTask(
+                        plugin,
+                        Runnable {
+                            if (!player.isOnline) {
+                                return@Runnable
+                            }
+                            sendJoinNotification(player, openCounts, totalCount, currentSettings)
+                        },
+                    )
+                }
+            },
+            currentSettings.joinNotificationDelayTicks,
+        )
+    }
+
     fun loadTargetSummaries(type: ReportType, resolved: Boolean, callback: (List<ReportTargetSummary>) -> Unit) {
         executor.execute {
             val results = storage.listReportTargetSummaries(type, resolved)
@@ -228,6 +277,37 @@ class ReportService(
         discordNotifier.sendCreatedNotification(reportId, type, reporter.name, reported.name, reason)
     }
 
+    private fun sendJoinNotification(
+        player: Player,
+        openCounts: Map<ReportType, Int>,
+        totalCount: Int,
+        currentSettings: ReportSettings,
+    ) {
+        val summary = openCounts.entries.joinToString(", ") { (type, count) ->
+            "${ReportText.queue(plugin, type)} $count"
+        }
+        val clickEvent = ClickEvent.runCommand("/reports")
+        val hoverEvent = HoverEvent.showText(plugin.messages.text("report.notify.join-hover"))
+
+        player.sendMessage(
+            plugin.messages.text(
+                "report.notify.join",
+                "count" to totalCount.toString(),
+                "summary" to summary,
+            )
+                .clickEvent(clickEvent)
+                .hoverEvent(hoverEvent)
+                .append(plugin.messages.text("report.notify.join-button").clickEvent(clickEvent).hoverEvent(hoverEvent)),
+        )
+
+        if (!currentSettings.notificationsSoundEnabled) {
+            return
+        }
+
+        val sound = currentSettings.notificationSound ?: return
+        player.playSound(player.location, sound, currentSettings.notificationSoundVolume, currentSettings.notificationSoundPitch)
+    }
+
     private fun sanitizeReason(raw: String): String =
         raw.trim()
             .replace(Regex("\\s+"), " ")
@@ -271,4 +351,6 @@ private data class ReportSettings(
     val notificationSound: Sound? = Sound.ENTITY_EXPERIENCE_ORB_PICKUP,
     val notificationSoundVolume: Float = 1f,
     val notificationSoundPitch: Float = 1.1f,
+    val joinNotificationsEnabled: Boolean = true,
+    val joinNotificationDelayTicks: Long = 40L,
 )

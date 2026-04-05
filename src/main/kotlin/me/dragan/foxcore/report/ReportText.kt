@@ -13,6 +13,19 @@ internal object ReportText {
             else -> reportType.name.lowercase()
         }
 
+    fun queue(plugin: FoxCorePlugin, reportType: ReportType): String =
+        when (locale(plugin)) {
+            "cs" -> when (reportType) {
+                ReportType.PLAYER -> "hráči"
+                ReportType.STAFF -> "staff"
+            }
+
+            else -> when (reportType) {
+                ReportType.PLAYER -> "players"
+                ReportType.STAFF -> "staff"
+            }
+        }
+
     fun status(plugin: FoxCorePlugin, reportStatus: ReportStatus): String =
         when (locale(plugin)) {
             "cs" -> when (reportStatus) {

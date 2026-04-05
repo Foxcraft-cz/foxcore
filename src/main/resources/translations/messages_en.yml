@@ -799,6 +799,9 @@ report:
   notify:
     created: "<gray>[<gold>Reports</gold>]</gray> <yellow>New <white>%type%</white> report <white>#%id%</white>: <white>%reporter%</white> reported <white>%reported%</white> for <white>%reason%</white>.</yellow>"
     hover: "<yellow>Click to open this report.</yellow>"
+    join: "<gray>[<gold>Reports</gold>]</gray> <yellow>There are <white>%count%</white> active reports waiting for review: <white>%summary%</white>.</yellow>"
+    join-button: " <gold>[Open Menu]</gold>"
+    join-hover: "<yellow>Click to open the reports menu.</yellow>"
   status:
     open: "<yellow>Open</yellow>"
     confirmed: "<green>Confirmed</green>"
