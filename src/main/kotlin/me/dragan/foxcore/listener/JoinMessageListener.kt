@@ -16,17 +16,28 @@ class JoinMessageListener(
         val placeholders = commonPlaceholders(player.name)
         val isFirstJoin = !player.hasPlayedBefore()
 
-        event.joinMessage(
-            when {
-                isFirstJoin && plugin.config.getBoolean("join-messages.first-join-broadcast-enabled", true) ->
-                    plugin.messages.text("event.join.first-broadcast", *placeholders)
+        event.joinMessage(null)
 
-                !isFirstJoin && plugin.config.getBoolean("join-messages.join-broadcast-enabled", true) ->
-                    plugin.messages.text("event.join.broadcast", *placeholders)
+        val broadcastMessage = when {
+            isFirstJoin && plugin.config.getBoolean("join-messages.first-join-broadcast-enabled", true) ->
+                plugin.messages.text("event.join.first-broadcast", *placeholders)
 
-                else -> null
-            },
-        )
+            !isFirstJoin && plugin.config.getBoolean("join-messages.join-broadcast-enabled", true) ->
+                plugin.messages.text("event.join.broadcast", *placeholders)
+
+            else -> null
+        }
+
+        if (broadcastMessage != null) {
+            plugin.server.scheduler.runTask(plugin, Runnable {
+                if (!player.isOnline || plugin.vanishService.isVanished(player)) {
+                    return@Runnable
+                }
+
+                plugin.server.onlinePlayers.forEach { it.sendMessage(broadcastMessage) }
+                plugin.server.consoleSender.sendMessage(broadcastMessage)
+            })
+        }
 
         if (!plugin.config.getBoolean("join-messages.personal-enabled", true)) {
             return

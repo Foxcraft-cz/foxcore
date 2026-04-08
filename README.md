@@ -234,7 +234,7 @@ Built jar output:
 - Notes:
 - One periodic check scans online players using configurable timings from `config.yml`.
 - Explicit actions such as chat, commands, inventory clicks, interactions, combat, teleports, and block changes reset activity.
-- Movement only resets activity after a real block-position change and ignores passive movement such as water drift, bubble columns, vehicles, gliding, and flight.
+- Movement only resets activity after a real horizontal block-position change and ignores Y-only movement plus passive movement such as liquids, bubble columns, vehicles, gliding, and flight.
 - Players with `foxcore.afk.bypass` are excluded from AFK flagging and AFK kicks.
 - Players with `foxcore.afk.bypass-kick` are still flagged AFK normally but are not kicked by the AFK timeout.
 - Players detected as vanished through FoxCore's PlaceholderAPI vanish check are also excluded from the AFK system entirely.
@@ -1397,9 +1397,11 @@ FoxCore also stores reloadable shortcut commands in `plugins/FoxCore/shortcuts.y
 
 ### `join-messages.join-broadcast-enabled`
 - Enables or disables the broadcast join message shown to other players.
+- Players detected as vanished are skipped, including vanish states restored immediately after login.
 
 ### `join-messages.first-join-broadcast-enabled`
 - Enables or disables the special first-join broadcast shown to other players.
+- Players detected as vanished are skipped, including vanish states restored immediately after login.
 
 ### `join-messages.quit-broadcast-enabled`
 - Enables or disables the logout broadcast shown to other players.

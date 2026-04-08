@@ -1,6 +1,7 @@
 package me.dragan.foxcore.listener
 
 import me.dragan.foxcore.FoxCorePlugin
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -103,12 +104,12 @@ class AfkListener(
     fun onMove(event: PlayerMoveEvent) {
         val to = event.to ?: return
         val from = event.from
-        if (from.blockX == to.blockX && from.blockY == to.blockY && from.blockZ == to.blockZ) {
+        if (from.blockX == to.blockX && from.blockZ == to.blockZ) {
             return
         }
 
         val player = event.player
-        if (isPassiveMovement(player)) {
+        if (isPassiveMovement(player, from, to)) {
             return
         }
 
@@ -123,16 +124,27 @@ class AfkListener(
         })
     }
 
-    private fun isPassiveMovement(player: Player): Boolean {
-        if (player.isInsideVehicle || player.isGliding) {
+    private fun isPassiveMovement(player: Player, from: Location, to: Location): Boolean {
+        if (player.isInsideVehicle || player.isGliding || player.isFlying) {
             return true
         }
         if (player.isInWater || player.isSwimming) {
             return true
         }
 
-        val feet = player.location.block.type
-        val below = player.location.clone().subtract(0.0, 1.0, 0.0).block.type
-        return feet == Material.BUBBLE_COLUMN || below == Material.BUBBLE_COLUMN
+        return isPassiveBlock(from) || isPassiveBlock(to) || isPassiveSupportBlock(from) || isPassiveSupportBlock(to)
+    }
+
+    private fun isPassiveBlock(location: Location): Boolean {
+        val block = location.block
+        return block.isLiquid || block.type == Material.BUBBLE_COLUMN
+    }
+
+    private fun isPassiveSupportBlock(location: Location): Boolean {
+        if (location.blockY <= location.world.minHeight) {
+            return false
+        }
+        val below = location.world.getBlockAt(location.blockX, location.blockY - 1, location.blockZ)
+        return below.isLiquid || below.type == Material.BUBBLE_COLUMN
     }
 }
